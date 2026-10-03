@@ -1,5 +1,340 @@
 document.addEventListener('DOMContentLoaded', () => {
 
+  // Only these game-state fields belong to a player profile. The jackpot is intentionally
+  // excluded: without a trusted shared backend it is a browser-local demo, not a global pool.
+  const PLAYER_STATE_KEYS = new Set([
+    'casino_hub_player', 'casino_hub_xp', 'casino_hub_debt',
+    'casino_hub_wheel', 'casino_hub_settings'
+  ]);
+  const JACKPOT_KEY = 'casino_hub_jackpot';
+  let firebaseApi = null;
+  let firebaseAuth = null;
+  let firebaseDb = null;
+  let authSdkReady = false;
+  let authSessionGeneration = 0;
+  const lockedHeaderButtons = new WeakMap();
+
+  // All legacy game managers use this adapter so guest saves remain local while signed-in
+  // saves are namespaced by Firebase UID and can never fall through to another player's data.
+  const PlayerProgress = {
+    uid: null,
+    values: {},
+    ready: false,
+    writeQueue: Promise.resolve(),
+
+    getItem(key) {
+      if (key === JACKPOT_KEY || !this.uid) return localStorage.getItem(key);
+      return Object.prototype.hasOwnProperty.call(this.values, key) ? this.values[key] : null;
+    },
+
+    setItem(key, value) {
+      const stringValue = String(value);
+      if (key === JACKPOT_KEY || !this.uid) {
+        localStorage.setItem(key, stringValue);
+        return;
+      }
+      if (!PLAYER_STATE_KEYS.has(key)) return;
+      // Ignore game writes while a new UID is hydrating; stale UI must not seed that profile.
+      if (!this.ready) return;
+      this.values[key] = stringValue;
+      this.queueCloudWrite(this.uid, key, stringValue);
+    },
+
+    beginSession(uid) {
+      this.ready = false;
+      this.uid = uid || null;
+      this.values = {};
+    },
+
+    activateSession(uid, values) {
+      if (this.uid !== (uid || null)) return false;
+      this.values = values || {};
+      this.ready = true;
+      return true;
+    },
+
+    queueCloudWrite(uid, key, value) {
+      const modules = firebaseApi;
+      const database = firebaseDb;
+      if (!modules || !database) return;
+      // Capture the UID and field at mutation time: even if the user signs out before this
+      // request runs, the queued write can only target that same user's own document.
+      this.writeQueue = this.writeQueue.catch(() => {}).then(() => modules.setDoc(
+        modules.doc(database, 'users', uid),
+        { state: { [key]: value }, updatedAt: modules.serverTimestamp() },
+        { merge: true }
+      )).catch(() => {
+        if (this.uid === uid) {
+          showAuthMessage('Cloud save failed. Check your connection and Firestore rules; your current session is still active.', 'error');
+        }
+      });
+    },
+
+    flush() {
+      return this.writeQueue.catch(() => {});
+    }
+  };
+
+  function showAuthMessage(message, kind = '') {
+    const messageEl = document.getElementById('auth-message');
+    if (!messageEl) return;
+    messageEl.textContent = message;
+    messageEl.classList.toggle('is-error', kind === 'error');
+    messageEl.classList.toggle('is-success', kind === 'success');
+  }
+
+  function setAccountLocked(locked, message = 'Loading your saved casino progress…') {
+    const shield = document.getElementById('account-loading-shield');
+    const loadingMessage = document.getElementById('account-loading-message');
+    document.querySelectorAll('.global-bar button').forEach(button => {
+      if (locked) {
+        if (!lockedHeaderButtons.has(button)) lockedHeaderButtons.set(button, button.disabled);
+        button.disabled = true;
+      } else if (lockedHeaderButtons.has(button)) {
+        button.disabled = lockedHeaderButtons.get(button);
+        lockedHeaderButtons.delete(button);
+      }
+    });
+    document.body.classList.toggle('account-transition', locked);
+    if (loadingMessage) loadingMessage.textContent = message;
+    if (shield) shield.classList.toggle('hidden-view', !locked);
+  }
+
+  function setAuthFormEnabled(enabled) {
+    document.querySelectorAll('#auth-form input, #auth-form button').forEach(element => {
+      element.disabled = !enabled;
+    });
+  }
+
+  function resetTransientGameUI() {
+    // A hand, spin animation, or result banner is session-only; clear it on identity changes
+    // so switching accounts in one tab cannot leave the previous player's table on screen.
+    ['modal-wheel', 'modal-settings', 'modal-bank'].forEach(id => {
+      const modal = document.getElementById(id);
+      modal?.classList.replace('active-view', 'hidden-view');
+    });
+    if (typeof CasinoHub !== 'undefined') CasinoHub.switchView('lobby');
+    if (typeof BlackjackGame !== 'undefined') {
+      BlackjackGame.playerHand = [];
+      BlackjackGame.dealerHand = [];
+      BlackjackGame.deck = [];
+      BlackjackGame.gameState = 'BETTING';
+      BlackjackGame.dealerHidden = true;
+      BlackjackGame.renderHands();
+      BlackjackGame.setStatus('PLACE YOUR BET TO DEAL');
+      BlackjackGame.updateUI();
+    }
+    if (typeof CoinTossGame !== 'undefined') {
+      CoinTossGame.isFlipping = false;
+      CoinTossGame.coinEl.classList.remove('animate-heads', 'animate-tails');
+      CoinTossGame.coinEl.style.transform = 'rotateY(0deg)';
+      CoinTossGame.setStatus('PICK HEADS OR TAILS');
+      CoinTossGame.updateUI();
+    }
+    if (typeof FiveReelGame !== 'undefined') {
+      FiveReelGame.isSpinning = false;
+      FiveReelGame.freeSpinsRemaining = 0;
+      FiveReelGame.bonusTotalWin = 0;
+      FiveReelGame.stickyWildsGrid = Array(5).fill(null).map(() => Array(3).fill(false));
+      FiveReelGame.setStatus('PRESS SPIN TO PLAY');
+      FiveReelGame.updateUI();
+    }
+    if (typeof ClassicSlots !== 'undefined') {
+      ClassicSlots.isSpinning = false;
+      ClassicSlots.currentGrid = [];
+      ClassicSlots.clearHighlights();
+      ClassicSlots.setStatus('PRESS SPIN TO PLAY');
+      ClassicSlots.updateUI();
+    }
+  }
+
+  function refreshPlayerManagers() {
+    CasinoHub.loadState(1000);
+    CasinoHub.updateGlobalUI();
+    window.Bank.loadState();
+    window.Bank.updateModalUI();
+    window.XP.loadState();
+    window.XP.updateUI();
+    window.DailyWheel.loadState();
+    window.DailyWheel.updateUI();
+    window.CasinoSettings.loadSettings();
+    // The jackpot intentionally stays in localStorage and is not hydrated from a user profile.
+    ClassicSlots.updateUI();
+    FiveReelGame.updateUI();
+    CoinTossGame.updateUI();
+    BlackjackGame.updateUI();
+  }
+
+  function friendlyFirebaseError(error, phase) {
+    const code = error?.code || '';
+    const messages = {
+      'auth/email-already-in-use': 'An account already exists for this email. Try signing in instead.',
+      'auth/invalid-email': 'Enter a valid email address.',
+      'auth/weak-password': 'Choose a password with at least 6 characters.',
+      'auth/user-not-found': 'Email or password is incorrect.',
+      'auth/wrong-password': 'Email or password is incorrect.',
+      'auth/invalid-credential': 'Email or password is incorrect.',
+      'auth/too-many-requests': 'Too many attempts. Wait a while, then try again.',
+      'auth/network-request-failed': 'Could not reach the account service. Check your internet connection.',
+      'auth/operation-not-allowed': 'Email/password sign-in is not enabled in the Firebase console.',
+      'auth/configuration-not-found': 'Firebase Authentication is not configured for this project.',
+      'permission-denied': 'Firestore denied access. Publish the included owner-only rules and try again.',
+      'unavailable': 'Firestore is temporarily unavailable. Check your connection and try again.'
+    };
+    if (messages[code]) return messages[code];
+    if (phase === 'load') return 'Could not load this account’s progress. Check that Firestore is enabled and its owner-only rules are published. Gameplay remains locked to protect your data.';
+    return 'The account request could not be completed. Check your connection and Firebase setup, then try again.';
+  }
+
+  async function applyAuthUser(user) {
+    const generation = ++authSessionGeneration;
+    const uid = user?.uid || null;
+    PlayerProgress.beginSession(uid);
+    setAccountLocked(true, user ? 'Loading this account’s saved progress…' : 'Preparing guest progress…');
+    setAuthFormEnabled(false);
+    resetTransientGameUI();
+
+    const statusEl = document.getElementById('account-status');
+    const detailEl = document.getElementById('account-detail');
+    const form = document.getElementById('auth-form');
+    const signedControls = document.getElementById('signed-in-controls');
+    const emailEl = document.getElementById('account-email');
+    const signOutBtn = document.getElementById('btn-sign-out');
+    if (user) {
+      statusEl.textContent = 'Loading signed-in account…';
+      detailEl.textContent = 'Account progress loads before play is enabled. The jackpot ticker is local-only demo data.';
+      form.classList.add('hidden-view');
+      signedControls.classList.remove('hidden-view');
+      emailEl.textContent = user.email || 'Signed in';
+      signOutBtn.disabled = true;
+    } else {
+      statusEl.textContent = 'Guest mode — saved on this device';
+      detailEl.textContent = 'Sign in to sync wallet, XP, loans, daily wheel, and settings. Jackpot is local-only demo data.';
+      form.classList.remove('hidden-view');
+      signedControls.classList.add('hidden-view');
+      signOutBtn.disabled = false;
+    }
+
+    try {
+      let profileState = {};
+      if (user) {
+        const profile = await firebaseApi.getDoc(firebaseApi.doc(firebaseDb, 'users', uid));
+        if (profile.exists()) {
+          const stored = profile.data()?.state;
+          if (stored && typeof stored === 'object' && !Array.isArray(stored)) {
+            profileState = Object.fromEntries(Object.entries(stored).filter(([key, value]) =>
+              PLAYER_STATE_KEYS.has(key) && typeof value === 'string'
+            ));
+          }
+        }
+      }
+      if (generation !== authSessionGeneration) return;
+      PlayerProgress.activateSession(uid, profileState);
+      refreshPlayerManagers();
+      if (user) {
+        statusEl.textContent = `Signed in${user.email ? ` as ${user.email}` : ''}`;
+        detailEl.textContent = 'Your progress is saved to your account. The jackpot ticker is local-only demo data.';
+        showAuthMessage('', '');
+        signOutBtn.disabled = false;
+      } else {
+        setAuthFormEnabled(authSdkReady);
+      }
+      setAccountLocked(false);
+    } catch (error) {
+      if (generation !== authSessionGeneration) return;
+      statusEl.textContent = 'Account progress could not be loaded';
+      detailEl.textContent = 'For safety, gameplay is paused until the saved profile can be read.';
+      showAuthMessage(friendlyFirebaseError(error, 'load'), 'error');
+      signOutBtn.disabled = false;
+      setAccountLocked(true, 'Saved progress could not be loaded. Sign out or correct the Firebase setup, then reload.');
+    }
+  }
+
+  async function initializeFirebaseAccounts() {
+    const authForm = document.getElementById('auth-form');
+    const passwordInput = document.getElementById('auth-password');
+    const signOutButton = document.getElementById('btn-sign-out');
+
+    authForm.addEventListener('submit', async event => {
+      event.preventDefault();
+      if (!authSdkReady || !firebaseApi || !firebaseAuth) return;
+      const action = event.submitter?.value || 'sign-in';
+      const email = document.getElementById('auth-email').value.trim();
+      const password = passwordInput.value;
+      setAccountLocked(true, action === 'create-account' ? 'Creating your account…' : 'Signing in…');
+      setAuthFormEnabled(false);
+      showAuthMessage('', '');
+      try {
+        if (action === 'create-account') {
+          await firebaseApi.createUserWithEmailAndPassword(firebaseAuth, email, password);
+        } else {
+          await firebaseApi.signInWithEmailAndPassword(firebaseAuth, email, password);
+        }
+        passwordInput.value = '';
+      } catch (error) {
+        passwordInput.value = '';
+        showAuthMessage(friendlyFirebaseError(error, 'auth'), 'error');
+        setAuthFormEnabled(true);
+        setAccountLocked(false);
+      }
+    });
+
+    signOutButton.addEventListener('click', async () => {
+      if (!firebaseApi || !firebaseAuth) return;
+      signOutButton.disabled = true;
+      setAccountLocked(true, 'Signing out and keeping account data separate…');
+      await PlayerProgress.flush();
+      try {
+        await firebaseApi.signOut(firebaseAuth);
+      } catch (error) {
+        showAuthMessage(friendlyFirebaseError(error, 'auth'), 'error');
+        signOutButton.disabled = false;
+        setAccountLocked(false);
+      }
+    });
+
+    try {
+      const version = '10.12.2';
+      const [appSdk, authSdk, firestoreSdk] = await Promise.all([
+        import(`https://www.gstatic.com/firebasejs/${version}/firebase-app.js`),
+        import(`https://www.gstatic.com/firebasejs/${version}/firebase-auth.js`),
+        import(`https://www.gstatic.com/firebasejs/${version}/firebase-firestore.js`)
+      ]);
+      const firebaseConfig = {
+        apiKey: 'AIzaSyAVpfgHflK9ZaoD0y2gN7Q8_DTj5axJnac',
+        authDomain: 'ss-casino.firebaseapp.com',
+        projectId: 'ss-casino',
+        storageBucket: 'ss-casino.firebasestorage.app',
+        messagingSenderId: '953674031138',
+        appId: '1:953674031138:web:ad213e2b3d5ff4eeeb2a7b',
+        measurementId: 'G-PEZ7TLY0M4'
+      };
+      const app = appSdk.initializeApp(firebaseConfig);
+      firebaseAuth = authSdk.getAuth(app);
+      firebaseDb = firestoreSdk.getFirestore(app);
+      firebaseApi = {
+        ...authSdk,
+        getDoc: firestoreSdk.getDoc,
+        doc: firestoreSdk.doc,
+        setDoc: firestoreSdk.setDoc,
+        serverTimestamp: firestoreSdk.serverTimestamp
+      };
+      authSdkReady = true;
+      authSdk.onAuthStateChanged(firebaseAuth, user => { void applyAuthUser(user); });
+    } catch (error) {
+      // Firebase/CDN configuration trouble must not destroy the existing local guest mode.
+      const statusEl = document.getElementById('account-status');
+      const detailEl = document.getElementById('account-detail');
+      statusEl.textContent = 'Account services unavailable';
+      detailEl.textContent = 'Guest progress remains local to this device. Reload after Firebase setup is available.';
+      showAuthMessage('Could not connect to Firebase. Check the internet connection and account setup; guest play is available.', 'error');
+      PlayerProgress.beginSession(null);
+      PlayerProgress.activateSession(null, {});
+      refreshPlayerManagers();
+      setAccountLocked(false);
+    }
+  }
+
   // ==========================================
   // 1. SOUND FX & PARTICLE CANVAS ENGINE
   // ==========================================
@@ -688,11 +1023,11 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     saveState() {
-      localStorage.setItem('casino_hub_wheel', this.lastSpinTime.toString());
+      PlayerProgress.setItem('casino_hub_wheel', this.lastSpinTime.toString());
     }
 
     loadState() {
-      const saved = localStorage.getItem('casino_hub_wheel');
+      const saved = PlayerProgress.getItem('casino_hub_wheel');
       this.lastSpinTime = saved ? parseInt(saved, 10) : 0;
     }
 
@@ -794,11 +1129,11 @@ document.addEventListener('DOMContentLoaded', () => {
         isMuted: this.isMuted,
         theme: this.currentTheme || 'vegas'
       };
-      localStorage.setItem('casino_hub_settings', JSON.stringify(settings));
+      PlayerProgress.setItem('casino_hub_settings', JSON.stringify(settings));
     }
 
     loadSettings() {
-      const saved = localStorage.getItem('casino_hub_settings');
+      const saved = PlayerProgress.getItem('casino_hub_settings');
       if (saved) {
         try {
           const parsed = JSON.parse(saved);
@@ -894,11 +1229,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     saveState() {
       const data = { level: this.level, xp: this.xp };
-      localStorage.setItem('casino_hub_xp', JSON.stringify(data));
+      PlayerProgress.setItem('casino_hub_xp', JSON.stringify(data));
     }
 
     loadState() {
-      const saved = localStorage.getItem('casino_hub_xp');
+      const saved = PlayerProgress.getItem('casino_hub_xp');
       if (saved) {
         try {
           const parsed = JSON.parse(saved);
@@ -1051,11 +1386,11 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     saveState() {
-      localStorage.setItem('casino_hub_debt', this.currentDebt.toString());
+      PlayerProgress.setItem('casino_hub_debt', this.currentDebt.toString());
     }
 
     loadState() {
-      const saved = localStorage.getItem('casino_hub_debt');
+      const saved = PlayerProgress.getItem('casino_hub_debt');
       this.currentDebt = saved ? parseFloat(saved) : 0;
     }
 
@@ -1143,11 +1478,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     saveState() {
       const data = { balance: this.balance };
-      localStorage.setItem('casino_hub_player', JSON.stringify(data));
+      PlayerProgress.setItem('casino_hub_player', JSON.stringify(data));
     }
 
     loadState(defaultBalance) {
-      const saved = localStorage.getItem('casino_hub_player');
+      const saved = PlayerProgress.getItem('casino_hub_player');
       if (saved) {
         try {
           const data = JSON.parse(saved);
@@ -1183,7 +1518,7 @@ document.addEventListener('DOMContentLoaded', () => {
   window.Bank = new BankManager(CasinoHub);
   window.XP = new XPManager(CasinoHub);
   window.DailyWheel = new DailyWheelManager(CasinoHub);
-  new SettingsManager();
+  window.CasinoSettings = new SettingsManager();
 
   // ==========================================
   // 9. COIN TOSS TABLE ENGINE
@@ -1840,9 +2175,13 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // Instantiation
-  new ClassicSlotEngine(CasinoHub);
-  new HighVolatilitySlotEngine(CasinoHub);
-  new CoinTossEngine(CasinoHub);
-  new BlackjackEngine(CasinoHub);
+  const ClassicSlots = new ClassicSlotEngine(CasinoHub);
+  const FiveReelGame = new HighVolatilitySlotEngine(CasinoHub);
+  const CoinTossGame = new CoinTossEngine(CasinoHub);
+  const BlackjackGame = new BlackjackEngine(CasinoHub);
+
+  // Firebase initialization is asynchronous; its auth observer hydrates the correct profile
+  // before removing the interaction shield or permitting any signed-in autosave.
+  void initializeFirebaseAccounts();
 
 });
