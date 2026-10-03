@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>S&S Casino Hub — Part 14</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="app.js" defer></script>
+</head>
+<body>
+
+  <!-- Fullscreen Particle FX Canvas -->
+  <canvas id="fx-canvas"></canvas>
+
+  <!-- Global Casino Header -->
+  <header class="global-bar">
+    <div class="logo-title">🎰 S&S CASINO HUB</div>
+
+    <!-- XP Level & Progress Header Widget -->
+    <div class="xp-header-widget">
+      <div class="level-badge" id="player-level-badge">LVL 1</div>
+      <div class="xp-bar-container">
+        <div class="xp-bar-fill" id="xp-bar-fill" style="width: 0%;"></div>
+        <span class="xp-bar-text" id="xp-bar-text">0 / 100 XP</span>
+      </div>
+      <span class="vip-tier-tag" id="vip-tier-tag">BRONZE</span>
+    </div>
+
+    <!-- Progressive Jackpot Ticker -->
+    <div class="jackpot-ticker-container">
+      <span class="jackpot-label">LOCAL DEMO JACKPOT</span>
+      <span id="global-jackpot" class="jackpot-amount">$10,000.00</span>
+    </div>
+
+    <div class="header-right">
+      <button id="btn-open-wheel" class="wheel-header-btn">🎁 DAILY BONUS</button>
+      <button id="btn-open-settings" class="icon-btn" title="Audio & Theme Settings">⚙️</button>
+      <button id="btn-open-bank" class="bank-btn">🏦 BANK</button>
+      <div class="wallet-display">
+        <span class="wallet-label">BALANCE</span>
+        <span id="global-balance" class="wallet-amount">$1,000.00</span>
+      </div>
+      <button id="btn-reset-data" class="reset-data-btn" title="Reset Local Saved Data">🔄</button>
+    </div>
+  </header>
+
+  <!-- Email/password auth controls; game access stays locked until account data is hydrated. -->
+  <section id="account-bar" class="account-bar" aria-label="Player account">
+    <div class="account-summary">
+      <strong id="account-status">Connecting to account services…</strong>
+      <span id="account-detail">Your wallet, XP, loans, wheel, and settings are saved per account.</span>
+    </div>
+    <form id="auth-form" class="auth-form">
+      <label class="sr-only" for="auth-email">Email address</label>
+      <input id="auth-email" name="email" type="email" autocomplete="email" placeholder="Email address" required disabled>
+      <label class="sr-only" for="auth-password">Password</label>
+      <input id="auth-password" name="password" type="password" autocomplete="current-password" minlength="6" placeholder="Password (6+ characters)" required disabled>
+      <button id="btn-sign-in" class="account-btn" type="submit" value="sign-in" disabled>Sign in</button>
+      <button id="btn-create-account" class="account-btn account-btn-secondary" type="submit" value="create-account" disabled>Create account</button>
+    </form>
+    <div id="signed-in-controls" class="signed-in-controls hidden-view">
+      <span id="account-email" class="account-email"></span>
+      <button id="btn-sign-out" class="account-btn account-btn-secondary" type="button">Sign out</button>
+    </div>
+    <p id="auth-message" class="auth-message" aria-live="polite" role="status"></p>
+  </section>
+
+  <!-- Covers gameplay during startup/account changes so stale local state cannot be played or saved. -->
+  <div id="account-loading-shield" class="account-loading-shield" role="status" aria-live="polite">
+    <div class="account-loading-card">
+      <span class="account-spinner" aria-hidden="true"></span>
+      <p id="account-loading-message">Loading your saved casino progress…</p>
+    </div>
+  </div>
+
+  <!-- DAILY WHEEL MODAL OVERLAY -->
+  <div id="modal-wheel" class="modal-overlay hidden-view">
+    <div class="modal-card wheel-modal-card">
+      <button id="btn-close-wheel" class="modal-close-btn">&times;</button>
+      <h2>🎡 DAILY LUCKY WHEEL</h2>
+      <p class="modal-subtitle">Spin once every 24 hours to claim free bonus chips!</p>
+
+      <div class="wheel-stage-container">
+        <div class="wheel-pointer">▼</div>
+        <canvas id="wheel-canvas" width="320" height="320"></canvas>
+      </div>
+
+      <div class="wheel-action-area">
+        <div id="wheel-cooldown-timer" class="cooldown-badge hidden-view">NEXT SPIN IN: 23:59:59</div>
+        <button id="btn-spin-wheel" class="spin-wheel-btn">SPIN WHEEL NOW</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SETTINGS MODAL OVERLAY -->
+  <div id="modal-settings" class="modal-overlay hidden-view">
+    <div class="modal-card">
+      <button id="btn-close-settings" class="modal-close-btn">&times;</button>
+      <h2>⚙️ CASINO SETTINGS</h2>
+      <p class="modal-subtitle">Customize sound effects and visual appearance.</p>
+
+      <div class="settings-section">
+        <h3>🔊 AUDIO MIXER</h3>
+        <div class="setting-row">
+          <label for="slider-volume">Master Volume</label>
+          <div class="volume-control">
+            <input type="range" id="slider-volume" min="0" max="100" value="80">
+            <span id="volume-display-val">80%</span>
+          </div>
+        </div>
+        <div class="setting-row">
+          <label>Mute Sound Effects</label>
+          <button id="btn-toggle-mute" class="toggle-btn">MUTE: OFF</button>
+        </div>
+      </div>
+
+      <div class="settings-section">
+        <h3>🎨 VISUAL THEME</h3>
+        <div class="theme-selector-grid">
+          <button class="theme-btn active-theme" data-theme="vegas">
+            <span class="theme-swatch swatch-vegas"></span>
+            Vegas Purple
+          </button>
+          <button class="theme-btn" data-theme="midnight">
+            <span class="theme-swatch swatch-midnight"></span>
+            Midnight Dark
+          </button>
+          <button class="theme-btn" data-theme="gold">
+            <span class="theme-swatch swatch-gold"></span>
+            High Roller Gold
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BANK MODAL OVERLAY -->
+  <div id="modal-bank" class="modal-overlay hidden-view">
+    <div class="modal-card">
+      <button id="btn-close-bank" class="modal-close-btn">&times;</button>
+      <h2>🏦 CASINO BANK & LOAN VAULT</h2>
+      <p class="modal-subtitle">Borrow extra funds or repay your outstanding debt.</p>
+
+      <div class="bank-stats-grid">
+        <div class="bank-stat-card">
+          <span class="stat-label">OUTSTANDING DEBT</span>
+          <span id="bank-debt-display" class="stat-value debt-color">$0.00</span>
+        </div>
+        <div class="bank-stat-card">
+          <span class="stat-label">CREDIT LIMIT</span>
+          <span id="bank-credit-display" class="stat-value">$2,000.00</span>
+        </div>
+        <div class="bank-stat-card">
+          <span class="stat-label">INTEREST RATE</span>
+          <span class="stat-value">10%</span>
+        </div>
+      </div>
+
+      <div class="bank-actions-container">
+        <div class="bank-action-box">
+          <h3>BORROW CASH</h3>
+          <p>Get instant chip credit (10% flat fee added to debt).</p>
+          <div class="action-inputs">
+            <button class="btn-preset-loan" data-amount="100">+$100</button>
+            <button class="btn-preset-loan" data-amount="250">+$250</button>
+            <button class="btn-preset-loan" data-amount="500">+$500</button>
+          </div>
+        </div>
+
+        <div class="bank-action-box">
+          <h3>REPAY DEBT</h3>
+          <p>Deduct debt balance from your current wallet.</p>
+          <div class="action-inputs">
+            <button id="btn-repay-100" class="btn-repay">Pay $100</button>
+            <button id="btn-repay-all" class="btn-repay btn-repay-max">Pay All Debt</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <main id="app-container">
+    
+    <!-- LOBBY VIEW -->
+    <section id="view-lobby" class="view-screen active-view">
+      <div class="lobby-header">
+        <h2>SELECT A GAME</h2>
+        <p>Pick a table or slot machine to start playing</p>
+      </div>
+
+      <div class="game-grid">
+        <!-- Classic 3-Reel Card -->
+        <div class="game-card">
+          <div class="card-icon">🎰</div>
+          <h3>Classic 3-Reel</h3>
+          <p>Traditional 3-reel slot machine with wild payouts.</p>
+          <button class="play-btn" data-game="classic-slots">PLAY NOW</button>
+        </div>
+
+        <!-- 5-Reel Gem Quest Card -->
+        <div class="game-card">
+          <div class="card-icon">💎</div>
+          <h3>5-Reel Gem Quest</h3>
+          <p>High-volatility 5-reel slot with Free Spins, Sticky Wilds & Local Demo Jackpot.</p>
+          <button class="play-btn" data-game="5reel-slots">PLAY NOW</button>
+        </div>
+
+        <!-- Coin Toss Card -->
+        <div class="game-card">
+          <div class="card-icon">🪙</div>
+          <h3>High Roller Coin Toss</h3>
+          <p>Double or nothing! Flip the gold coin for instant 2x payouts.</p>
+          <button class="play-btn" data-game="coin-toss">PLAY NOW</button>
+        </div>
+
+        <!-- Blackjack 21 Card -->
+        <div class="game-card">
+          <div class="card-icon">🃏</div>
+          <h3>Blackjack 21</h3>
+          <p>Beat the dealer! Hit, Stand, or Double Down for 3:2 Blackjack payouts.</p>
+          <button class="play-btn" data-game="blackjack">PLAY NOW</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- BLACKJACK 21 VIEW -->
+    <section id="view-blackjack" class="view-screen hidden-view">
+      <button class="back-lobby-btn">⬅ BACK TO LOBBY</button>
+      
+      <div class="slot-machine blackjack-table">
+        <div class="header">
+          <h1>Blackjack 21</h1>
+          <div id="status-bj" class="status-banner">PLACE YOUR BET TO DEAL</div>
+        </div>
+
+        <!-- Felt Play Table Area -->
+        <div class="felt-table">
+          <!-- Dealer Area -->
+          <div class="hand-section">
+            <div class="hand-header">
+              <span>DEALER HAND</span>
+              <span id="bj-dealer-score" class="score-badge">0</span>
+            </div>
+            <div id="bj-dealer-cards" class="cards-container"></div>
+          </div>
+
+          <!-- Divider Line -->
+          <div class="table-divider"><span>BLACKJACK PAYS 3 TO 2 — DEALER MUST STAND ON 17</span></div>
+
+          <!-- Player Area -->
+          <div class="hand-section">
+            <div class="hand-header">
+              <span>YOUR HAND</span>
+              <span id="bj-player-score" class="score-badge">0</span>
+            </div>
+            <div id="bj-player-cards" class="cards-container"></div>
+          </div>
+        </div>
+
+        <!-- Controls Dashboard -->
+        <div class="dashboard">
+          <div class="card">
+            <span class="label">Current Bet</span>
+            <div class="bet-controls">
+              <button id="btn-bj-minus" class="btn-small">-</button>
+              <span id="bet-bj-display" class="value">$10</span>
+              <button id="btn-bj-plus" class="btn-small">+</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="actions">
+          <button id="btn-bj-deal" class="spin-btn">DEAL HAND</button>
+          <button id="btn-bj-hit" class="action-btn-green hidden-view">HIT</button>
+          <button id="btn-bj-stand" class="action-btn-red hidden-view">STAND</button>
+          <button id="btn-bj-double" class="action-btn-gold hidden-view">DOUBLE DOWN</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- COIN TOSS VIEW -->
+    <section id="view-coin-toss" class="view-screen hidden-view">
+      <button class="back-lobby-btn">⬅ BACK TO LOBBY</button>
+      
+      <div class="slot-machine coin-toss-machine">
+        <div class="header">
+          <h1>Coin Toss</h1>
+          <div id="status-coin" class="status-banner">PICK HEADS OR TAILS</div>
+        </div>
+
+        <div class="coin-stage">
+          <div id="coin-element" class="coin">
+            <div class="coin-face coin-heads">🪙<br><span>HEADS</span></div>
+            <div class="coin-face coin-tails">👑<br><span>TAILS</span></div>
+          </div>
+        </div>
+
+        <div class="choice-selector">
+          <button id="btn-pick-heads" class="choice-btn active-choice">HEADS (2x)</button>
+          <button id="btn-pick-tails" class="choice-btn">TAILS (2x)</button>
+        </div>
+
+        <div class="dashboard">
+          <div class="card">
+            <span class="label">Current Bet</span>
+            <div class="bet-controls">
+              <button id="btn-coin-minus" class="btn-small">-</button>
+              <span id="bet-coin-display" class="value">$10</span>
+              <button id="btn-coin-plus" class="btn-small">+</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="actions">
+          <button id="btn-coin-max" class="max-btn">MAX</button>
+          <button id="btn-coin-flip" class="spin-btn">FLIP COIN</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5-REEL SLOTS VIEW -->
+    <section id="view-5reel-slots" class="view-screen hidden-view">
+      <button class="back-lobby-btn">⬅ BACK TO LOBBY</button>
+      
+      <div class="slot-machine slot-5reel">
+        <div class="header">
+          <h1>Gem Quest 5x3</h1>
+          <div id="status-5reel" class="status-banner">PRESS SPIN TO PLAY</div>
+        </div>
+
+        <div id="bonus-hud-5reel" class="bonus-hud hidden-view">
+          <div class="bonus-stat">FREE SPINS: <span id="fs-remaining-count">0</span></div>
+          <div class="bonus-stat">BONUS WIN: <span id="fs-total-win">$0.00</span></div>
+        </div>
+
+        <div class="reels-viewport-5reel">
+          <div class="reel-5reel" id="reel5-0"><div class="strip"></div></div>
+          <div class="reel-5reel" id="reel5-1"><div class="strip"></div></div>
+          <div class="reel-5reel" id="reel5-2"><div class="strip"></div></div>
+          <div class="reel-5reel" id="reel5-3"><div class="strip"></div></div>
+          <div class="reel-5reel" id="reel5-4"><div class="strip"></div></div>
+        </div>
+
+        <div class="dashboard">
+          <div class="card">
+            <span class="label">Current Bet (10 Lines)</span>
+            <div class="bet-controls">
+              <button id="btn5-minus" class="btn-small">-</button>
+              <span id="bet5-display" class="value">$10</span>
+              <button id="btn5-plus" class="btn-small">+</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="actions">
+          <button id="btn5-max" class="max-btn">MAX</button>
+          <button id="btn5-spin" class="spin-btn">SPIN</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- CLASSIC SLOTS VIEW -->
+    <section id="view-classic-slots" class="view-screen hidden-view">
+      <button class="back-lobby-btn">⬅ BACK TO LOBBY</button>
+      
+      <div class="slot-machine">
+        <div class="header">
+          <h1>Classic 3-Reel</h1>
+          <div id="status" class="status-banner">PRESS SPIN TO PLAY</div>
+        </div>
+
+        <div class="reels-viewport">
+          <div class="payline-overlay"></div>
+          <div class="reel" id="reel-0"><div class="strip"></div></div>
+          <div class="reel" id="reel-1"><div class="strip"></div></div>
+          <div class="reel" id="reel-2"><div class="strip"></div></div>
+        </div>
+
+        <div class="dashboard">
+          <div class="card">
+            <span class="label">Current Bet</span>
+            <div class="bet-controls">
+              <button id="btn-minus" class="btn-small">-</button>
+              <span id="bet-display" class="value">$10</span>
+              <button id="btn-plus" class="btn-small">+</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="actions">
+          <button id="btn-max" class="max-btn">MAX</button>
+          <button id="btn-spin" class="spin-btn">SPIN</button>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+</body>
+</html>
