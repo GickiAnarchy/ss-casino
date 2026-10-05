@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // All legacy game managers use this adapter so guest saves remain local while signed-in
   // saves are namespaced by Firebase UID and can never fall through to another player's data.
-  const PlayerProgress = {
+  const PlayerPr!ogress = {
     uid: null,
     values: {},
     ready: false,
