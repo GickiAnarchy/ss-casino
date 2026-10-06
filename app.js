@@ -542,10 +542,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
       this.currentAngle = 0;
       this.isSpinning = false;
-      this.lastSpinTime = 0;
 
       this.bindElements();
-      this.loadState();
       this.initEvents();
       this.drawWheel(0);
       this.startTimerInterval();
@@ -644,7 +642,7 @@ document.addEventListener('DOMContentLoaded', () => {
           requestAnimationFrame(animate);
         } else {
           this.isSpinning = false;
-          this.lastSpinTime = Date.now();
+          this.hub.player.lastSpinTime = Date.now();
           this.saveState();
 
           const wonSlice = this.slices[targetSliceIndex];
@@ -663,7 +661,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     getRemainingCooldown() {
       const cooldownMs = 24 * 60 * 60 * 1000;
-      const elapsed = Date.now() - this.lastSpinTime;
+      const elapsed = Date.now() - this.hub.player.lastSpinTime;
       return Math.max(0, cooldownMs - elapsed);
     }
 
@@ -688,16 +686,11 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     saveState() {
-      localStorage.setItem('casino_hub_wheel', this.lastSpinTime.toString());
-    }
-
-    loadState() {
-      const saved = localStorage.getItem('casino_hub_wheel');
-      this.lastSpinTime = saved ? parseInt(saved, 10) : 0;
+      this.hub.saveState();
     }
 
     resetState() {
-      this.lastSpinTime = 0;
+      this.hub.player.lastSpinTime = 0;
       this.saveState();
       this.updateUI();
     }
@@ -828,11 +821,8 @@ document.addEventListener('DOMContentLoaded', () => {
   class XPManager {
     constructor(hubController) {
       this.hub = hubController;
-      this.level = 1;
-      this.xp = 0;
 
       this.bindElements();
-      this.loadState();
       this.updateUI();
     }
 
@@ -845,11 +835,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     addWagerXP(wagerAmount) {
       const xpEarned = Math.max(1, Math.floor(wagerAmount * 0.5));
-      this.xp += xpEarned;
+      this.hub.player.xp += xpEarned;
 
-      while (this.xp >= this.getRequiredXP()) {
-        this.xp -= this.getRequiredXP();
-        this.level++;
+      while (this.hub.player.xp >= this.getRequiredXP()) {
+        this.hub.player.xp -= this.getRequiredXP();
+        this.hub.player.level++;
         this.handleLevelUp();
       }
 
@@ -858,62 +848,47 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     getRequiredXP() {
-      return Math.floor(100 * Math.pow(this.level, 1.2));
+      return Math.floor(100 * Math.pow(this.hub.player.level, 1.2));
     }
 
     getVIPTier() {
-      if (this.level >= 20) return 'DIAMOND';
-      if (this.level >= 15) return 'PLATINUM';
-      if (this.level >= 10) return 'GOLD';
-      if (this.level >= 5) return 'SILVER';
+      if (this.hub.player.level >= 20) return 'DIAMOND';
+      if (this.hub.player.level >= 15) return 'PLATINUM';
+      if (this.hub.player.level >= 10) return 'GOLD';
+      if (this.hub.player.level >= 5) return 'SILVER';
       return 'BRONZE';
     }
 
     handleLevelUp() {
-      const levelBonus = this.level * 50;
+      const levelBonus = this.hub.player.level * 50;
+      this.hub.player.creditLimit += 250;
       this.hub.modifyBalance(levelBonus);
-      if (window.Bank) window.Bank.maxCreditLimit += 250;
 
       FX.playJackpotSound();
       FX.spawnConfetti(120);
 
       setTimeout(() => {
-        alert(`🎉 LEVEL UP! You reached Level ${this.level} (${this.getVIPTier()})!\nAwarded +$${levelBonus} Cash Bonus! Credit Limit +$250!`);
+        alert(`🎉 LEVEL UP! You reached Level ${this.hub.player.level} (${this.getVIPTier()})!\nAwarded +$${levelBonus} Cash Bonus! Credit Limit +$250!`);
       }, 200);
     }
 
     updateUI() {
       const required = this.getRequiredXP();
-      const pct = Math.min(100, Math.floor((this.xp / required) * 100));
+      const pct = Math.min(100, Math.floor((this.hub.player.xp / required) * 100));
 
-      if (this.levelBadgeEl) this.levelBadgeEl.textContent = `LVL ${this.level}`;
+      if (this.levelBadgeEl) this.levelBadgeEl.textContent = `LVL ${this.hub.player.level}`;
       if (this.barFillEl) this.barFillEl.style.width = `${pct}%`;
-      if (this.barTextEl) this.barTextEl.textContent = `${this.xp} / ${required} XP`;
+      if (this.barTextEl) this.barTextEl.textContent = `${this.hub.player.xp} / ${required} XP`;
       if (this.vipTagEl) this.vipTagEl.textContent = this.getVIPTier();
     }
 
     saveState() {
-      const data = { level: this.level, xp: this.xp };
-      localStorage.setItem('casino_hub_xp', JSON.stringify(data));
-    }
-
-    loadState() {
-      const saved = localStorage.getItem('casino_hub_xp');
-      if (saved) {
-        try {
-          const parsed = JSON.parse(saved);
-          this.level = parsed.level ?? 1;
-          this.xp = parsed.xp ?? 0;
-        } catch (e) {
-          this.level = 1;
-          this.xp = 0;
-        }
-      }
+      this.hub.saveState();
     }
 
     resetState() {
-      this.level = 1;
-      this.xp = 0;
+      this.hub.player.level = 1;
+      this.hub.player.xp = 0;
       this.saveState();
       this.updateUI();
     }
@@ -974,10 +949,8 @@ document.addEventListener('DOMContentLoaded', () => {
     constructor(hubController) {
       this.hub = hubController;
       this.interestRate = 0.10;
-      this.maxCreditLimit = 2000;
       
       this.bindElements();
-      this.loadState();
       this.initEvents();
     }
 
@@ -1011,17 +984,17 @@ document.addEventListener('DOMContentLoaded', () => {
       });
 
       this.repay100Btn?.addEventListener('click', () => this.repayLoan(100));
-      this.repayAllBtn?.addEventListener('click', () => this.repayLoan(this.currentDebt));
+      this.repayAllBtn?.addEventListener('click', () => this.repayLoan(this.hub.player.debt));
     }
 
     takeLoan(amount) {
-      if (this.currentDebt + amount > this.maxCreditLimit) {
-        alert(`Loan request exceeds maximum credit limit of $${this.maxCreditLimit.toLocaleString()}!`);
+      if (this.hub.player.debt + amount > this.hub.player.creditLimit) {
+        alert(`Loan request exceeds maximum credit limit of $${this.hub.player.creditLimit.toLocaleString()}!`);
         return;
       }
 
       const totalCharge = amount * (1 + this.interestRate);
-      this.currentDebt += totalCharge;
+      this.hub.player.debt += totalCharge;
       this.hub.modifyBalance(amount);
       
       FX.playWinSound();
@@ -1030,19 +1003,19 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     repayLoan(amount) {
-      if (this.currentDebt <= 0) {
+      if (this.hub.player.debt <= 0) {
         alert('You currently have no outstanding debt!');
         return;
       }
 
-      const payAmount = Math.min(amount, this.currentDebt, this.hub.balance);
+      const payAmount = Math.min(amount, this.hub.player.debt, this.hub.balance);
 
       if (payAmount <= 0) {
         alert('Insufficient wallet funds to repay loan!');
         return;
       }
 
-      this.currentDebt -= payAmount;
+      this.hub.player.debt -= payAmount;
       this.hub.modifyBalance(-payAmount);
 
       FX.playClick();
@@ -1051,26 +1024,21 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     saveState() {
-      localStorage.setItem('casino_hub_debt', this.currentDebt.toString());
-    }
-
-    loadState() {
-      const saved = localStorage.getItem('casino_hub_debt');
-      this.currentDebt = saved ? parseFloat(saved) : 0;
+      this.hub.saveState();
     }
 
     resetState() {
-      this.currentDebt = 0;
+      this.hub.player.debt = 0;
       this.saveState();
       this.updateModalUI();
     }
 
     updateModalUI() {
       if (this.debtDisplayEl) {
-        this.debtDisplayEl.textContent = `$${this.currentDebt.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+        this.debtDisplayEl.textContent = `$${this.hub.player.debt.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
       }
       if (this.creditDisplayEl) {
-        this.creditDisplayEl.textContent = `$${this.maxCreditLimit.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+        this.creditDisplayEl.textContent = `$${this.hub.player.creditLimit.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
       }
     }
   }
@@ -1087,9 +1055,19 @@ document.addEventListener('DOMContentLoaded', () => {
       this.coinTossView = document.getElementById('view-coin-toss');
       this.blackjackView = document.getElementById('view-blackjack');
       
-      this.loadState(startingBalance);
+      // One account-free in-memory player owns all game stats; model loading
+      // migrates the existing browser-local keys before managers initialize.
+      this.player = Player.fromLocalStorage(startingBalance);
       this.initEventListeners();
       this.updateGlobalUI();
+    }
+
+    get balance() {
+      return this.player.balance;
+    }
+
+    set balance(value) {
+      this.player.balance = value;
     }
 
     initEventListeners() {
@@ -1142,22 +1120,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     saveState() {
-      const data = { balance: this.balance };
-      localStorage.setItem('casino_hub_player', JSON.stringify(data));
-    }
-
-    loadState(defaultBalance) {
-      const saved = localStorage.getItem('casino_hub_player');
-      if (saved) {
-        try {
-          const data = JSON.parse(saved);
-          this.balance = data.balance ?? defaultBalance;
-        } catch (e) {
-          this.balance = defaultBalance;
-        }
-      } else {
-        this.balance = defaultBalance;
-      }
+      this.player.saveLocalState();
     }
 
     resetState() {
