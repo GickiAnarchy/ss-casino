@@ -44,35 +44,6 @@
     </div>
   </header>
 
-  <!-- Email/password auth controls; game access stays locked until account data is hydrated. -->
-  <section id="account-bar" class="account-bar" aria-label="Player account">
-    <div class="account-summary">
-      <strong id="account-status">Connecting to account services…</strong>
-      <span id="account-detail">Your wallet, XP, loans, wheel, and settings are saved per account.</span>
-    </div>
-    <form id="auth-form" class="auth-form">
-      <label class="sr-only" for="auth-email">Email address</label>
-      <input id="auth-email" name="email" type="email" autocomplete="email" placeholder="Email address" required disabled>
-      <label class="sr-only" for="auth-password">Password</label>
-      <input id="auth-password" name="password" type="password" autocomplete="current-password" minlength="6" placeholder="Password (6+ characters)" required disabled>
-      <button id="btn-sign-in" class="account-btn" type="submit" value="sign-in" disabled>Sign in</button>
-      <button id="btn-create-account" class="account-btn account-btn-secondary" type="submit" value="create-account" disabled>Create account</button>
-    </form>
-    <div id="signed-in-controls" class="signed-in-controls hidden-view">
-      <span id="account-email" class="account-email"></span>
-      <button id="btn-sign-out" class="account-btn account-btn-secondary" type="button">Sign out</button>
-    </div>
-    <p id="auth-message" class="auth-message" aria-live="polite" role="status"></p>
-  </section>
-
-  <!-- Covers gameplay during startup/account changes so stale local state cannot be played or saved. -->
-  <div id="account-loading-shield" class="account-loading-shield" role="status" aria-live="polite">
-    <div class="account-loading-card">
-      <span class="account-spinner" aria-hidden="true"></span>
-      <p id="account-loading-message">Loading your saved casino progress…</p>
-    </div>
-  </div>
-
   <!-- DAILY WHEEL MODAL OVERLAY -->
   <div id="modal-wheel" class="modal-overlay hidden-view">
     <div class="modal-card wheel-modal-card">
