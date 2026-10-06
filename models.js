@@ -1,3 +1,5 @@
 class Player {
-  constructor(name, pw, balance, xp, )
+  constructor(name, pw, balance) {
+    //TODO
+  }
 }
