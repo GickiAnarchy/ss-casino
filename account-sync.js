@@ -481,7 +481,7 @@
 
     safeAuthErrorCode(error) {
       const code = error?.code;
-      return typeof code === 'string' && code.length <= 80 && /^auth\/[a-z0-9-]+$/.test(code)
+      return typeof code === 'string' && code.length <= 80 && /^auth\/[a-z0-9._-]+$/.test(code)
         ? code
         : 'auth/unknown';
     }
