@@ -5,13 +5,25 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>S&S Casino Hub — Part 14</title>
   <link rel="stylesheet" href="style.css">
+  <script defer src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+  <script defer src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+  <script defer src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
+  <script src="firebase-config.js" defer></script>
   <script src="models.js" defer></script>
+  <script src="account-sync.js" defer></script>
   <script src="app.js" defer></script>
 </head>
 <body>
 
   <!-- Fullscreen Particle FX Canvas -->
   <canvas id="fx-canvas"></canvas>
+
+  <div id="startup-overlay" class="startup-overlay" role="status" aria-live="polite">
+    <div class="startup-card">
+      <span class="startup-spinner" aria-hidden="true"></span>
+      <span id="startup-message">Loading your save…</span>
+    </div>
+  </div>
 
   <!-- Global Casino Header -->
   <header class="global-bar">
@@ -34,6 +46,7 @@
     </div>
 
     <div class="header-right">
+      <button id="btn-open-account" class="account-header-btn" aria-label="Sign in or create an account">👤 SIGN IN</button>
       <button id="btn-open-wheel" class="wheel-header-btn">🎁 DAILY BONUS</button>
       <button id="btn-open-settings" class="icon-btn" title="Audio & Theme Settings">⚙️</button>
       <button id="btn-open-bank" class="bank-btn">🏦 BANK</button>
@@ -44,6 +57,30 @@
       <button id="btn-reset-data" class="reset-data-btn" title="Reset Local Saved Data">🔄</button>
     </div>
   </header>
+
+  <!-- ACCOUNT & CLOUD SAVE MODAL -->
+  <div id="modal-account" class="modal-overlay hidden-view" role="dialog" aria-modal="true" aria-labelledby="account-modal-title">
+    <div class="modal-card account-modal-card">
+      <button id="btn-close-account" class="modal-close-btn" type="button" aria-label="Close account dialog">&times;</button>
+      <h2 id="account-modal-title">👤 PLAYER ACCOUNT</h2>
+      <p id="account-identity" class="modal-subtitle">Guest play is available without an account.</p>
+      <div id="account-sync-status" class="account-sync-status" aria-live="polite" data-state="local">Guest progress is saved on this device.</div>
+      <form id="account-form" class="account-form">
+        <label for="account-email">Email address</label>
+        <input id="account-email" name="email" type="email" autocomplete="email" inputmode="email" required>
+        <label for="account-password">Password</label>
+        <input id="account-password" name="password" type="password" autocomplete="current-password" minlength="6" required>
+        <p id="account-form-message" class="account-form-message" aria-live="polite"></p>
+        <div class="account-form-actions">
+          <button id="btn-account-submit" class="account-primary-btn" type="submit">Sign in</button>
+          <button id="btn-reset-password" class="account-secondary-btn" type="button">Forgot password?</button>
+        </div>
+      </form>
+      <button id="btn-account-mode" class="account-link-btn" type="button">Create a new account</button>
+      <button id="btn-account-signout" class="account-secondary-btn hidden-view" type="button">Sign out</button>
+      <p class="account-privacy-note">Passwords are handled by Firebase Authentication. Game progress and preferences sync to your private account; guest saves stay separate.</p>
+    </div>
+  </div>
 
   <!-- DAILY WHEEL MODAL OVERLAY -->
   <div id="modal-wheel" class="modal-overlay hidden-view">

@@ -700,7 +700,8 @@ document.addEventListener('DOMContentLoaded', () => {
   // 4. SETTINGS & THEME MANAGER
   // ==========================================
   class SettingsManager {
-    constructor() {
+    constructor(hubController) {
+      this.hub = hubController;
       this.bindElements();
       this.loadSettings();
       this.initEvents();
@@ -782,36 +783,47 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     saveSettings() {
-      const settings = {
-        volume: this.volumeSlider ? parseInt(this.volumeSlider.value, 10) : 80,
-        isMuted: this.isMuted,
-        theme: this.currentTheme || 'vegas'
+      const settings = this.getSettings();
+      if (!window.AccountSync?.currentUser) {
+        try {
+          localStorage.setItem('casino_hub_settings', JSON.stringify(settings));
+        } catch (error) {
+          // Keep settings usable in memory when browser storage is unavailable.
+        }
+      }
+      this.hub.saveState();
+    }
+
+    getSettings() {
+      const volume = this.volumeSlider ? parseInt(this.volumeSlider.value, 10) : 80;
+      return {
+        volume: Number.isFinite(volume) ? Math.max(0, Math.min(100, volume)) : 80,
+        isMuted: this.isMuted === true,
+        theme: ['vegas', 'midnight', 'gold'].includes(this.currentTheme) ? this.currentTheme : 'vegas'
       };
-      localStorage.setItem('casino_hub_settings', JSON.stringify(settings));
+    }
+
+    applySettings(settings = {}) {
+      const value = Number(settings.volume);
+      const volume = Number.isFinite(value) ? Math.max(0, Math.min(100, Math.round(value))) : 80;
+      const theme = ['vegas', 'midnight', 'gold'].includes(settings.theme) ? settings.theme : 'vegas';
+      this.isMuted = settings.isMuted === true;
+      if (this.volumeSlider) this.volumeSlider.value = String(volume);
+      if (this.volumeDisplay) this.volumeDisplay.textContent = `${volume}%`;
+      FX.setVolume(volume / 100);
+      FX.setMute(this.isMuted);
+      this.updateMuteUI();
+      this.applyTheme(theme);
     }
 
     loadSettings() {
-      const saved = localStorage.getItem('casino_hub_settings');
-      if (saved) {
-        try {
-          const parsed = JSON.parse(saved);
-          const vol = parsed.volume ?? 80;
-          this.isMuted = parsed.isMuted ?? false;
-          const theme = parsed.theme ?? 'vegas';
-
-          if (this.volumeSlider) this.volumeSlider.value = vol;
-          if (this.volumeDisplay) this.volumeDisplay.textContent = `${vol}%`;
-
-          FX.setVolume(vol / 100);
-          FX.setMute(this.isMuted);
-          this.updateMuteUI();
-          this.applyTheme(theme);
-        } catch (e) {
-          this.applyTheme('vegas');
-        }
-      } else {
-        this.applyTheme('vegas');
+      let savedSettings = {};
+      try {
+        savedSettings = JSON.parse(localStorage.getItem('casino_hub_settings') || '{}');
+      } catch (error) {
+        // Ignore malformed guest preferences and use the defaults.
       }
+      this.applySettings(savedSettings);
     }
   }
 
@@ -1055,8 +1067,8 @@ document.addEventListener('DOMContentLoaded', () => {
       this.coinTossView = document.getElementById('view-coin-toss');
       this.blackjackView = document.getElementById('view-blackjack');
       
-      // One account-free in-memory player owns all game stats; model loading
-      // migrates the existing browser-local keys before managers initialize.
+      // Guests load the established local keys; authenticated profiles replace
+      // this state only after the matching UID's save has been checked.
       this.player = Player.fromLocalStorage(startingBalance);
       this.initEventListeners();
       this.updateGlobalUI();
@@ -1120,7 +1132,11 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     saveState() {
-      this.player.saveLocalState();
+      if (window.AccountSync) {
+        window.AccountSync.handleLocalSave();
+      } else {
+        this.player.saveLocalState();
+      }
     }
 
     resetState() {
@@ -1146,7 +1162,7 @@ document.addEventListener('DOMContentLoaded', () => {
   window.Bank = new BankManager(CasinoHub);
   window.XP = new XPManager(CasinoHub);
   window.DailyWheel = new DailyWheelManager(CasinoHub);
-  window.CasinoSettings = new SettingsManager();
+  window.CasinoSettings = new SettingsManager(CasinoHub);
 
   // ==========================================
   // 9. COIN TOSS TABLE ENGINE
@@ -1808,6 +1824,13 @@ document.addEventListener('DOMContentLoaded', () => {
   const CoinTossGame = new CoinTossEngine(CasinoHub);
   const BlackjackGame = new BlackjackEngine(CasinoHub);
 
+  window.AccountSync = new window.AccountSyncManager({
+    hub: CasinoHub,
+    bank: window.Bank,
+    xp: window.XP,
+    dailyWheel: window.DailyWheel,
+    settings: window.CasinoSettings
+  });
 
 
 });

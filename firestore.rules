@@ -1,0 +1,50 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function ownsProfile(uid) {
+      return request.auth != null && request.auth.uid == uid;
+    }
+
+    function validProfile(profile) {
+      return profile is map
+        && profile.keys().hasAll(['balance', 'lastSpinTime', 'level', 'xp', 'debt', 'creditLimit'])
+        && profile.keys().hasOnly(['balance', 'lastSpinTime', 'level', 'xp', 'debt', 'creditLimit'])
+        && profile.balance is number && profile.balance >= 0 && profile.balance <= 1000000000000
+        && profile.lastSpinTime is int && profile.lastSpinTime >= 0 && profile.lastSpinTime <= 9007199254740991
+        && profile.level is int && profile.level >= 1 && profile.level <= 1000000
+        && profile.xp is int && profile.xp >= 0 && profile.xp <= 1000000000
+        && profile.debt is number && profile.debt >= 0 && profile.debt <= 1000000000000
+        && profile.creditLimit is number && profile.creditLimit >= 0 && profile.creditLimit <= 1000000000;
+    }
+
+    function validSettings(settings) {
+      return settings is map
+        && settings.keys().hasAll(['volume', 'isMuted', 'theme'])
+        && settings.keys().hasOnly(['volume', 'isMuted', 'theme'])
+        && settings.volume is int && settings.volume >= 0 && settings.volume <= 100
+        && settings.isMuted is bool
+        && settings.theme is string
+        && settings.theme in ['vegas', 'midnight', 'gold'];
+    }
+
+    function validSave() {
+      let data = request.resource.data;
+      return data.keys().hasAll(['schemaVersion', 'updatedAtMs', 'revision', 'profile', 'settings'])
+        && data.keys().hasOnly(['schemaVersion', 'updatedAtMs', 'revision', 'profile', 'settings'])
+        && data.schemaVersion is int && data.schemaVersion == 1
+        && data.updatedAtMs is int && data.updatedAtMs >= 0 && data.updatedAtMs <= 9007199254740991
+        && data.revision is int && data.revision >= 0 && data.revision <= 1000000000
+        && validProfile(data.profile)
+        && validSettings(data.settings);
+    }
+
+    match /users/{uid} {
+      // A player can read only their own exact UID document. Collection listing is never allowed.
+      allow get: if ownsProfile(uid);
+      allow list: if false;
+      allow create, update: if ownsProfile(uid) && validSave();
+      // Account deletion and profile removal must be handled deliberately in a future feature.
+      allow delete: if false;
+    }
+  }
+}
