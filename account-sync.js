@@ -479,7 +479,14 @@
       this.syncStatus.dataset.state = state;
     }
 
-    friendlyAuthError(error) {
+    safeAuthErrorCode(error) {
+      const code = error?.code;
+      return typeof code === 'string' && code.length <= 80 && /^auth\/[a-z0-9-]+$/.test(code)
+        ? code
+        : 'auth/unknown';
+    }
+
+    friendlyAuthError(error, includeCode = false) {
       const messages = {
         'auth/email-already-in-use': 'An account already uses that email. Sign in instead.',
         'auth/invalid-email': 'Enter a valid email address.',
@@ -491,7 +498,8 @@
         'auth/network-request-failed': 'Network unavailable. Check your connection and try again.',
         'auth/unauthorized-domain': 'This website is not authorized for Firebase sign-in yet.'
       };
-      return messages[error?.code] || 'Sign-in could not be completed. Check your details and try again.';
+      const message = messages[error?.code] || 'Sign-in could not be completed. Check your details and try again.';
+      return includeCode ? `${message} (Firebase code: ${this.safeAuthErrorCode(error)})` : message;
     }
 
     async submitAuthForm() {
@@ -521,7 +529,7 @@
         this.passwordInput.value = '';
         this.formMessage.textContent = 'Account connected. Loading your separate save…';
       } catch (error) {
-        this.formMessage.textContent = this.friendlyAuthError(error);
+        this.formMessage.textContent = this.friendlyAuthError(error, true);
         this.passwordInput.value = '';
       } finally {
         this.submitButton.disabled = false;
