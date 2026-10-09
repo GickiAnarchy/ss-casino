@@ -479,38 +479,46 @@
       this.syncStatus.dataset.state = state;
     }
 
-    safeAuthErrorCode(error) {
+    safeAuthErrorDiagnostic(error) {
       let code;
       try {
         code = error?.code;
       } catch (ignored) {
-        return 'auth/unknown';
+        return { code: 'auth/unknown', source: 'unreadable', codeType: 'unreadable' };
       }
+      const codeType = typeof code;
       const codePattern = /^[a-z][a-z0-9._-]{0,31}\/[a-z][a-z0-9._-]{0,46}(?![\s\S])/;
-      return typeof code === 'string' && code.length <= 80 && codePattern.test(code)
-        ? code
-        : 'auth/unknown';
+      if (typeof code === 'string' && code.length <= 80 && codePattern.test(code)) {
+        return { code, source: 'SDK', codeType };
+      }
+      return {
+        code: 'auth/unknown',
+        source: code === undefined ? 'missing' : 'filtered',
+        codeType
+      };
     }
 
-    safeAuthErrorTypeHint(error) {
+    safeAuthErrorCode(error) {
+      return this.safeAuthErrorDiagnostic(error).code;
+    }
+
+    safeAuthErrorTypeHint(error, diagnostic = this.safeAuthErrorDiagnostic(error)) {
       if (error === null) return 'null';
       const type = typeof error;
       if (type !== 'object' && type !== 'function') return type;
 
       const knownNames = new Set(['FirebaseError', 'Error', 'TypeError', 'ReferenceError', 'SyntaxError', 'RangeError', 'URIError', 'EvalError', 'DOMException']);
       let name = 'object';
-      let codeType = 'unreadable';
+      const codeType = diagnostic.codeType;
       try {
         const candidate = typeof error.name === 'string' ? error.name : error.constructor?.name;
         if (knownNames.has(candidate)) name = candidate;
-      } catch (ignored) {}
-      try {
-        codeType = typeof error.code;
       } catch (ignored) {}
       return `${type}/${name}; code type: ${codeType}`;
     }
 
     friendlyAuthError(error, includeCode = false, includeTypeHint = false) {
+      const diagnostic = this.safeAuthErrorDiagnostic(error);
       const messages = {
         'auth/email-already-in-use': 'An account already uses that email. Sign in instead.',
         'auth/invalid-email': 'Enter a valid email address.',
@@ -522,9 +530,9 @@
         'auth/network-request-failed': 'Network unavailable. Check your connection and try again.',
         'auth/unauthorized-domain': 'This website is not authorized for Firebase sign-in yet.'
       };
-      const message = messages[error?.code] || 'Sign-in could not be completed. Check your details and try again.';
+      const message = messages[diagnostic.code] || 'Sign-in could not be completed. Check your details and try again.';
       return includeCode
-        ? `${message} (Firebase code: ${this.safeAuthErrorCode(error)}${includeTypeHint ? `; error type: ${this.safeAuthErrorTypeHint(error)}` : ''})`
+        ? `${message} (Firebase code: ${diagnostic.code}; code source: ${diagnostic.source}${includeTypeHint ? `; error type: ${this.safeAuthErrorTypeHint(error, diagnostic)}` : ''})`
         : message;
     }
 
