@@ -480,8 +480,14 @@
     }
 
     safeAuthErrorCode(error) {
-      const code = error?.code;
-      return typeof code === 'string' && code.length <= 80 && /^auth\/[a-z0-9._-]+$/.test(code)
+      let code;
+      try {
+        code = error?.code;
+      } catch (ignored) {
+        return 'auth/unknown';
+      }
+      const codePattern = /^[a-z][a-z0-9._-]{0,31}\/[a-z][a-z0-9._-]{0,46}(?![\s\S])/;
+      return typeof code === 'string' && code.length <= 80 && codePattern.test(code)
         ? code
         : 'auth/unknown';
     }
