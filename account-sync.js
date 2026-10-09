@@ -486,7 +486,25 @@
         : 'auth/unknown';
     }
 
-    friendlyAuthError(error, includeCode = false) {
+    safeAuthErrorTypeHint(error) {
+      if (error === null) return 'null';
+      const type = typeof error;
+      if (type !== 'object' && type !== 'function') return type;
+
+      const knownNames = new Set(['FirebaseError', 'Error', 'TypeError', 'ReferenceError', 'SyntaxError', 'RangeError', 'URIError', 'EvalError', 'DOMException']);
+      let name = 'object';
+      let codeType = 'unreadable';
+      try {
+        const candidate = typeof error.name === 'string' ? error.name : error.constructor?.name;
+        if (knownNames.has(candidate)) name = candidate;
+      } catch (ignored) {}
+      try {
+        codeType = typeof error.code;
+      } catch (ignored) {}
+      return `${type}/${name}; code type: ${codeType}`;
+    }
+
+    friendlyAuthError(error, includeCode = false, includeTypeHint = false) {
       const messages = {
         'auth/email-already-in-use': 'An account already uses that email. Sign in instead.',
         'auth/invalid-email': 'Enter a valid email address.',
@@ -499,7 +517,9 @@
         'auth/unauthorized-domain': 'This website is not authorized for Firebase sign-in yet.'
       };
       const message = messages[error?.code] || 'Sign-in could not be completed. Check your details and try again.';
-      return includeCode ? `${message} (Firebase code: ${this.safeAuthErrorCode(error)})` : message;
+      return includeCode
+        ? `${message} (Firebase code: ${this.safeAuthErrorCode(error)}${includeTypeHint ? `; error type: ${this.safeAuthErrorTypeHint(error)}` : ''})`
+        : message;
     }
 
     async submitAuthForm() {
@@ -529,7 +549,7 @@
         this.passwordInput.value = '';
         this.formMessage.textContent = 'Account connected. Loading your separate save…';
       } catch (error) {
-        this.formMessage.textContent = this.friendlyAuthError(error, true);
+        this.formMessage.textContent = this.friendlyAuthError(error, true, this.authMode === 'signup');
         this.passwordInput.value = '';
       } finally {
         this.submitButton.disabled = false;
