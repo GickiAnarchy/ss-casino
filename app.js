@@ -263,7 +263,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       this.minusBtn.addEventListener('click', () => { FX.playClick(); if (this.bet > 5) { this.bet -= 5; this.updateUI(); } });
       this.plusBtn.addEventListener('click', () => {
         FX.playClick();
-        if (this.bet + 5 <= Math.min(this.hub.balance, 100)) {
+        if (this.bet + 5 <= Math.min(this.hub.balance, this.hub.player.maxBet)) {
           this.bet += 5;
           this.updateUI();
         }
@@ -836,7 +836,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     addWagerXP(wagerAmount) {
-      const xpEarned = Math.max(1, Math.floor(wagerAmount * 0.5));
+      const xpEarned = Math.max(1, Math.floor(wagerAmount * 0.15));
       this.hub.player.xp += xpEarned;
 
       while (this.hub.player.xp >= this.getRequiredXP()) {
@@ -862,9 +862,12 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     handleLevelUp() {
-      const levelBonus = this.hub.player.level * 50;
-      this.hub.player.creditLimit += 250;
-      this.hub.modifyBalance(levelBonus);
+      if ((this.hub.player.level % 5) !== 0) {
+        const levelBonus = this.hub.player.level * 50;
+        this.hub.player.creditLimit += 250;
+        this.hub.player.maxBet += 500;
+        this.hub.modifyBalance(levelBonus);
+      }
 
       FX.playJackpotSound();
       FX.spawnConfetti(120);
@@ -1204,11 +1207,11 @@ document.addEventListener('DOMContentLoaded', async () => {
       });
 
       this.flipBtn.addEventListener('click', () => this.startFlip());
-      this.maxBtn.addEventListener('click', () => { FX.playClick(); this.bet = 100; this.updateUI(); });
+      this.maxBtn.addEventListener('click', () => { FX.playClick(); this.bet = this.hub.player.maxBet; this.updateUI(); });
       this.minusBtn.addEventListener('click', () => { FX.playClick(); if (this.bet > 5) { this.bet -= 5; this.updateUI(); } });
       this.plusBtn.addEventListener('click', () => {
         FX.playClick();
-        if (this.bet + 5 <= Math.min(this.hub.balance, 100)) {
+        if (this.bet + 5 <= Math.min(this.hub.balance, this.hub.player.maxBet)) {
           this.bet += 5;
           this.updateUI();
         }
@@ -1333,11 +1336,11 @@ document.addEventListener('DOMContentLoaded', async () => {
       }
 
       this.spinBtn.addEventListener('click', () => this.startSpin());
-      this.maxBtn.addEventListener('click', () => { FX.playClick(); this.bet = 100; this.updateUI(); });
+      this.maxBtn.addEventListener('click', () => { FX.playClick(); this.bet = this.hub.player.maxBet; this.updateUI(); });
       this.minusBtn.addEventListener('click', () => { FX.playClick(); if (this.bet > 5) { this.bet -= 5; this.updateUI(); } });
       this.plusBtn.addEventListener('click', () => {
         FX.playClick();
-        if (this.bet + 5 <= Math.min(this.hub.balance, 100)) {
+        if (this.bet + 5 <= Math.min(this.hub.balance, this.hub.player.maxBet)) {
           this.bet += 5;
           this.updateUI();
         }
@@ -1558,11 +1561,11 @@ document.addEventListener('DOMContentLoaded', async () => {
       }
 
       this.spinBtn.addEventListener('click', () => this.startSpin());
-      this.maxBtn.addEventListener('click', () => { FX.playClick(); if (this.freeSpinsRemaining === 0) { this.bet = 100; this.updateUI(); } });
+      this.maxBtn.addEventListener('click', () => { FX.playClick(); if (this.freeSpinsRemaining === 0) { this.bet = this.hub.player.maxBet; this.updateUI(); } });
       this.minusBtn.addEventListener('click', () => { FX.playClick(); if (this.freeSpinsRemaining === 0 && this.bet > 5) { this.bet -= 5; this.updateUI(); } });
       this.plusBtn.addEventListener('click', () => {
         FX.playClick();
-        if (this.freeSpinsRemaining === 0 && this.bet + 5 <= Math.min(this.hub.balance, 100)) {
+        if (this.freeSpinsRemaining === 0 && this.bet + 5 <= Math.min(this.hub.balance, this.hub.player.maxBet)) {
           this.bet += 5;
           this.updateUI();
         }
