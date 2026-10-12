@@ -901,17 +901,30 @@ document.addEventListener('DOMContentLoaded', async () => {
   // ==========================================
   class ProgressiveJackpotManager {
     constructor(initialAmount = 10000) {
+      this.storageKey = 'ss_casino_shared_jackpot_v1';
       this.jackpotEl = document.getElementById('global-jackpot');
+      window.addEventListener('storage', event => {
+        if (event.key !== this.storageKey) return;
+        const sharedAmount = Number(event.newValue);
+        if (Number.isFinite(sharedAmount) && sharedAmount >= 0) {
+          this.currentJackpot = sharedAmount;
+          this.updateDisplay();
+        }
+      });
       this.loadState(initialAmount);
     }
 
     contribute(amount) {
-      this.currentJackpot += amount;
+      const contribution = Number(amount);
+      if (!Number.isFinite(contribution) || contribution <= 0) return;
+      this.currentJackpot = this.readSharedAmount() ?? this.currentJackpot;
+      this.currentJackpot += contribution;
       this.saveState();
       this.updateDisplay();
     }
 
     claimJackpot() {
+      this.currentJackpot = this.readSharedAmount() ?? this.currentJackpot;
       const awarded = this.currentJackpot;
       this.currentJackpot = 5000;
       this.saveState();
@@ -919,15 +932,46 @@ document.addEventListener('DOMContentLoaded', async () => {
       return awarded;
     }
 
+    readSharedAmount() {
+      try {
+        const stored = localStorage.getItem(this.storageKey);
+        if (stored === null) return null;
+        const amount = Number(stored);
+        return Number.isFinite(amount) && amount >= 0 ? amount : null;
+      } catch (error) {
+        return null;
+      }
+    }
+
     saveState() {
-      window.LocalProfiles?.saveCurrent({ jackpot: this.currentJackpot });
+      try {
+        localStorage.setItem(this.storageKey, String(this.currentJackpot));
+      } catch (error) {
+        console.error('Shared local jackpot could not be saved to this browser.', error);
+      }
       window.LocalSave?.queueFileSave();
     }
 
     loadState(defaultAmount) {
-      const saved = window.LocalProfiles?.getCurrentSave().jackpot;
-      this.currentJackpot = Number.isFinite(Number(saved)) ? Number(saved) : defaultAmount;
+      const sharedAmount = this.readSharedAmount();
+      if (sharedAmount !== null) {
+        this.currentJackpot = sharedAmount;
+      } else {
+        const saved = window.LocalProfiles?.getCurrentSave().jackpot;
+        const legacyAmount = Number(saved);
+        this.currentJackpot = Number.isFinite(legacyAmount) && legacyAmount >= 0 ? legacyAmount : defaultAmount;
+        this.saveState();
+      }
       this.updateDisplay();
+    }
+
+    setJackpot(amount) {
+      const parsed = Number(amount);
+      if (!Number.isFinite(parsed) || parsed < 0) return false;
+      this.currentJackpot = parsed;
+      this.saveState();
+      this.updateDisplay();
+      return true;
     }
 
     resetState() {
@@ -1127,8 +1171,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       const current = window.LocalProfiles?.getCurrentSave() || {};
       window.LocalProfiles?.saveCurrent({
         player: this.player.toProfile(),
-        settings: window.CasinoSettings?.getSettings() || current.settings,
-        jackpot: window.JackpotManager?.currentJackpot ?? current.jackpot
+        settings: window.CasinoSettings?.getSettings() || current.settings
       });
       window.LocalSave?.queueFileSave();
     }
@@ -1840,8 +1883,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     CasinoHub.player = Player.fromProfile(save.player, profile.name);
     CasinoHub.switchView('lobby');
     window.CasinoSettings.applySettings(save.settings);
-    JackpotManager.currentJackpot = save.jackpot;
-    JackpotManager.updateDisplay();
+    JackpotManager.loadState(10000);
     window.Bank.updateModalUI();
     window.XP.updateUI();
     window.DailyWheel.updateUI();

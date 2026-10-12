@@ -172,13 +172,11 @@
     applySave(save) {
       this.hub.player = Player.fromProfile(save.player, window.LocalProfiles?.activeProfile?.name || 'Player');
       this.settings.applySettings(save.settings);
-      this.jackpot.currentJackpot = save.jackpot;
+      this.jackpot.setJackpot(save.jackpot);
       window.LocalProfiles?.saveCurrent({
         player: this.hub.player.toProfile(),
-        settings: save.settings,
-        jackpot: save.jackpot
+        settings: save.settings
       });
-      this.jackpot.updateDisplay();
       this.hub.updateGlobalUI();
       this.bank.updateModalUI();
       this.xp.updateUI();

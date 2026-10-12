@@ -190,10 +190,12 @@
 
     async encryptSave(profile, key, save) {
       const iv = crypto.getRandomValues(new Uint8Array(12));
+      const profileSave = this.normalizeSave(save);
+      delete profileSave.jackpot;
       const ciphertext = await crypto.subtle.encrypt(
         { name: 'AES-GCM', iv, additionalData: this.additionalData(profile) },
         key,
-        new TextEncoder().encode(JSON.stringify(this.normalizeSave(save)))
+        new TextEncoder().encode(JSON.stringify(profileSave))
       );
       return { iv: this.toBase64(iv), ciphertext: this.toBase64(new Uint8Array(ciphertext)) };
     }
