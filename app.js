@@ -1,4 +1,7 @@
 document.addEventListener('DOMContentLoaded', async () => {
+  const LocalProfiles = new window.LocalProfileManager();
+  window.LocalProfiles = LocalProfiles;
+  await LocalProfiles.initialize();
 
   // ==========================================
   // 1. SOUND FX & PARTICLE CANVAS ENGINE
@@ -783,12 +786,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     saveSettings() {
-      const settings = this.getSettings();
-      try {
-        localStorage.setItem('casino_hub_settings', JSON.stringify(settings));
-      } catch (error) {
-        // Keep settings usable in memory when browser storage is unavailable.
-      }
       this.hub.saveState();
     }
 
@@ -815,12 +812,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     loadSettings() {
-      let savedSettings = {};
-      try {
-        savedSettings = JSON.parse(localStorage.getItem('casino_hub_settings') || '{}');
-      } catch (error) {
-        // Ignore malformed guest preferences and use the defaults.
-      }
+      const savedSettings = window.LocalProfiles?.getCurrentSave().settings || {};
       this.applySettings(savedSettings);
     }
   }
@@ -928,13 +920,13 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     saveState() {
-      localStorage.setItem('casino_hub_jackpot', this.currentJackpot.toString());
+      window.LocalProfiles?.saveCurrent({ jackpot: this.currentJackpot });
       window.LocalSave?.queueFileSave();
     }
 
     loadState(defaultAmount) {
-      const saved = localStorage.getItem('casino_hub_jackpot');
-      this.currentJackpot = saved ? parseFloat(saved) : defaultAmount;
+      const saved = window.LocalProfiles?.getCurrentSave().jackpot;
+      this.currentJackpot = Number.isFinite(Number(saved)) ? Number(saved) : defaultAmount;
       this.updateDisplay();
     }
 
@@ -952,6 +944,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 
   const JackpotManager = new ProgressiveJackpotManager(10000);
+  window.JackpotManager = JackpotManager;
 
   // ==========================================
   // 7. BANK & LOAN MANAGER
@@ -1066,8 +1059,9 @@ document.addEventListener('DOMContentLoaded', async () => {
       this.coinTossView = document.getElementById('view-coin-toss');
       this.blackjackView = document.getElementById('view-blackjack');
       
-      // Continue using the established local save keys for this browser.
-      this.player = Player.fromLocalStorage(startingBalance);
+      this.currentView = 'lobby';
+      const profileSave = window.LocalProfiles.getCurrentSave();
+      this.player = Player.fromProfile(profileSave.player, window.LocalProfiles.activeProfile?.name || 'Player');
       this.initEventListeners();
       this.updateGlobalUI();
     }
@@ -1130,7 +1124,12 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     saveState() {
-      this.player.saveLocalState();
+      const current = window.LocalProfiles?.getCurrentSave() || {};
+      window.LocalProfiles?.saveCurrent({
+        player: this.player.toProfile(),
+        settings: window.CasinoSettings?.getSettings() || current.settings,
+        jackpot: window.JackpotManager?.currentJackpot ?? current.jackpot
+      });
       window.LocalSave?.queueFileSave();
     }
 
@@ -1828,5 +1827,51 @@ document.addEventListener('DOMContentLoaded', async () => {
     settings: window.CasinoSettings
   });
   await window.LocalSave.initialize();
+
+  LocalProfiles.canSwitchProfile = () => (
+    CasinoHub.currentView === 'lobby' &&
+    !ClassicSlots.isSpinning && !FiveReelGame.isSpinning &&
+    FiveReelGame.freeSpinsRemaining === 0 && !CoinTossGame.isFlipping &&
+    !window.DailyWheel.isSpinning &&
+    ['BETTING', 'ENDED'].includes(BlackjackGame.gameState)
+  );
+  LocalProfiles.onProfileChanged = async (save, profile) => {
+    await window.LocalSave.switchProfile();
+    CasinoHub.player = Player.fromProfile(save.player, profile.name);
+    CasinoHub.switchView('lobby');
+    window.CasinoSettings.applySettings(save.settings);
+    JackpotManager.currentJackpot = save.jackpot;
+    JackpotManager.updateDisplay();
+    window.Bank.updateModalUI();
+    window.XP.updateUI();
+    window.DailyWheel.updateUI();
+
+    ClassicSlots.bet = 10;
+    ClassicSlots.setStatus('PRESS SPIN TO PLAY');
+    ClassicSlots.updateUI();
+    FiveReelGame.bet = 10;
+    FiveReelGame.freeSpinsRemaining = 0;
+    FiveReelGame.bonusTotalWin = 0;
+    FiveReelGame.stickyWildsGrid = Array(5).fill(null).map(() => Array(3).fill(false));
+    FiveReelGame.setStatus('PRESS SPIN TO PLAY');
+    FiveReelGame.updateUI();
+    CoinTossGame.bet = 10;
+    CoinTossGame.selectedChoice = 'HEADS';
+    CoinTossGame.setStatus('PICK HEADS OR TAILS');
+    CoinTossGame.updateUI();
+    BlackjackGame.bet = 10;
+    BlackjackGame.deck = [];
+    BlackjackGame.playerHand = [];
+    BlackjackGame.dealerHand = [];
+    BlackjackGame.dealerHidden = true;
+    BlackjackGame.gameState = 'BETTING';
+    BlackjackGame.playerCardsEl.innerHTML = '';
+    BlackjackGame.dealerCardsEl.innerHTML = '';
+    BlackjackGame.playerScoreEl.textContent = '0';
+    BlackjackGame.dealerScoreEl.textContent = '0';
+    BlackjackGame.setStatus('PLACE YOUR BET TO DEAL');
+    BlackjackGame.updateUI();
+    CasinoHub.saveState();
+  };
 
 });

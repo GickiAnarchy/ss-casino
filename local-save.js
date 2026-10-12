@@ -5,7 +5,6 @@
   const HANDLE_DB_NAME = 'ss-casino-local-save-files';
   const HANDLE_STORE_NAME = 'handles';
   const HANDLE_KEY = 'primary-save-file';
-  const LEGACY_PROFILE_PREFIX = 'ss_casino_profile_v1_';
   const DEFAULT_SETTINGS = Object.freeze({ volume: 80, isMuted: false, theme: 'vegas' });
   const THEMES = new Set(['vegas', 'midnight', 'gold']);
 
@@ -127,27 +126,12 @@
     }
 
     readLegacyProfiles() {
-      const profiles = [];
-      try {
-        for (let index = 0; index < localStorage.length; index++) {
-          const key = localStorage.key(index);
-          if (!key?.startsWith(LEGACY_PROFILE_PREFIX)) continue;
-          try {
-            const data = JSON.parse(localStorage.getItem(key) || 'null');
-            if (!data?.profile || !data.uid) continue;
-            profiles.push({
-              updatedAtMs: Player.numberOr(data.updatedAtMs, 0, 0),
-              player: Player.fromProfile(data.profile).toProfile(),
-              settings: this.normalizeSettings(data.settings)
-            });
-          } catch (error) {
-            // Ignore malformed old caches; leave them untouched for recovery elsewhere.
-          }
-        }
-      } catch (error) {
-        return [];
-      }
-      return profiles.sort((a, b) => b.updatedAtMs - a.updatedAtMs);
+      const archived = window.LocalProfiles?.getCurrentSave().legacyProfiles || [];
+      return archived.map(profile => ({
+        updatedAtMs: Player.numberOr(profile.updatedAtMs, 0, 0),
+        player: Player.fromProfile(profile.player).toProfile(),
+        settings: this.normalizeSettings(profile.settings)
+      })).sort((a, b) => b.updatedAtMs - a.updatedAtMs);
     }
 
     refreshLegacyRecoveryOption() {
@@ -186,16 +170,14 @@
     }
 
     applySave(save) {
-      this.hub.player = Player.fromProfile(save.player, 'Guest');
-      try {
-        this.hub.player.saveLocalState();
-        localStorage.setItem('casino_hub_settings', JSON.stringify(save.settings));
-        localStorage.setItem('casino_hub_jackpot', String(save.jackpot));
-      } catch (error) {
-        this.setStatus('Imported into this session, but browser storage is unavailable. Download a backup before closing.', 'warning');
-      }
+      this.hub.player = Player.fromProfile(save.player, window.LocalProfiles?.activeProfile?.name || 'Player');
       this.settings.applySettings(save.settings);
       this.jackpot.currentJackpot = save.jackpot;
+      window.LocalProfiles?.saveCurrent({
+        player: this.hub.player.toProfile(),
+        settings: save.settings,
+        jackpot: save.jackpot
+      });
       this.jackpot.updateDisplay();
       this.hub.updateGlobalUI();
       this.bank.updateModalUI();
@@ -242,13 +224,14 @@
 
     queueFileSave() {
       if (!this.fileHandle) return;
+      const fileHandle = this.fileHandle;
       const saveText = JSON.stringify(this.createSave(), null, 2);
       this.fileWriteQueue = this.fileWriteQueue
         .then(async () => {
-          const writable = await this.fileHandle.createWritable();
+          const writable = await fileHandle.createWritable();
           await writable.write(saveText);
           await writable.close();
-          this.setStatus(`Saved in this browser and linked file: ${this.fileHandle.name}`, 'linked');
+          this.setStatus(`Saved in this browser and linked file: ${fileHandle.name}`, 'linked');
         })
         .catch(() => {
           this.setStatus('Saved in this browser, but the linked file could not be updated. Reconnect it or download a backup.', 'warning');
@@ -260,6 +243,12 @@
       const writable = await this.fileHandle.createWritable();
       await writable.write(JSON.stringify(this.createSave(), null, 2));
       await writable.close();
+    }
+
+    async switchProfile() {
+      await this.fileWriteQueue.catch(() => {});
+      this.fileHandle = null;
+      this.setStatus('Encrypted profile save is active in this browser. Choose a save file to link this profile.', 'local');
     }
 
     downloadBackup() {
@@ -308,7 +297,7 @@
       const db = await this.openHandleDatabase();
       if (!db) return null;
       return new Promise((resolve, reject) => {
-        const request = db.transaction(HANDLE_STORE_NAME, 'readonly').objectStore(HANDLE_STORE_NAME).get(HANDLE_KEY);
+        const request = db.transaction(HANDLE_STORE_NAME, 'readonly').objectStore(HANDLE_STORE_NAME).get(this.getHandleKey());
         request.onsuccess = () => { db.close(); resolve(request.result || null); };
         request.onerror = () => { db.close(); reject(request.error); };
       });
@@ -319,10 +308,15 @@
       if (!db) return;
       return new Promise((resolve, reject) => {
         const transaction = db.transaction(HANDLE_STORE_NAME, 'readwrite');
-        transaction.objectStore(HANDLE_STORE_NAME).put(handle, HANDLE_KEY);
+        transaction.objectStore(HANDLE_STORE_NAME).put(handle, this.getHandleKey());
         transaction.oncomplete = () => { db.close(); resolve(); };
         transaction.onerror = () => { db.close(); reject(transaction.error); };
       });
+    }
+
+    getHandleKey() {
+      const profileId = window.LocalProfiles?.activeProfile?.id;
+      return profileId ? `profile-save-file:${profileId}` : HANDLE_KEY;
     }
   }
 

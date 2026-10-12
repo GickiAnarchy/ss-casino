@@ -4,7 +4,7 @@ A static, virtual-chip casino game with Classic Slots, Gem Quest 5-Reel Slots, C
 
 ## Local saves
 
-All game data stays local. Progress and preferences save automatically in this browser; no account, Firebase project, or online save service is used. From the **LOCAL SAVE** button, download or import a JSON backup. Supported desktop browsers can also link a JSON file and update it automatically as you play.
+Game data stays local in password-protected profiles encrypted in this browser; no Firebase project or online save service is used. Each profile keeps separate progress and preferences. From the **LOCAL SAVE** button, download or import a JSON backup for the active profile. Supported desktop browsers can also link a JSON file and update it automatically as you play. Backups contain game data only and are not encrypted; profile passwords cannot be recovered.
 
 See [`LOCAL_SAVES.md`](./LOCAL_SAVES.md) for backup, restore, and linked-file details.
 

@@ -4,10 +4,11 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>S&S Casino Hub — Part 14</title>
-  <link rel="stylesheet" href="style.css?v=local-20261012">
-  <script src="models.js?v=local-20261012" defer></script>
-  <script src="local-save.js?v=local-20261012" defer></script>
-  <script src="app.js?v=local-20261012" defer></script>
+  <link rel="stylesheet" href="style.css?v=profiles-20261012">
+  <script src="models.js?v=profiles-20261012" defer></script>
+  <script src="local-save.js?v=profiles-20261012" defer></script>
+  <script src="profiles.js?v=profiles-20261012" defer></script>
+  <script src="app.js?v=profiles-20261012" defer></script>
 </head>
 <body>
 
@@ -18,6 +19,12 @@
     <div class="startup-card">
       <span class="startup-spinner" aria-hidden="true"></span>
       <span id="startup-message">Loading your local save…</span>
+    </div>
+  </div>
+
+  <div id="profile-gate" class="profile-gate" role="dialog" aria-modal="true" aria-labelledby="profile-gate-title">
+    <div class="profile-card">
+      <div id="profile-gate-content"></div>
     </div>
   </div>
 
@@ -42,6 +49,7 @@
     </div>
 
     <div class="header-right">
+      <button id="btn-profile-manager" class="profile-header-btn" type="button" aria-label="Switch local profile">👤 <span id="active-profile-name">Profile</span></button>
       <button id="btn-open-local-save" class="local-save-header-btn" aria-label="Manage local saves">💾 LOCAL SAVE</button>
       <button id="btn-open-wheel" class="wheel-header-btn">🎁 DAILY BONUS</button>
       <button id="btn-open-settings" class="icon-btn" title="Audio & Theme Settings">⚙️</button>
