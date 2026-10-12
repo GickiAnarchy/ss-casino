@@ -1,6 +1,6 @@
 /**
- * In-memory game profile. Authentication credentials belong exclusively to
- * Firebase Authentication; Player never receives or persists a password.
+ * In-memory game profile. Only virtual-chip progress is persisted locally;
+ * credentials are not part of the game or save data.
  */
 class Player {
   constructor({
@@ -28,7 +28,7 @@ class Player {
     return player;
   }
 
-  /** Restore a validated profile from the account cache or Firestore. */
+  /** Restore a validated profile from a local save file. */
   static fromProfile(profile = {}, name = 'Player') {
     return new Player({
       name,
@@ -52,7 +52,7 @@ class Player {
     return this;
   }
 
-  /** The only fields permitted in a local account cache or Firestore document. */
+  /** Explicit list of player fields stored in a local save. */
   toProfile() {
     return {
       balance: this.balance,

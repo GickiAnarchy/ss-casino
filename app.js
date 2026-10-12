@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
 
   // ==========================================
   // 1. SOUND FX & PARTICLE CANVAS ENGINE
@@ -784,12 +784,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     saveSettings() {
       const settings = this.getSettings();
-      if (!window.AccountSync?.currentUser) {
-        try {
-          localStorage.setItem('casino_hub_settings', JSON.stringify(settings));
-        } catch (error) {
-          // Keep settings usable in memory when browser storage is unavailable.
-        }
+      try {
+        localStorage.setItem('casino_hub_settings', JSON.stringify(settings));
+      } catch (error) {
+        // Keep settings usable in memory when browser storage is unavailable.
       }
       this.hub.saveState();
     }
@@ -931,6 +929,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     saveState() {
       localStorage.setItem('casino_hub_jackpot', this.currentJackpot.toString());
+      window.LocalSave?.queueFileSave();
     }
 
     loadState(defaultAmount) {
@@ -1067,8 +1066,7 @@ document.addEventListener('DOMContentLoaded', () => {
       this.coinTossView = document.getElementById('view-coin-toss');
       this.blackjackView = document.getElementById('view-blackjack');
       
-      // Guests load the established local keys; authenticated profiles replace
-      // this state only after the matching UID's save has been checked.
+      // Continue using the established local save keys for this browser.
       this.player = Player.fromLocalStorage(startingBalance);
       this.initEventListeners();
       this.updateGlobalUI();
@@ -1132,11 +1130,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     saveState() {
-      if (window.AccountSync) {
-        window.AccountSync.handleLocalSave();
-      } else {
-        this.player.saveLocalState();
-      }
+      this.player.saveLocalState();
+      window.LocalSave?.queueFileSave();
     }
 
     resetState() {
@@ -1824,13 +1819,14 @@ document.addEventListener('DOMContentLoaded', () => {
   const CoinTossGame = new CoinTossEngine(CasinoHub);
   const BlackjackGame = new BlackjackEngine(CasinoHub);
 
-  window.AccountSync = new window.AccountSyncManager({
+  window.LocalSave = new window.LocalSaveManager({
     hub: CasinoHub,
+    jackpot: JackpotManager,
     bank: window.Bank,
     xp: window.XP,
     dailyWheel: window.DailyWheel,
     settings: window.CasinoSettings
   });
-
+  await window.LocalSave.initialize();
 
 });

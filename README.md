@@ -2,10 +2,10 @@
 
 A static, virtual-chip casino game with Classic Slots, Gem Quest 5-Reel Slots, Coin Toss, Blackjack 21, a daily bonus wheel, player leveling, and a local demo jackpot.
 
-## Accounts and saves
+## Local saves
 
-Play as a guest with browser-local saves, or create/sign in to an account with Firebase Email/Password Authentication. Signed-in saves sync to the player's UID-owned Firestore profile and remain cached separately on that device. Guest progress is not silently imported into a new account. Passwords are handled by Firebase Authentication and never stored in game state or Firestore.
+All game data stays local. Progress and preferences save automatically in this browser; no account, Firebase project, or online save service is used. From the **LOCAL SAVE** button, download or import a JSON backup. Supported desktop browsers can also link a JSON file and update it automatically as you play.
 
-Firebase setup and local testing: [`S&S_Casino_Hub_account_setup.md`](./S%26S_Casino_Hub_account_setup.md). Firestore rules: [`firestore.rules`](./firestore.rules).
+See [`LOCAL_SAVES.md`](./LOCAL_SAVES.md) for backup, restore, and linked-file details.
 
 This game uses virtual credits only. It does not support deposits, cashouts, or real-money gambling.
