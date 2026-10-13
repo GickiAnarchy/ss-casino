@@ -1119,6 +1119,12 @@ document.addEventListener('DOMContentLoaded', async () => {
     set balance(value) {
       this.player.balance = value;
     }
+    
+    modifyBalance(amount) {
+      this.balance += amount;
+      this.saveState();
+      this.updateGlobalUI();
+    }
 
     initEventListeners() {
       document.querySelectorAll('.play-btn').forEach(btn => {
@@ -1142,7 +1148,10 @@ document.addEventListener('DOMContentLoaded', async () => {
           JackpotManager.resetState();
           window.Bank.resetState();
           window.XP.resetState();
-          window.DailyWheel.resetState();
+          
+          // Don't reset wheel
+          // window.DailyWheel.resetState();
+          
           alert('Casino state has been reset to defaults!');
         }
       });
@@ -1189,12 +1198,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         this.globalBalanceEl.textContent = `$${this.balance.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
       }
     }
-
-    modifyBalance(amount) {
-      this.balance += amount;
-      this.saveState();
-      this.updateGlobalUI();
-    }
+    
   }
 
   const CasinoHub = new CasinoHubController(1000);
@@ -1859,6 +1863,30 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
   }
 
+
+  //
+  // 12. PAPER, ROCK, SCISSORS
+  //
+  class PRS {
+    //TODO
+  }
+  
+  
+  //
+  // 13. Race Betting
+  //
+  class RaceEngine {
+    constructor(casinohub) {
+      this.hub = casinohub;
+      this.selectedRacer = null;
+      this.wager = 0;
+      this.isRacing = false;
+      this.nextRaceTime = null;
+    }
+  }
+
+
+
   // Instantiation
   const ClassicSlots = new ClassicSlotEngine(CasinoHub);
   const FiveReelGame = new HighVolatilitySlotEngine(CasinoHub);
@@ -1921,3 +1949,5 @@ document.addEventListener('DOMContentLoaded', async () => {
   };
 
 });
+
+
