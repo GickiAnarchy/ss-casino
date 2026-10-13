@@ -20,11 +20,16 @@ class Player {
     this.xp = Player.numberOr(xp, 0, 0);
     this.debt = Player.numberOr(debt, 0, 0);
     this.creditLimit = Player.numberOr(creditLimit, 2000, 0);
-    this.maxBet = maxBet;
+    this._maxBet = Player.numberOr(maxBet, 100, 1);
   }
   
   get maxBet() {
-    return (this.maxBet ? this.maxBet <= this.balance : this.balance);
+    // Returns the configured max bet, safely capped by the current balance
+    return Math.min(this._maxBet, this.balance);
+  }
+  
+  set maxBet(amount) {
+    this._maxBet = Player.numberOr(amount, 100, 1);
   }
 
   /** Load the existing browser-local save keys so current guest progress survives. */
@@ -69,7 +74,7 @@ class Player {
       xp: this.xp,
       debt: this.debt,
       creditLimit: this.creditLimit,
-      maxBet: this.maxBet
+      maxBet: this._maxBet
     };
   }
 
@@ -99,7 +104,7 @@ class Player {
       this.creditLimit,
       0
     );
-    this.maxBet = Player.numberOr(storage.getItem('casino_hub_max_bet'),this.maxBet, 100);
+    this.maxBet = Player.numberOr(storage.getItem('casino_hub_max_bet'), this._maxBet, 100);
     return this;
   }
 
@@ -110,7 +115,7 @@ class Player {
     storage.setItem('casino_hub_debt', String(this.debt));
     storage.setItem('casino_hub_wheel', String(this.lastSpinTime));
     storage.setItem('casino_hub_credit_limit', String(this.creditLimit));
-    storage.setItem('casino_hub_max_bet', String(this.maxBet));
+    storage.setItem('casino_hub_max_bet', String(this._maxBet));
   }
 
   static numberOr(value, fallback, minimum) {
