@@ -1238,3 +1238,28 @@ body {
   .profile-header-btn { flex: 1 1 100%; max-width: none; }
   .profile-card { padding: 22px 18px; }
 }
+
+.splash-modal {
+  display: fixed;
+  z-index: 500; 
+  justify-content: center;
+  align-items: center;
+  animation: splash 7s linear 1 both;
+}
+
+.splash-logo {
+  width: 70%;
+  height: auto;
+}
+
+@keyframes splash {
+  0%, 35% {
+    opacity: 1.0;
+    scale: 100%;
+  }
+  100% {
+    opacity: 0.0;
+    scale: 0%;
+  }
+
+}

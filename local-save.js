@@ -28,6 +28,7 @@
       this.importInput = document.getElementById('local-save-import-input');
       this.status = document.getElementById('local-save-status');
       this.startupOverlay = document.getElementById('startup-overlay');
+      this.splashModal = document.getElementById('splash-modal');
       this.bindEvents();
     }
 
@@ -45,6 +46,15 @@
     }
 
     async initialize() {
+      this.splashModal.classList.replace('active-view', 'hidden-view');
+      this.splashModal.getAnimations().forEach(animation => {
+        if (animation.name === 'splash') {
+          animation.onfinish = () => this.splashModal.remove(); 
+          animation.play();
+        }
+      });
+
+
       this.setStatus('Saved automatically in this browser. Choose a JSON file to enable direct file auto-save where supported.', 'local');
       try {
         this.fileHandle = await this.readStoredHandle();
