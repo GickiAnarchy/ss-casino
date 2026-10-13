@@ -1309,7 +1309,7 @@ body {
   background:
     radial-gradient(ellipse at 50% 34%, rgba(105, 25, 125, 0.38), transparent 55%),
     linear-gradient(180deg, #100817 0%, #080510 100%);
-  animation: splash-intro 3.6s ease-in-out both;
+  animation: splash-intro 8.6s ease-in-out both;
 }
 
 .splash-logo {
@@ -1359,7 +1359,7 @@ body {
 @keyframes splash-intro {
   0% { opacity: 0; transform: scale(0.97); }
   12%, 76% { opacity: 1; transform: scale(1); }
-  100% { opacity: 0; transform: scale(1.02); visibility: hidden; }
+  100% { opacity: 0; transform: scale(1.10); visibility: hidden; }
 }
 
 @media (max-width: 560px) {
