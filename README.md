@@ -1,6 +1,6 @@
 # S&S Casino Hub
 
-A static, virtual-chip casino game with Classic Slots, Gem Quest 5-Reel Slots, Coin Toss, Blackjack 21, a daily bonus wheel, player leveling, and a demo jackpot shared locally across profiles in the same browser.
+A static, virtual-chip casino game with Classic Slots, Gem Quest 5-Reel Slots, Coin Toss, Blackjack 21, simulated horse races, a daily bonus wheel, player leveling, and a demo jackpot shared locally across profiles in the same browser.
 
 ## Local saves
 
@@ -9,3 +9,7 @@ Game data stays local in password-protected profiles encrypted in this browser; 
 See [`LOCAL_SAVES.md`](./LOCAL_SAVES.md) for backup, restore, and linked-file details.
 
 This game uses virtual credits only. It does not support deposits, cashouts, or real-money gambling.
+
+## Simulated horse racing
+
+Horse races are generated in the browser on a one-minute local schedule. Each sprint runs for 12 seconds; users can place one virtual-chip win bet on a six-horse field before the start. Race timing and results do not use a live sports feed or server. An unsettled ticket is saved with the active encrypted local profile and included in save backups so it can be settled after a page refresh.

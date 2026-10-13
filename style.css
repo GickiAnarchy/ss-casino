@@ -1234,9 +1234,64 @@ body {
 .profile-feedback { min-height: 1.3em; margin-top: 10px; color: #ffadad; font-size: 0.85rem; text-align: center; }
 .profile-note, .profile-migration-note { margin-top: 14px; color: #9999a6; font-size: 0.76rem; line-height: 1.55; }
 .profile-migration-note { padding: 10px 12px; border: 1px solid #5c4b16; border-radius: 8px; color: #f0d991; background: rgba(184, 134, 11, 0.12); }
+
+/* Simulated racing stays visually consistent with the casino while making live movement and betting state clear. */
+.race-machine { max-width: 760px; }
+.race-header { width: 100%; }
+.race-local-note { margin: 5px 0 12px; color: #b9b4c6; font-size: 0.82rem; text-align: center; }
+.race-info-strip { width: 100%; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; }
+.race-info-item { display: grid; gap: 4px; padding: 10px 8px; background: #17131f; border: 1px solid #423853; border-radius: 9px; text-align: center; }
+.race-info-item span { color: #aaa2ba; font-size: 0.62rem; font-weight: 800; letter-spacing: 0.08em; }
+.race-info-item strong { color: var(--gold-primary); font-size: 0.9rem; }
+.race-stage, .race-betting-panel { width: 100%; border-radius: 14px; background: #15141a; border: 1px solid #3d3548; padding: 14px; }
+.race-track-heading { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; color: #d9d2e4; font-size: 0.7rem; font-weight: 900; letter-spacing: 0.08em; }
+.race-finish-label { color: #ffd700; }
+.race-track { display: grid; gap: 5px; }
+.race-lane { min-width: 0; display: grid; grid-template-columns: 24px minmax(0, 1fr) 118px; align-items: center; gap: 8px; }
+.race-lane-number { color: #aaa; font-size: 0.68rem; font-weight: 800; text-align: center; }
+.race-lane-rail { position: relative; height: 36px; overflow: hidden; border: 1px solid #4d4850; border-radius: 5px; background: repeating-linear-gradient(0deg, #284b30 0, #284b30 7px, #1c3d26 7px, #1c3d26 14px); }
+.race-lane-rail::before { content: ''; position: absolute; inset: 50% 0 auto; border-top: 1px dashed rgba(255,255,255,0.16); }
+.race-finish-line { position: absolute; top: 0; right: 4%; z-index: 1; height: 100%; border-left: 3px solid #fff; box-shadow: 1px 0 #111; }
+.race-horse-token { position: absolute; top: 50%; left: 0; z-index: 2; width: 30px; height: 30px; display: grid; place-items: center; border: 2px solid var(--silks-color, #fff); border-radius: 50%; background: #101017; font-size: 1rem; transform: translate(-50%, -50%); transition: left 220ms linear, box-shadow 180ms ease; }
+.race-lane-name { overflow: hidden; color: #d7d3df; font-size: 0.72rem; text-overflow: ellipsis; white-space: nowrap; }
+.race-lane.is-race-running .race-horse-token { box-shadow: 0 0 10px var(--silks-color); }
+.race-lane.is-race-winner .race-horse-token { box-shadow: 0 0 16px #ffd700; border-color: #ffd700; }
+.race-panel-heading { margin-bottom: 11px; }
+.race-panel-heading h2 { color: var(--gold-primary); font-size: 1.1rem; }
+.race-panel-heading p { margin-top: 3px; color: #aaa; font-size: 0.77rem; line-height: 1.4; }
+.race-runner-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+.race-runner-option { min-width: 0; display: grid; grid-template-columns: 38px minmax(0, 1fr) auto; align-items: center; gap: 8px; padding: 9px; border: 1px solid #484251; border-radius: 9px; color: #fff; background: #201c29; text-align: left; cursor: pointer; transition: border-color 150ms ease, background 150ms ease, transform 150ms ease; }
+.race-runner-option:hover:not(:disabled) { transform: translateY(-1px); border-color: var(--gold-primary); }
+.race-runner-option.is-selected { border-color: var(--gold-primary); background: #352b1a; box-shadow: 0 0 0 1px rgba(255,215,0,0.15); }
+.race-runner-option:disabled { cursor: not-allowed; opacity: 0.72; }
+.race-runner-silks { width: 34px; height: 34px; display: grid; place-items: center; border-radius: 50%; background: #111018; font-size: 1.2rem; }
+.race-runner-details { min-width: 0; display: grid; gap: 3px; }
+.race-runner-details strong { overflow: hidden; font-size: 0.78rem; text-overflow: ellipsis; white-space: nowrap; }
+.race-runner-details small, .race-odds-wrap small { color: #aaa4b2; font-size: 0.61rem; }
+.race-odds-wrap { display: grid; justify-items: end; gap: 2px; }
+.race-runner-odds { color: #ffe17a; font-size: 0.88rem; font-weight: 900; white-space: nowrap; }
+.race-dashboard { width: 100%; margin: 0; }
+.race-dashboard .card { flex: 1; }
+.race-return-card { align-items: flex-end; }
+.race-return-card .value { color: #4eef90; }
+.race-actions { width: 100%; }
+.race-actions button { min-height: 46px; }
+.race-actions button:disabled { cursor: not-allowed; opacity: 0.48; }
+.race-ticket-note { min-height: 1.4em; color: #ffe17a; font-size: 0.82rem; line-height: 1.45; text-align: center; }
+.race-odds-note { max-width: 620px; color: #9d98a7; font-size: 0.69rem; line-height: 1.45; text-align: center; }
+
 @media (max-width: 768px) {
   .profile-header-btn { flex: 1 1 100%; max-width: none; }
   .profile-card { padding: 22px 18px; }
+  .race-machine { padding: 14px 10px; }
+  .race-info-strip { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .race-runner-list { grid-template-columns: 1fr; }
+  .race-stage, .race-betting-panel { padding: 10px; }
+  .race-lane { grid-template-columns: 18px minmax(0, 1fr) 92px; gap: 5px; }
+  .race-lane-name { font-size: 0.63rem; }
+  .race-actions { flex-direction: column; }
+  .race-actions button { width: 100%; min-height: 44px; }
+  .race-dashboard { flex-wrap: wrap; }
 }
 
 .splash-modal {

@@ -13,7 +13,8 @@
   const DEFAULT_SAVE = Object.freeze({
     player: { balance: 1000, lastSpinTime: 0, level: 1, xp: 0, debt: 0, creditLimit: 2000, maxBet: 100 },
     settings: { volume: 80, isMuted: false, theme: 'vegas' },
-    jackpot: 10000
+    jackpot: 10000,
+    raceBet: null
   });
 
   class LocalProfileManager {
@@ -151,6 +152,20 @@
         return Number.isFinite(number) && number >= minimum ? number : fallback;
       };
       const themes = ['vegas', 'midnight', 'gold'];
+      const raceBet = input.raceBet && typeof input.raceBet === 'object' ? input.raceBet : null;
+      const validHorseId = value => typeof value === 'string' && /^horse-[1-6]$/.test(value);
+      const safeRaceBet = raceBet && Number.isSafeInteger(Number(raceBet.raceId)) && Number(raceBet.raceId) >= 0 &&
+        validHorseId(raceBet.runnerId) && validHorseId(raceBet.winnerId) &&
+        Number.isFinite(Number(raceBet.stake)) && Number(raceBet.stake) > 0 &&
+        Number.isFinite(Number(raceBet.odds)) && Number(raceBet.odds) >= 1 && Number(raceBet.odds) <= 100
+        ? {
+          raceId: Number(raceBet.raceId),
+          runnerId: raceBet.runnerId,
+          winnerId: raceBet.winnerId,
+          stake: Math.round(Number(raceBet.stake) * 100) / 100,
+          odds: Math.round(Number(raceBet.odds) * 100) / 100
+        }
+        : null;
       return {
         player: {
           balance: numberOr(player.balance, 1000),
@@ -167,6 +182,7 @@
           theme: themes.includes(settings.theme) ? settings.theme : 'vegas'
         },
         jackpot: numberOr(input.jackpot, 10000),
+        raceBet: safeRaceBet,
         legacyProfiles: Array.isArray(input.legacyProfiles) ? input.legacyProfiles.slice(0, 100).map(profile => {
           const archived = profile && typeof profile === 'object' ? profile : {};
           const archivedSave = this.normalizeSave({ player: archived.player, settings: archived.settings });

@@ -1104,6 +1104,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       this.slot5ReelView = document.getElementById('view-5reel-slots');
       this.coinTossView = document.getElementById('view-coin-toss');
       this.blackjackView = document.getElementById('view-blackjack');
+      this.raceView = document.getElementById('view-horse-racing');
       
       this.currentView = 'lobby';
       const profileSave = window.LocalProfiles.getCurrentSave();
@@ -1144,6 +1145,10 @@ document.addEventListener('DOMContentLoaded', async () => {
 
       document.getElementById('btn-reset-data')?.addEventListener('click', () => {
         if (confirm('Are you sure you want to reset your casino balance, loans, XP, and daily wheel?')) {
+          if (RaceGame?.hasPendingTicket()) {
+            alert('Wait for your simulated race to finish before resetting casino data.');
+            return;
+          }
           this.resetState();
           JackpotManager.resetState();
           window.Bank.resetState();
@@ -1164,6 +1169,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       this.slot5ReelView.classList.replace('active-view', 'hidden-view');
       this.coinTossView.classList.replace('active-view', 'hidden-view');
       this.blackjackView.classList.replace('active-view', 'hidden-view');
+      this.raceView?.classList.replace('active-view', 'hidden-view');
 
       if (viewName === 'lobby') {
         this.lobbyView.classList.replace('hidden-view', 'active-view');
@@ -1175,6 +1181,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         this.coinTossView.classList.replace('hidden-view', 'active-view');
       } else if (viewName === 'blackjack') {
         this.blackjackView.classList.replace('hidden-view', 'active-view');
+      } else if (viewName === 'horse-racing') {
+        this.raceView?.classList.replace('hidden-view', 'active-view');
       }
     }
 
@@ -1206,6 +1214,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     
   }
 
+  let RaceGame = null;
   const CasinoHub = new CasinoHubController(1000);
   window.Bank = new BankManager(CasinoHub);
   window.XP = new XPManager(CasinoHub);
@@ -1877,21 +1886,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
   
   
-  //
-  // 13. Race Betting
-  //
-  class RaceEngine {
-    constructor(casinohub) {
-      this.hub = casinohub;
-      this.selectedRacer = null;
-      this.wager = 0;
-      this.isRacing = false;
-      this.nextRaceTime = null;
-    }
-  }
-
-
-
   // Instantiation
   const ClassicSlots = new ClassicSlotEngine(CasinoHub);
   const FiveReelGame = new HighVolatilitySlotEngine(CasinoHub);
@@ -1907,12 +1901,14 @@ document.addEventListener('DOMContentLoaded', async () => {
     settings: window.CasinoSettings
   });
   await window.LocalSave.initialize();
+  RaceGame = new window.RaceEngine(CasinoHub, { fx: FX, jackpot: JackpotManager, xp: window.XP });
 
   LocalProfiles.canSwitchProfile = () => (
     CasinoHub.currentView === 'lobby' &&
     !ClassicSlots.isSpinning && !FiveReelGame.isSpinning &&
     FiveReelGame.freeSpinsRemaining === 0 && !CoinTossGame.isFlipping &&
     !window.DailyWheel.isSpinning &&
+    !RaceGame.hasPendingTicket() &&
     ['BETTING', 'ENDED'].includes(BlackjackGame.gameState)
   );
   LocalProfiles.onProfileChanged = async (save, profile) => {
@@ -1950,9 +1946,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     BlackjackGame.dealerScoreEl.textContent = '0';
     BlackjackGame.setStatus('PLACE YOUR BET TO DEAL');
     BlackjackGame.updateUI();
+    RaceGame.resetForActiveProfile();
     CasinoHub.saveState();
   };
 
 });
-
-

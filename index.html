@@ -3,12 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>S&S Casino Hub — Part 14</title>
-  <link rel="stylesheet" href="style.css?v=shared-jackpot-20261012">
+  <title>S&S Casino Hub — Simulated Racing</title>
+  <link rel="stylesheet" href="style.css?v=race-sim-20261013">
   <script src="models.js?v=shared-jackpot-20261012" defer></script>
-  <script src="local-save.js?v=shared-jackpot-20261012" defer></script>
-  <script src="profiles.js?v=shared-jackpot-20261012" defer></script>
-  <script src="app.js?v=harder-slot-odds-20261012" defer></script>
+  <script src="local-save.js?v=race-sim-20261013" defer></script>
+  <script src="profiles.js?v=race-sim-20261013" defer></script>
+  <script src="race-engine.js?v=race-sim-20261013" defer></script>
+  <script src="app.js?v=race-sim-20261013" defer></script>
 </head>
 <body>
 
@@ -227,6 +228,68 @@
           <p>Beat the dealer! Hit, Stand, or Double Down for 3:2 Blackjack payouts.</p>
           <button class="play-btn" data-game="blackjack">PLAY NOW</button>
         </div>
+
+        <!-- Simulated Race Card -->
+        <div class="game-card">
+          <div class="card-icon">🏇</div>
+          <h3>Simulated Horse Racing</h3>
+          <p>Pick a winner in local one-minute races with animated 12-second sprints and virtual-chip odds.</p>
+          <button class="play-btn" data-game="horse-racing">RACE NOW</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- LOCAL SIMULATED RACING VIEW -->
+    <section id="view-horse-racing" class="view-screen hidden-view">
+      <button class="back-lobby-btn" type="button">⬅ BACK TO LOBBY</button>
+      <div class="slot-machine race-machine">
+        <div class="header race-header">
+          <h1>🏇 Simulated Race Track</h1>
+          <p class="race-local-note">Browser-local races • virtual chips only • no live odds or outside race data</p>
+          <div id="race-status" class="status-banner status-spinning" role="status" aria-live="polite">Loading the next local race…</div>
+        </div>
+
+        <div class="race-info-strip" aria-label="Upcoming race details">
+          <div class="race-info-item"><span>BETTING FOR</span><strong id="race-number">—</strong></div>
+          <div class="race-info-item"><span>PHASE</span><strong id="race-phase-label">—</strong></div>
+          <div class="race-info-item"><span>STARTS IN</span><strong id="race-countdown">—</strong></div>
+          <div class="race-info-item"><span>LOCAL START</span><strong id="race-start-time">—</strong></div>
+        </div>
+
+        <div class="race-stage">
+          <div class="race-track-heading"><span id="race-track-caption">NEXT RACE PREVIEW</span><span class="race-finish-label">FINISH</span></div>
+          <div id="race-track" class="race-track" aria-label="Animated simulated race track"></div>
+        </div>
+
+        <div class="race-betting-panel">
+          <div class="race-panel-heading">
+            <h2>Choose a winner</h2>
+            <p id="race-target-text">Pick one horse to win. Bets close when the race starts.</p>
+          </div>
+          <div id="race-runner-list" class="race-runner-list" role="group" aria-label="Choose a horse to win"></div>
+        </div>
+
+        <div class="dashboard race-dashboard">
+          <div class="card">
+            <span class="label">Win Bet</span>
+            <div class="bet-controls">
+              <button id="btn-race-minus" class="btn-small" type="button" aria-label="Decrease race bet">−</button>
+              <span id="race-bet-display" class="value">$10.00</span>
+              <button id="btn-race-plus" class="btn-small" type="button" aria-label="Increase race bet">+</button>
+            </div>
+          </div>
+          <div class="card race-return-card">
+            <span class="label">Potential total return</span>
+            <span id="race-estimated-return" class="value">$0.00</span>
+          </div>
+        </div>
+
+        <div class="actions race-actions">
+          <button id="btn-race-max" class="max-btn" type="button">MAX BET</button>
+          <button id="btn-race-bet" class="spin-btn" type="button" disabled>SELECT A HORSE</button>
+        </div>
+        <p id="race-ticket-note" class="race-ticket-note" role="status" aria-live="polite">One win bet per race. Your stake is virtual chips only.</p>
+        <p class="race-odds-note">Displayed odds are a simulated total return including your original stake. Race results are local to this browser and are not linked to real sporting events.</p>
       </div>
     </section>
 

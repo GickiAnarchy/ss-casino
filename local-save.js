@@ -103,7 +103,8 @@
         updatedAt: new Date().toISOString(),
         player: this.hub.player.toProfile(),
         settings: this.normalizeSettings(this.settings.getSettings()),
-        jackpot: Player.numberOr(this.jackpot.currentJackpot, 10000, 0)
+        jackpot: Player.numberOr(this.jackpot.currentJackpot, 10000, 0),
+        raceBet: window.LocalProfiles?.getCurrentSave().raceBet || null
       };
     }
 
@@ -121,7 +122,8 @@
         updatedAt: typeof data.updatedAt === 'string' ? data.updatedAt : new Date().toISOString(),
         player,
         settings: this.normalizeSettings(data.settings),
-        jackpot
+        jackpot,
+        raceBet: window.LocalProfiles?.normalizeSave({ raceBet: data.raceBet })?.raceBet || null
       };
     }
 
@@ -185,7 +187,8 @@
       this.jackpot.setJackpot(save.jackpot);
       window.LocalProfiles?.saveCurrent({
         player: this.hub.player.toProfile(),
-        settings: save.settings
+        settings: save.settings,
+        raceBet: Object.hasOwn(save, 'raceBet') ? save.raceBet : window.LocalProfiles?.getCurrentSave().raceBet || null
       });
       this.hub.updateGlobalUI();
       this.bank.updateModalUI();
