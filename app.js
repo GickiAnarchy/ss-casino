@@ -1331,13 +1331,14 @@ document.addEventListener('DOMContentLoaded', async () => {
       this.REEL_COUNT = 3;
       this.VISIBLE_ROWS = 3;
 
+      // More even common symbols and rarer specials reduce the classic slot hit rate.
       this.SYMBOLS = [
-        { id: 'cherry', icon: '🍒', multiplier: 3,   weight: 35 },
-        { id: 'lemon',  icon: '🍋', multiplier: 5,   weight: 25.5 },
-        { id: 'orange', icon: '🍊', multiplier: 10,  weight: 20 },
-        { id: 'bell',   icon: '🔔', multiplier: 30,  weight: 10 },
-        { id: 'wild',   icon: '🃏', multiplier: 50,  weight: 6.5 },
-        { id: 'seven',  icon: '7️⃣', multiplier: 100, weight: 3 }
+        { id: 'cherry', icon: '🍒', multiplier: 1,  weight: 28 },
+        { id: 'lemon',  icon: '🍋', multiplier: 1,  weight: 25 },
+        { id: 'orange', icon: '🍊', multiplier: 2,  weight: 22 },
+        { id: 'bell',   icon: '🔔', multiplier: 4,  weight: 18 },
+        { id: 'wild',   icon: '🃏', multiplier: 8,  weight: 5 },
+        { id: 'seven',  icon: '7️⃣', multiplier: 15, weight: 2 }
       ];
 
       this.PAYLINES = [
@@ -1538,16 +1539,17 @@ document.addEventListener('DOMContentLoaded', async () => {
       this.REEL_COUNT = 5;
       this.VISIBLE_ROWS = 3;
 
+      // Lower special-symbol frequency and a tighter paytable make wins and bonuses rarer.
       this.SYMBOLS = [
-        { id: 'ten',     icon: '🔟', mult: { 3: 2, 4: 5, 5: 10 },    weight: 30 },
-        { id: 'jack',    icon: '🇯',  mult: { 3: 2, 4: 5, 5: 12 },    weight: 25 },
-        { id: 'queen',   icon: '🇶',  mult: { 3: 3, 4: 8, 5: 15 },    weight: 20 },
-        { id: 'king',    icon: '🇰',  mult: { 3: 4, 4: 10, 5: 20 },   weight: 15 },
-        { id: 'ace',     icon: '🇦',  mult: { 3: 5, 4: 12, 5: 25 },   weight: 12 },
-        { id: 'ruby',    icon: '💎', mult: { 3: 10, 4: 25, 5: 75 },  weight: 8 },
-        { id: 'crown',   icon: '👑', mult: { 3: 20, 4: 50, 5: 150 }, weight: 4 },
-        { id: 'wild',    icon: '🃏', mult: { 3: 30, 4: 100, 5: 300 },weight: 3, isWild: true },
-        { id: 'scatter', icon: '⭐', mult: { 3: 5, 4: 20, 5: 100 },  weight: 3, isScatter: true }
+        { id: 'ten',     icon: '🔟', mult: { 3: 1, 4: 2, 5: 4 },   weight: 15 },
+        { id: 'jack',    icon: '🇯',  mult: { 3: 1, 4: 2, 5: 4 },   weight: 15 },
+        { id: 'queen',   icon: '🇶',  mult: { 3: 1, 4: 3, 5: 5 },   weight: 15 },
+        { id: 'king',    icon: '🇰',  mult: { 3: 1, 4: 4, 5: 7 },   weight: 15 },
+        { id: 'ace',     icon: '🇦',  mult: { 3: 1, 4: 5, 5: 8 },   weight: 15 },
+        { id: 'ruby',    icon: '💎', mult: { 3: 2, 4: 10, 5: 20 }, weight: 15 },
+        { id: 'crown',   icon: '👑', mult: { 3: 4, 4: 20, 5: 40 }, weight: 1 },
+        { id: 'wild',    icon: '🃏', mult: { 3: 6, 4: 25, 5: 60 }, weight: 2, isWild: true },
+        { id: 'scatter', icon: '⭐', mult: { 3: 1, 4: 4, 5: 20 },  weight: 1, isScatter: true }
       ];
 
       this.PAYLINES = [
