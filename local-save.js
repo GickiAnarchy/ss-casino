@@ -29,6 +29,8 @@
       this.status = document.getElementById('local-save-status');
       this.startupOverlay = document.getElementById('startup-overlay');
       this.splashModal = document.getElementById('splash-modal');
+      this.skipSplashButton = document.getElementById('btn-skip-splash');
+      this.splashReturnFocus = null;
       this.bindEvents();
     }
 
@@ -43,21 +45,23 @@
       this.importButton?.addEventListener('click', () => this.importInput?.click());
       this.recoverButton?.addEventListener('click', () => this.recoverLegacyProfile());
       this.importInput?.addEventListener('change', (event) => this.importSelectedFile(event));
+      this.skipSplashButton?.addEventListener('click', () => this.dismissSplash());
+      this.splashModal?.addEventListener('animationend', (event) => {
+        if (event.target === this.splashModal && event.animationName === 'splash-intro') {
+          this.dismissSplash();
+        }
+      });
+      document.addEventListener('keydown', (event) => {
+        if (!this.splashModal?.classList.contains('active-view')) return;
+        if (event.key === 'Escape') this.dismissSplash();
+        if (event.key === 'Tab') {
+          event.preventDefault();
+          this.skipSplashButton?.focus();
+        }
+      });
     }
 
     async initialize() {
-      this.splashModal.classList.replace('hidden-view', 'active-view');
-      document.getAnimations().forEach(a => {
-        console.log(`${a.id} ${a.currentTime}`);
-      });
-      /* this.splashModal.getAnimations().forEach(animation => {
-        if (animation.name === 'splash') {
-          console.log("animation === splash");
-          animation.onfinish = () => this.splashModal.remove(); 
-          animation.play();
-        }
-      }); */
-
       this.setStatus('Saved automatically in this browser. Choose a JSON file to enable direct file auto-save where supported.', 'local');
       try {
         this.fileHandle = await this.readStoredHandle();
@@ -83,6 +87,25 @@
         this.refreshLegacyRecoveryOption();
         this.startupOverlay?.classList.add('hidden-view');
       }
+
+      // Start the intro only after the blocking save loader is gone.
+      this.showSplash();
+    }
+
+    showSplash() {
+      if (!this.splashModal) return;
+      this.splashReturnFocus = document.activeElement;
+      this.splashModal.classList.replace('hidden-view', 'active-view');
+      this.skipSplashButton?.focus({ preventScroll: true });
+    }
+
+    dismissSplash() {
+      if (!this.splashModal?.classList.contains('active-view')) return;
+      this.splashModal.classList.replace('active-view', 'hidden-view');
+      if (this.splashReturnFocus?.isConnected) {
+        this.splashReturnFocus.focus({ preventScroll: true });
+      }
+      this.splashReturnFocus = null;
     }
 
     openModal() {

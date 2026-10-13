@@ -1294,30 +1294,86 @@ body {
   .race-dashboard { flex-wrap: wrap; }
 }
 
-.splash-modal .active-view {
+/* The intro is a viewport overlay and only runs after the save loader is dismissed. */
+.splash-modal.active-view {
   position: fixed;
-  display: flex;    
-  z-index: 500;
-  top: 0;
-  left: 0;
+  inset: 0;
+  z-index: 2000;
+  display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
-  animation: splash 7s linear 1 both;
+  gap: clamp(8px, 1.8vh, 18px);
+  overflow: hidden;
+  padding: clamp(16px, 4vw, 48px);
+  background:
+    radial-gradient(ellipse at 50% 34%, rgba(105, 25, 125, 0.38), transparent 55%),
+    linear-gradient(180deg, #100817 0%, #080510 100%);
+  animation: splash-intro 3.6s ease-in-out both;
 }
 
 .splash-logo {
-  width: 70%;
-  height: auto;
+  width: min(62vw, 46vh, 520px);
+  max-height: 46vh;
+  object-fit: contain;
+  filter: drop-shadow(0 14px 30px rgba(0, 0, 0, 0.6));
 }
 
-@keyframes splash {
-  0%, 35% {
-    opacity: 1.0;
-    scale: 100%;
-  }
-  100% {
-    opacity: 0.0;
-    scale: 0%;
-  }
+.splash-copy { text-align: center; }
+.splash-kicker {
+  color: #ffe17a;
+  font-size: 0.68rem;
+  font-weight: 900;
+  letter-spacing: 0.28em;
+}
+.splash-copy h1 {
+  margin: 4px 0 6px;
+  color: #ffd700;
+  font-size: clamp(1.65rem, 5vw, 2.75rem);
+  font-weight: 950;
+  letter-spacing: 0.08em;
+  text-shadow: 0 2px 18px rgba(255, 190, 40, 0.3);
+}
+.splash-tagline { color: #e7dff1; font-size: clamp(0.78rem, 2vw, 0.95rem); }
+.splash-disclaimer { margin-top: 8px; color: #a8a0b1; font-size: 0.75rem; }
+.splash-skip {
+  position: absolute;
+  right: max(16px, env(safe-area-inset-right));
+  bottom: max(16px, env(safe-area-inset-bottom));
+  min-height: 44px;
+  padding: 0 16px;
+  border: 1px solid rgba(255, 215, 0, 0.55);
+  border-radius: 999px;
+  background: rgba(24, 18, 32, 0.88);
+  color: #f7edce;
+  font-size: 0.8rem;
+  font-weight: 800;
+  cursor: pointer;
+}
+.splash-skip:hover, .splash-skip:focus-visible {
+  background: #332345;
+  outline: 2px solid #ffd700;
+  outline-offset: 3px;
+}
 
+@keyframes splash-intro {
+  0% { opacity: 0; transform: scale(0.97); }
+  12%, 76% { opacity: 1; transform: scale(1); }
+  100% { opacity: 0; transform: scale(1.02); visibility: hidden; }
+}
+
+@media (max-width: 560px) {
+  .splash-modal.active-view { gap: 10px; }
+  .splash-logo { width: min(78vw, 48vh, 420px); max-height: 48vh; }
+  .splash-skip { right: max(12px, env(safe-area-inset-right)); bottom: max(12px, env(safe-area-inset-bottom)); }
+}
+
+@media (max-height: 560px) {
+  .splash-logo { width: min(42vh, 320px); max-height: 38vh; }
+  .splash-modal.active-view { gap: 6px; padding: 12px; }
+  .splash-disclaimer { margin-top: 4px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .splash-modal.active-view { animation-duration: 1ms; }
 }

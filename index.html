@@ -4,9 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>S&S Casino Hub — Simulated Racing</title>
-  <link rel="stylesheet" href="style.css?v=race-sim-20261013">
+  <link rel="stylesheet" href="style.css?v=splash-intro-20261013">
   <script src="models.js?v=shared-jackpot-20261012" defer></script>
-  <script src="local-save.js?v=race-sim-20261013" defer></script>
+  <script src="local-save.js?v=splash-intro-20261013" defer></script>
   <script src="profiles.js?v=race-sim-20261013" defer></script>
   <script src="race-engine.js?v=race-sim-20261013" defer></script>
   <script src="app.js?v=race-sim-20261013" defer></script>
@@ -466,8 +466,15 @@
 
   </main>
 
-  <div class="splash-modal hidden-view" id="splash-modal">
-    <img src="assets/splash.png" alt="S&S Casino Hub Logo" class="splash-logo" id="splash-logo"/>
+  <div class="splash-modal hidden-view" id="splash-modal" role="dialog" aria-modal="true" aria-labelledby="splash-title">
+    <img src="assets/splash.png" alt="" class="splash-logo" id="splash-logo" />
+    <div class="splash-copy">
+      <p class="splash-kicker">WELCOME TO</p>
+      <h1 id="splash-title">S&amp;S CASINO HUB</h1>
+      <p class="splash-tagline">Slots · table games · simulated racing</p>
+      <p class="splash-disclaimer">Just-for-fun play with virtual credits</p>
+    </div>
+    <button class="splash-skip" id="btn-skip-splash" type="button">Skip intro</button>
   </div>
 
 </body>
