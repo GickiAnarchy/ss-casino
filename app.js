@@ -216,7 +216,6 @@ document.addEventListener('DOMContentLoaded', async () => {
       requestAnimationFrame(() => this.animateParticles());
     }
   }
-
   const FX = new FXEngine();
 
   // ==========================================

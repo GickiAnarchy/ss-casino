@@ -22,6 +22,10 @@ class Player {
     this.creditLimit = Player.numberOr(creditLimit, 2000, 0);
     this.maxBet = maxBet;
   }
+  
+  get maxBet() {
+    return (this.maxBet ? this.maxBet <= this.balance : this.balance);
+  }
 
   /** Load the existing browser-local save keys so current guest progress survives. */
   static fromLocalStorage(defaultBalance = 1000, storage = window.localStorage) {
