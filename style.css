@@ -1294,9 +1294,12 @@ body {
   .race-dashboard { flex-wrap: wrap; }
 }
 
-.splash-modal {
-  display: fixed;
-  z-index: 500; 
+.splash-modal .active-view {
+  position: fixed;
+  display: flex;    
+  z-index: 500;
+  top: 0;
+  left: 0;
   justify-content: center;
   align-items: center;
   animation: splash 7s linear 1 both;

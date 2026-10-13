@@ -46,14 +46,17 @@
     }
 
     async initialize() {
-      this.splashModal.classList.replace('active-view', 'hidden-view');
-      this.splashModal.getAnimations().forEach(animation => {
+      this.splashModal.classList.replace('hidden-view', 'active-view');
+      document.getAnimations().forEach(a => {
+        console.log(`${a.id} ${a.currentTime}`);
+      });
+      /* this.splashModal.getAnimations().forEach(animation => {
         if (animation.name === 'splash') {
+          console.log("animation === splash");
           animation.onfinish = () => this.splashModal.remove(); 
           animation.play();
         }
-      });
-
+      }); */
 
       this.setStatus('Saved automatically in this browser. Choose a JSON file to enable direct file auto-save where supported.', 'local');
       try {
