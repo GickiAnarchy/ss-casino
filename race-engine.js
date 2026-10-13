@@ -1,8 +1,8 @@
 /* Local-only, scheduled horse races for the virtual-chip casino. */
 (function installRaceEngine() {
-  const RACE_INTERVAL_MS = 60_000;
-  const RACE_LENGTH_MS = 12_000;
-  const RESULT_DISPLAY_MS = 3_000;
+  const RACE_INTERVAL_MS = 660_000;
+  const RACE_LENGTH_MS = 180_000;
+  const RESULT_DISPLAY_MS = 120_000;
   const BET_STEP = 5;
   const CENTS = 100;
   const HORSES = [
