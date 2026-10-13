@@ -7,11 +7,11 @@
   const LEGACY_PROFILE_PREFIX = 'ss_casino_profile_v1_';
   const LEGACY_KEYS = [
     'casino_hub_player', 'casino_hub_xp', 'casino_hub_debt',
-    'casino_hub_wheel', 'casino_hub_credit_limit', 'casino_hub_settings',
+    'casino_hub_wheel', 'casino_hub_credit_limit', 'casino_hub_max_bet', 'casino_hub_settings',
     'casino_hub_jackpot'
   ];
   const DEFAULT_SAVE = Object.freeze({
-    player: { balance: 1000, lastSpinTime: 0, level: 1, xp: 0, debt: 0, creditLimit: 2000 },
+    player: { balance: 1000, lastSpinTime: 0, level: 1, xp: 0, debt: 0, creditLimit: 2000, maxBet: 100 },
     settings: { volume: 80, isMuted: false, theme: 'vegas' },
     jackpot: 10000
   });
@@ -98,7 +98,8 @@
           level: Math.max(1, Math.floor(readNumber(oldXp.level, 1, 1))),
           xp: readNumber(oldXp.xp, 0),
           debt: readNumber(localStorage.getItem('casino_hub_debt'), 0),
-          creditLimit: readNumber(localStorage.getItem('casino_hub_credit_limit'), 2000)
+          creditLimit: readNumber(localStorage.getItem('casino_hub_credit_limit'), 2000),
+          maxBet: readNumber(localStorage.getItem('casino_hub_max_bet'), 100, 100)
         },
         settings,
         jackpot: readNumber(localStorage.getItem('casino_hub_jackpot'), 10000)
@@ -157,7 +158,8 @@
           level: Math.max(1, Math.floor(numberOr(player.level, 1, 1))),
           xp: numberOr(player.xp, 0),
           debt: numberOr(player.debt, 0),
-          creditLimit: numberOr(player.creditLimit, 2000)
+          creditLimit: numberOr(player.creditLimit, 2000),
+          maxBet: numberOr(player.maxBet, 100, 100)
         },
         settings: {
           volume: Math.max(0, Math.min(100, Math.round(numberOr(settings.volume, 80)))),
@@ -190,10 +192,12 @@
 
     async encryptSave(profile, key, save) {
       const iv = crypto.getRandomValues(new Uint8Array(12));
+      const profileSave = this.normalizeSave(save);
+      delete profileSave.jackpot;
       const ciphertext = await crypto.subtle.encrypt(
         { name: 'AES-GCM', iv, additionalData: this.additionalData(profile) },
         key,
-        new TextEncoder().encode(JSON.stringify(this.normalizeSave(save)))
+        new TextEncoder().encode(JSON.stringify(profileSave))
       );
       return { iv: this.toBase64(iv), ciphertext: this.toBase64(new Uint8Array(ciphertext)) };
     }
