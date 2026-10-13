@@ -1189,6 +1189,11 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     resetState() {
       this.balance = 1000;
+      this.player.debt = 0;
+      this.player.creditLimit = 500;
+      this.player.maxBet = 100;
+      this.player.level = 1;
+      this.player.xp = 0;
       this.saveState();
       this.updateGlobalUI();
     }
