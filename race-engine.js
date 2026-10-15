@@ -5,14 +5,23 @@
   const RESULT_DISPLAY_MS = 120_000;
   const BET_STEP = 5;
   const CENTS = 100;
-  const HORSES = [
-    { id: 'horse-1', name: 'Copper Comet', silks: '🟠', lane: '#e67e22' },
-    { id: 'horse-2', name: 'Velvet Thunder', silks: '🟣', lane: '#9b59b6' },
-    { id: 'horse-3', name: 'Lucky Lantern', silks: '🟡', lane: '#f1c40f' },
-    { id: 'horse-4', name: 'Midnight Marigold', silks: '🔵', lane: '#3498db' },
-    { id: 'horse-5', name: 'Silver Streak', silks: '⚪', lane: '#bdc3c7' },
-    { id: 'horse-6', name: 'Golden Gallop', silks: '🟢', lane: '#2ecc71' }
+
+  // Expanded master list of horse names and silks/colors
+  const MASTER_HORSES = [
+    { name: 'Copper Comet', silks: '🟠', lane: '#e67e22' },
+    { name: 'Velvet Thunder', silks: '🟣', lane: '#9b59b6' },
+    { name: 'Lucky Lantern', silks: '🟡', lane: '#f1c40f' },
+    { name: 'Midnight Marigold', silks: '🔵', lane: '#3498db' },
+    { name: 'Silver Streak', silks: '⚪', lane: '#bdc3c7' },
+    { name: 'Golden Gallop', silks: '🟢', lane: '#2ecc71' },
+    { name: 'Thunder Spirit', silks: '⚡', lane: '#e74c3c' },
+    { name: 'Midnight Dash', silks: '🌙', lane: '#34495e' },
+    { name: 'Silver Blaze', silks: '✨', lane: '#95a5a6' },
+    { name: 'Galloping Ghost', silks: '👻', lane: '#1abc9c' },
+    { name: 'Copper Penny', silks: '🪙', lane: '#d35400' },
+    { name: 'Shadow Runner', silks: '👤', lane: '#2c3e50' }
   ];
+
   class RaceEngine {
     constructor(hub, { fx, jackpot, xp } = {}) {
       this.hub = hub;
@@ -123,12 +132,24 @@
 
     createRace(eventId) {
       const random = this.makeRandom(eventId);
-      const entrants = HORSES.map((horse, index) => ({
+
+      // Shuffle the master list using the seeded random generator to pick 6 unique horses
+      const shuffledMaster = [...MASTER_HORSES];
+      for (let i = shuffledMaster.length - 1; i > 0; i--) {
+        const j = Math.floor(random() * (i + 1));
+        [shuffledMaster[i], shuffledMaster[j]] = [shuffledMaster[j], shuffledMaster[i]];
+      }
+
+      const selectedHorses = shuffledMaster.slice(0, 6);
+
+      const entrants = selectedHorses.map((horse, index) => ({
         ...horse,
+        id: `horse-${index + 1}`,
         ability: 0.9 + random() * 0.2,
         finishFactor: 0.74 + random() * 0.2,
         index
       }));
+
       const weights = entrants.map(horse => Math.pow(horse.ability, 8));
       const totalWeight = weights.reduce((sum, weight) => sum + weight, 0);
       entrants.forEach((horse, index) => {
@@ -236,7 +257,8 @@
             : `RACE IN PROGRESS — BETTING OPENS AFTER THE FINISH`, 'status-spinning');
         } else if (this.isResultDisplay) {
           const finishedRace = this.createRace(Math.floor(now / RACE_INTERVAL_MS) * RACE_INTERVAL_MS);
-          const winner = HORSES.find(horse => horse.id === finishedRace.winnerId);
+          const activeEntrants = finishedRace.entrants;
+          const winner = activeEntrants.find(horse => horse.id === finishedRace.winnerId);
           this.setStatus(`RACE FINISHED — ${winner?.name || 'WINNER'} TAKES THE SPRINT`, 'status-win');
         } else {
           this.setStatus(`BETTING OPEN — RACE ${raceNumber} STARTS IN ${this.formatCountdown(remaining)}`, 'status-spinning');
@@ -340,8 +362,8 @@
 
     updateBetControls() {
       if (this.betDisplayEl) this.betDisplayEl.textContent = this.formatMoney(this.bet);
-      const selectedHorse = this.createRace(this.targetRaceId || (Math.floor(Date.now() / RACE_INTERVAL_MS) + 1) * RACE_INTERVAL_MS)
-        .entrants.find(horse => horse.id === this.selectedHorseId);
+      const currentRace = this.createRace(this.targetRaceId || (Math.floor(Date.now() / RACE_INTERVAL_MS) + 1) * RACE_INTERVAL_MS);
+      const selectedHorse = currentRace.entrants.find(horse => horse.id === this.selectedHorseId);
       const potential = selectedHorse ? this.roundMoney(this.bet * selectedHorse.odds) : 0;
       if (this.estimatedReturnEl) this.estimatedReturnEl.textContent = this.formatMoney(potential);
       const maximum = this.maxStake();
@@ -364,7 +386,8 @@
         return;
       }
       if (this.ticket) {
-        const horse = HORSES.find(item => item.id === this.ticket.runnerId);
+        const currentRace = this.createRace(this.ticket.raceId);
+        const horse = currentRace.entrants.find(item => item.id === this.ticket.runnerId);
         const potential = this.roundMoney(this.ticket.stake * this.ticket.odds);
         this.ticketNoteEl.textContent = `Locked ticket: ${this.formatMoney(this.ticket.stake)} on ${horse?.name || 'your runner'} at ${this.ticket.odds.toFixed(2)}×. Potential total return: ${this.formatMoney(potential)}.`;
         return;
@@ -406,7 +429,8 @@
     settleTicket() {
       const ticket = this.ticket;
       if (!ticket) return;
-      const horse = HORSES.find(item => item.id === ticket.runnerId);
+      const finishedRace = this.createRace(ticket.raceId);
+      const horse = finishedRace.entrants.find(item => item.id === ticket.runnerId);
       const won = ticket.runnerId === ticket.winnerId;
       const payout = won ? this.roundMoney(ticket.stake * ticket.odds) : 0;
 
@@ -425,7 +449,7 @@
         this.fx?.playWinSound();
         this.fx?.spawnConfetti(55);
       } else {
-        const winner = HORSES.find(item => item.id === ticket.winnerId);
+        const winner = finishedRace.entrants.find(item => item.id === ticket.winnerId);
         this.lastResultText = `${horse?.name || 'Your horse'} did not win. ${winner?.name || 'Another runner'} took the race.`;
         this.fx?.playClick();
       }
