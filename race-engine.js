@@ -203,6 +203,12 @@
       });
       if (winnerIndex < 0) winnerIndex = entrants.length - 1;
 
+      // The visual sprint must agree with the selected winner: make this runner
+      // faster than every rival and ensure it reaches the finish line.
+      const winner = entrants[winnerIndex];
+      const fastestRival = Math.max(...entrants.filter((_, index) => index !== winnerIndex).map(horse => horse.finishFactor));
+      winner.finishFactor = Math.max(winner.finishFactor, fastestRival + 0.03, 0.97);
+
       return {
         eventId,
         number: Math.floor(eventId / RACE_INTERVAL_MS),
@@ -433,7 +439,7 @@
         const token = lane.querySelector('.race-horse-token');
         const isWinner = horse?.id === winnerId;
         const position = isRunning
-          ? Math.min(isWinner && progress >= 1 ? 100 : 94, progress * horse.finishFactor * 100)
+          ? Math.min(isWinner ? 100 : 94, progress * horse.finishFactor * 100)
           : 0;
         token.style.left = `${position}%`;
         lane.classList.toggle('is-race-winner', isWinner && isRunning && progress >= 1);
