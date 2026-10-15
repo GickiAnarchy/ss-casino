@@ -12,4 +12,4 @@ This game uses virtual credits only. It does not support deposits, cashouts, or 
 
 ## Simulated horse racing
 
-Horse races are generated in the browser on a one-minute local schedule. Each sprint runs for 12 seconds; users can place one virtual-chip win bet on a six-horse field before the start. Race timing and results do not use a live sports feed or server. An unsettled ticket is saved with the active encrypted local profile and included in save backups so it can be settled after a page refresh.
+---Horse races are generated in the browser on a one-minute local schedule. Each sprint runs for 12 seconds; users can place one virtual-chip win bet on a six-horse field before the start. Race timing and results do not use a live sports feed or server. An unsettled ticket is saved with the active encrypted local profile and included in save backups so it can be settled after a page refresh.---
