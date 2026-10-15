@@ -14,7 +14,8 @@
     player: { balance: 1000, lastSpinTime: 0, level: 1, xp: 0, debt: 0, creditLimit: 2000, maxBet: 100 },
     settings: { volume: 80, isMuted: false, theme: 'vegas' },
     jackpot: 10000,
-    raceBet: null
+    raceBet: null,
+    raceResultNotice: null
   });
 
   class LocalProfileManager {
@@ -153,6 +154,7 @@
       };
       const themes = ['vegas', 'midnight', 'gold'];
       const raceBet = input.raceBet && typeof input.raceBet === 'object' ? input.raceBet : null;
+      const raceResultNotice = input.raceResultNotice && typeof input.raceResultNotice === 'object' ? input.raceResultNotice : null;
       const validHorseId = value => typeof value === 'string' && /^horse-[1-6]$/.test(value);
       const safeRaceBet = raceBet && Number.isSafeInteger(Number(raceBet.raceId)) && Number(raceBet.raceId) >= 0 &&
         validHorseId(raceBet.runnerId) && validHorseId(raceBet.winnerId) &&
@@ -163,7 +165,25 @@
           runnerId: raceBet.runnerId,
           winnerId: raceBet.winnerId,
           stake: Math.round(Number(raceBet.stake) * 100) / 100,
-          odds: Math.round(Number(raceBet.odds) * 100) / 100
+          odds: Math.round(Number(raceBet.odds) * 100) / 100,
+          durationMs: Number.isSafeInteger(Number(raceBet.durationMs)) &&
+            Number(raceBet.durationMs) >= 110_000 && Number(raceBet.durationMs) <= 200_000
+            ? Number(raceBet.durationMs)
+            : null
+        }
+        : null;
+      const safeRaceResultNotice = raceResultNotice && Number.isSafeInteger(Number(raceResultNotice.raceId)) && Number(raceResultNotice.raceId) >= 0 &&
+        validHorseId(raceResultNotice.runnerId) && validHorseId(raceResultNotice.winnerId) &&
+        Number.isFinite(Number(raceResultNotice.stake)) && Number(raceResultNotice.stake) > 0 &&
+        Number.isFinite(Number(raceResultNotice.payout)) && Number(raceResultNotice.payout) >= 0 &&
+        typeof raceResultNotice.won === 'boolean'
+        ? {
+          raceId: Number(raceResultNotice.raceId),
+          runnerId: raceResultNotice.runnerId,
+          winnerId: raceResultNotice.winnerId,
+          stake: Math.round(Number(raceResultNotice.stake) * 100) / 100,
+          payout: Math.round(Number(raceResultNotice.payout) * 100) / 100,
+          won: raceResultNotice.won
         }
         : null;
       return {
@@ -183,6 +203,7 @@
         },
         jackpot: numberOr(input.jackpot, 10000),
         raceBet: safeRaceBet,
+        raceResultNotice: safeRaceResultNotice,
         legacyProfiles: Array.isArray(input.legacyProfiles) ? input.legacyProfiles.slice(0, 100).map(profile => {
           const archived = profile && typeof profile === 'object' ? profile : {};
           const archivedSave = this.normalizeSave({ player: archived.player, settings: archived.settings });

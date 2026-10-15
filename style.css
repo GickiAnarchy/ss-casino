@@ -1239,7 +1239,7 @@ body {
 .race-machine { max-width: 760px; }
 .race-header { width: 100%; }
 .race-local-note { margin: 5px 0 12px; color: #b9b4c6; font-size: 0.82rem; text-align: center; }
-.race-info-strip { width: 100%; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; }
+.race-info-strip { width: 100%; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 8px; }
 .race-info-item { display: grid; gap: 4px; padding: 10px 8px; background: #17131f; border: 1px solid #423853; border-radius: 9px; text-align: center; }
 .race-info-item span { color: #aaa2ba; font-size: 0.62rem; font-weight: 800; letter-spacing: 0.08em; }
 .race-info-item strong { color: var(--gold-primary); font-size: 0.9rem; }
@@ -1279,6 +1279,12 @@ body {
 .race-actions button:disabled { cursor: not-allowed; opacity: 0.48; }
 .race-ticket-note { min-height: 1.4em; color: #ffe17a; font-size: 0.82rem; line-height: 1.45; text-align: center; }
 .race-odds-note { max-width: 620px; color: #9d98a7; font-size: 0.69rem; line-height: 1.45; text-align: center; }
+.race-result-notice { display: flex; justify-content: center; align-items: center; flex-wrap: wrap; gap: 10px 18px; padding: 12px 18px; border-bottom: 1px solid var(--gold-primary); background: #352b1a; color: #fff3c4; text-align: center; }
+.race-result-notice p { flex: 1 1 360px; max-width: 900px; font-size: 0.88rem; font-weight: 700; line-height: 1.45; }
+.race-result-actions { display: flex; justify-content: center; flex-wrap: wrap; gap: 8px; }
+.race-result-action-btn, .race-result-dismiss-btn { min-height: 38px; padding: 7px 12px; border: 1px solid #ffd700; border-radius: 8px; color: #17120a; background: #ffd700; font-weight: 800; cursor: pointer; }
+.race-result-dismiss-btn { border-color: #8b7848; color: #fff3c4; background: #272116; }
+.race-result-action-btn:focus-visible, .race-result-dismiss-btn:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
 
 @media (max-width: 768px) {
   .profile-header-btn { flex: 1 1 100%; max-width: none; }
@@ -1292,6 +1298,10 @@ body {
   .race-actions { flex-direction: column; }
   .race-actions button { width: 100%; min-height: 44px; }
   .race-dashboard { flex-wrap: wrap; }
+  .race-result-notice { padding: 10px 12px; }
+  .race-result-notice p { flex-basis: 100%; }
+  .race-result-actions { width: 100%; }
+  .race-result-actions button { flex: 1 1 auto; }
 }
 
 /* The intro is a viewport overlay and only runs after the save loader is dismissed. */

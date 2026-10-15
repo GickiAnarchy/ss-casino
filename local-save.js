@@ -130,7 +130,8 @@
         player: this.hub.player.toProfile(),
         settings: this.normalizeSettings(this.settings.getSettings()),
         jackpot: Player.numberOr(this.jackpot.currentJackpot, 10000, 0),
-        raceBet: window.LocalProfiles?.getCurrentSave().raceBet || null
+        raceBet: window.LocalProfiles?.getCurrentSave().raceBet || null,
+        raceResultNotice: window.LocalProfiles?.getCurrentSave().raceResultNotice || null
       };
     }
 
@@ -149,7 +150,8 @@
         player,
         settings: this.normalizeSettings(data.settings),
         jackpot,
-        raceBet: window.LocalProfiles?.normalizeSave({ raceBet: data.raceBet })?.raceBet || null
+        raceBet: window.LocalProfiles?.normalizeSave({ raceBet: data.raceBet })?.raceBet || null,
+        raceResultNotice: window.LocalProfiles?.normalizeSave({ raceResultNotice: data.raceResultNotice })?.raceResultNotice || null
       };
     }
 
@@ -214,8 +216,10 @@
       window.LocalProfiles?.saveCurrent({
         player: this.hub.player.toProfile(),
         settings: save.settings,
-        raceBet: Object.hasOwn(save, 'raceBet') ? save.raceBet : window.LocalProfiles?.getCurrentSave().raceBet || null
+        raceBet: Object.hasOwn(save, 'raceBet') ? save.raceBet : window.LocalProfiles?.getCurrentSave().raceBet || null,
+        raceResultNotice: Object.hasOwn(save, 'raceResultNotice') ? save.raceResultNotice : null
       });
+      window.RaceGame?.resetForActiveProfile();
       this.hub.updateGlobalUI();
       this.bank.updateModalUI();
       this.xp.updateUI();

@@ -1,8 +1,9 @@
 /* Local-only, scheduled horse races for the virtual-chip casino. */
 (function installRaceEngine() {
-  // Define timing constants for race intervals, sprint duration, result display time, and currency steps.
+  // Define timing constants for the race schedule, per-race sprint duration range, result display, and currency steps.
   const RACE_INTERVAL_MS = 660_000; // Time between race starts (11 minutes)
-  const RACE_LENGTH_MS = (getRandomInt(110 ,200) * 1000); // Random duration of the race itself (110 to 200 seconds)
+  const MIN_RACE_DURATION_SECONDS = 110; // Each race lasts at least 1 minute 50 seconds
+  const MAX_RACE_DURATION_SECONDS = 200; // Each race lasts at most 3 minutes 20 seconds
   const RESULT_DISPLAY_MS = 120_000; // Time results are shown before clearing (2 minutes)
   const BET_STEP = 5; // Minimum incremental change for bets
   const CENTS = 100; // Multiplier for currency rounding
@@ -37,6 +38,7 @@
       this.targetRaceId = null; // ID of the race currently targeted for bets
       this.trackRaceId = null; // ID of the race currently rendered on the track
       this.ticket = null; // Active player betting ticket, if any
+      this.raceResultNotice = null; // Saved result waiting for this profile to view or dismiss
       this.lastResultText = ''; // Text summary of the most recent race outcome
       this.isRaceInProgress = false; // Flag indicating if a race is actively running
       this.isResultDisplay = false; // Flag indicating if the race results are currently being displayed
@@ -44,6 +46,7 @@
       this.bindElements(); // Cache DOM element references
       this.bindEvents(); // Attach event listeners to UI controls
       this.loadProfileTicket(); // Load any saved pending wager from profile storage
+      this.lastResultText = this.raceResultNotice ? this.formatRaceResult(this.raceResultNotice) : '';
       this.update(); // Initial update to render the UI state
 
       // The clock is local to this browser; no server, live-data feed, or paid service is needed.
@@ -58,6 +61,7 @@
       this.phaseEl = document.getElementById('race-phase-label');
       this.countdownEl = document.getElementById('race-countdown');
       this.startTimeEl = document.getElementById('race-start-time');
+      this.raceDurationEl = document.getElementById('race-duration');
       this.trackCaptionEl = document.getElementById('race-track-caption');
       this.trackEl = document.getElementById('race-track');
       this.targetTextEl = document.getElementById('race-target-text');
@@ -69,6 +73,10 @@
       this.plusBtn = document.getElementById('btn-race-plus');
       this.maxBtn = document.getElementById('btn-race-max');
       this.placeBtn = document.getElementById('btn-race-bet');
+      this.resultNoticeEl = document.getElementById('race-result-notice');
+      this.resultNoticeTextEl = document.getElementById('race-result-notice-text');
+      this.viewResultsBtn = document.getElementById('btn-view-race-results');
+      this.dismissResultBtn = document.getElementById('btn-dismiss-race-result');
     }
 
     // Attach event listeners for betting controls (plus, minus, max, place bet) and runner selection
@@ -93,6 +101,8 @@
       });
       // Place bet button handler
       this.placeBtn?.addEventListener('click', () => this.placeBet());
+      this.viewResultsBtn?.addEventListener('click', () => this.acknowledgeRaceNotice(true));
+      this.dismissResultBtn?.addEventListener('click', () => this.acknowledgeRaceNotice(false));
       // Runner list selection handler
       this.runnerListEl?.addEventListener('click', event => {
         const option = event.target.closest('[data-runner-id]');
@@ -106,7 +116,9 @@
 
     // Load an unsettled wager from the encrypted profile save so a refresh cannot discard it
     loadProfileTicket() {
-      this.ticket = window.LocalProfiles?.getCurrentSave().raceBet || null;
+      const save = window.LocalProfiles?.getCurrentSave();
+      this.ticket = save?.raceBet || null;
+      this.raceResultNotice = save?.raceResultNotice || null;
     }
 
     // Reset race states when switching to a different active profile
@@ -115,8 +127,8 @@
       this.selectedHorseId = null;
       this.targetRaceId = null;
       this.trackRaceId = null;
-      this.lastResultText = '';
       this.loadProfileTicket();
+      this.lastResultText = this.raceResultNotice ? this.formatRaceResult(this.raceResultNotice) : '';
       this.update();
     }
 
@@ -136,8 +148,8 @@
     }
 
     // Seed each scheduled race by its start time so a saved ticket resolves to the same field after reload
-    makeRandom(eventId) {
-      let state = (Math.floor(eventId / RACE_INTERVAL_MS) * 2_654_435_761 + 1_013_904_223) >>> 0;
+    makeRandom(eventId, stream = 0) {
+      let state = (Math.floor(eventId / RACE_INTERVAL_MS) * 2_654_435_761 + 1_013_904_223 + stream) >>> 0;
       return () => {
         state = (state + 0x6D2B79F5) >>> 0;
         let value = state;
@@ -150,6 +162,11 @@
     // Generates a race object including randomized entrants, abilities, odds, and deterministically chosen winner
     createRace(eventId) {
       const random = this.makeRandom(eventId);
+      // A separate seeded stream varies each duration without changing existing horse fields or results.
+      const durationRandom = this.makeRandom(eventId, 0x9e3779b9);
+      const durationSeconds = MIN_RACE_DURATION_SECONDS + Math.floor(
+        durationRandom() * (MAX_RACE_DURATION_SECONDS - MIN_RACE_DURATION_SECONDS + 1)
+      );
 
       // Shuffle the master list using the seeded random generator to pick 6 unique horses
       const shuffledMaster = [...MASTER_HORSES];
@@ -189,6 +206,7 @@
       return {
         eventId,
         number: Math.floor(eventId / RACE_INTERVAL_MS),
+        durationMs: durationSeconds * 1000,
         entrants,
         winnerId: entrants[winnerIndex].id
       };
@@ -212,17 +230,57 @@
       return `${String(minutes).padStart(2, '0')}:${String(remainder).padStart(2, '0')}`;
     }
 
+    // Build the same readable result whenever a saved notice is shown again after login.
+    formatRaceResult(notice) {
+      const race = this.createRace(notice.raceId);
+      const horse = race.entrants.find(item => item.id === notice.runnerId);
+      const winner = race.entrants.find(item => item.id === notice.winnerId);
+      const raceLabel = `Race #${race.number.toLocaleString('en-US')}`;
+      if (notice.won) {
+        return `${raceLabel} finished: ${horse?.name || 'Your horse'} won! Your bet returned ${this.formatMoney(notice.payout)} including your stake.`;
+      }
+      return `${raceLabel} finished: ${horse?.name || 'Your horse'} did not win; ${winner?.name || 'another runner'} took the race. Your ${this.formatMoney(notice.stake)} stake was lost.`;
+    }
+
+    // Keep offline results visible across profile loads until the player views or dismisses the notice.
+    renderRaceResultNotice() {
+      if (!this.resultNoticeEl) return;
+      if (!this.raceResultNotice) {
+        this.resultNoticeEl.classList.add('hidden-view');
+        return;
+      }
+      const message = this.formatRaceResult(this.raceResultNotice);
+      if (this.resultNoticeTextEl && this.resultNoticeTextEl.textContent !== message) {
+        this.resultNoticeTextEl.textContent = message;
+      }
+      this.resultNoticeEl.classList.remove('hidden-view');
+    }
+
+    acknowledgeRaceNotice(openRace) {
+      const notice = this.raceResultNotice;
+      if (!notice) return;
+      this.lastResultText = this.formatRaceResult(notice);
+      this.raceResultNotice = null;
+      window.LocalProfiles?.saveCurrent({ raceResultNotice: null });
+      window.LocalSave?.queueFileSave();
+      this.renderRaceResultNotice();
+      if (openRace) this.hub.switchView('horse-racing');
+      this.updateTicketNote();
+    }
+
     // Main update tick function executed regularly to handle state changes, settling tickets, and refreshing UI
     update() {
       const now = Date.now();
       const currentStart = Math.floor(now / RACE_INTERVAL_MS) * RACE_INTERVAL_MS;
       const elapsed = now - currentStart;
-      this.isRaceInProgress = elapsed < RACE_LENGTH_MS;
-      this.isResultDisplay = !this.isRaceInProgress && elapsed < RACE_LENGTH_MS + RESULT_DISPLAY_MS;
+      const activeRace = this.createRace(currentStart);
+      this.isRaceInProgress = elapsed < activeRace.durationMs;
+      this.isResultDisplay = !this.isRaceInProgress && elapsed < activeRace.durationMs + RESULT_DISPLAY_MS;
       const nextRaceId = currentStart + RACE_INTERVAL_MS;
 
       // A ticket is cleared before crediting its payout; that ordering makes settlement safe to retry after reload.
-      if (this.ticket && now >= this.ticket.raceId + RACE_LENGTH_MS) this.settleTicket();
+      const ticketDuration = this.ticket?.durationMs || (this.ticket ? this.createRace(this.ticket.raceId).durationMs : 0);
+      if (this.ticket && now >= this.ticket.raceId + ticketDuration) this.settleTicket();
 
       const bettingRace = this.createRace(nextRaceId);
       const trackIsCurrent = this.isRaceInProgress || this.isResultDisplay;
@@ -239,17 +297,18 @@
       }
       this.updateTrackPositions(
         trackRace,
-        this.isRaceInProgress ? elapsed / RACE_LENGTH_MS : (this.isResultDisplay ? 1 : 0),
+        this.isRaceInProgress ? elapsed / activeRace.durationMs : (this.isResultDisplay ? 1 : 0),
         trackIsCurrent
       );
-      this.updateClockAndStatus(bettingRace, now, nextRaceId - now);
+      this.updateClockAndStatus(bettingRace, activeRace, now, nextRaceId - now);
       this.updateRunnerSelection();
       this.updateBetControls();
       this.updateTicketNote();
+      this.renderRaceResultNotice();
     }
 
     // Updates the clock, status messages, countdown timer, and header texts
-    updateClockAndStatus(bettingRace, now, remaining) {
+    updateClockAndStatus(bettingRace, activeRace, now, remaining) {
       const raceNumber = `#${bettingRace.number.toLocaleString('en-US')}`;
       const activeTicket = this.ticket;
       if (this.raceNumberEl) this.raceNumberEl.textContent = raceNumber;
@@ -258,10 +317,12 @@
         : (this.isResultDisplay ? 'RESULTS' : 'BETTING OPEN');
       const countdownLabel = this.countdownEl?.parentElement?.querySelector('span');
       if (countdownLabel) countdownLabel.textContent = this.isRaceInProgress ? 'FINISH IN' : 'STARTS IN';
+      const displayRace = this.isRaceInProgress || this.isResultDisplay ? activeRace : bettingRace;
       if (this.countdownEl) this.countdownEl.textContent = this.isRaceInProgress
-        ? this.formatCountdown(RACE_LENGTH_MS - (now % RACE_INTERVAL_MS))
+        ? this.formatCountdown(activeRace.durationMs - (now - activeRace.eventId))
         : this.formatCountdown(remaining);
       if (this.startTimeEl) this.startTimeEl.textContent = this.raceStartTime(bettingRace.eventId);
+      if (this.raceDurationEl) this.raceDurationEl.textContent = this.formatCountdown(displayRace.durationMs);
       if (this.targetTextEl) {
         const targetMessage = this.isRaceInProgress
           ? `Choose a runner for race ${raceNumber}; betting opens when the current sprint finishes.`
@@ -271,15 +332,15 @@
         this.targetTextEl.textContent = targetMessage;
       }
       if (this.trackCaptionEl) this.trackCaptionEl.textContent = this.isRaceInProgress
-        ? `RACE #${Math.floor(now / RACE_INTERVAL_MS).toLocaleString('en-US')} — LIVE SIMULATION`
+        ? `RACE #${activeRace.number.toLocaleString('en-US')} — LIVE SIMULATION`
         : (this.isResultDisplay
-          ? `RACE #${Math.floor(now / RACE_INTERVAL_MS).toLocaleString('en-US')} — FINAL RESULT`
+          ? `RACE #${activeRace.number.toLocaleString('en-US')} — FINAL RESULT`
           : `RACE #${bettingRace.number.toLocaleString('en-US')} — NEXT FIELD PREVIEW`);
 
       if (this.statusEl) {
         if (this.isRaceInProgress) {
           this.setStatus(activeTicket?.raceId === Math.floor(now / RACE_INTERVAL_MS) * RACE_INTERVAL_MS
-            ? `YOUR BET IS RUNNING — ${this.formatCountdown(RACE_LENGTH_MS - (now % RACE_INTERVAL_MS))} TO FINISH`
+            ? `YOUR BET IS RUNNING — ${this.formatCountdown(activeRace.durationMs - (now - activeRace.eventId))} TO FINISH`
             : `RACE IN PROGRESS — BETTING OPENS AFTER THE FINISH`, 'status-spinning');
         } else if (this.isResultDisplay) {
           const finishedRace = this.createRace(Math.floor(now / RACE_INTERVAL_MS) * RACE_INTERVAL_MS);
@@ -443,7 +504,8 @@
         runnerId: selectedHorse.id,
         stake: this.roundMoney(this.bet),
         odds: selectedHorse.odds,
-        winnerId: bettingRace.winnerId
+        winnerId: bettingRace.winnerId,
+        durationMs: bettingRace.durationMs
       };
 
       // Save the wallet deduction and its ticket together, so reloading cannot leave only one side of the wager.
@@ -465,29 +527,38 @@
       const ticket = this.ticket;
       if (!ticket) return;
       const finishedRace = this.createRace(ticket.raceId);
-      const horse = finishedRace.entrants.find(item => item.id === ticket.runnerId);
       const won = ticket.runnerId === ticket.winnerId;
       const payout = won ? this.roundMoney(ticket.stake * ticket.odds) : 0;
+      const notice = {
+        raceId: ticket.raceId,
+        runnerId: ticket.runnerId,
+        winnerId: ticket.winnerId,
+        stake: ticket.stake,
+        payout,
+        won
+      };
 
-      // Clear first and save the new balance in one encrypted profile update to prevent duplicate payouts.
+      // Save the cleared ticket, payout, and unread result together to prevent double settlement or missed notices.
       this.ticket = null;
+      this.raceResultNotice = notice;
       if (payout > 0) this.hub.balance = this.roundMoney(this.hub.balance + payout);
       window.LocalProfiles?.saveCurrent({
         player: this.hub.player.toProfile(),
-        raceBet: null
+        raceBet: null,
+        raceResultNotice: notice
       });
       this.hub.updateGlobalUI();
       window.LocalSave?.queueFileSave();
 
       if (won) {
-        this.lastResultText = `WIN! ${horse?.name || 'Your horse'} finished first. Total return: ${this.formatMoney(payout)}.`;
+        this.lastResultText = this.formatRaceResult(notice);
         this.fx?.playWinSound();
         this.fx?.spawnConfetti(55);
       } else {
-        const winner = finishedRace.entrants.find(item => item.id === ticket.winnerId);
-        this.lastResultText = `${horse?.name || 'Your horse'} did not win. ${winner?.name || 'Another runner'} took the race.`;
+        this.lastResultText = this.formatRaceResult(notice);
         this.fx?.playClick();
       }
+      this.renderRaceResultNotice();
       this.update();
     }
   }
@@ -495,8 +566,3 @@
   // Expose RaceEngine globally
   window.RaceEngine = RaceEngine;
 })();
-
-// Helper function to generate a random integer between min and max (inclusive)
-function getRandomInt(min, max) {
-  return Math.floor(Math.random() * (max - min + 1)) + min;
-}

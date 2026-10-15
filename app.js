@@ -1902,6 +1902,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   });
   await window.LocalSave.initialize();
   RaceGame = new window.RaceEngine(CasinoHub, { fx: FX, jackpot: JackpotManager, xp: window.XP });
+  window.RaceGame = RaceGame;
 
   LocalProfiles.canSwitchProfile = () => (
     CasinoHub.currentView === 'lobby' &&
