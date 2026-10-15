@@ -1,12 +1,13 @@
 /* Local-only, scheduled horse races for the virtual-chip casino. */
 (function installRaceEngine() {
-  const RACE_INTERVAL_MS = 660_000;
-  const RACE_LENGTH_MS = 180_000;
-  const RESULT_DISPLAY_MS = 120_000;
-  const BET_STEP = 5;
-  const CENTS = 100;
+  // Define timing constants for race intervals, sprint duration, result display time, and currency steps.
+  const RACE_INTERVAL_MS = 660_000; // Time between race starts (11 minutes)
+  const RACE_LENGTH_MS = (getRandomInt(110 ,200) * 1000); // Random duration of the race itself (110 to 200 seconds)
+  const RESULT_DISPLAY_MS = 120_000; // Time results are shown before clearing (2 minutes)
+  const BET_STEP = 5; // Minimum incremental change for bets
+  const CENTS = 100; // Multiplier for currency rounding
 
-  // Expanded master list of horse names and silks/colors
+  // Expanded master list of horse names, emojis/silks, and track lane colors
   const MASTER_HORSES = [
     { name: 'Copper Comet', silks: '🟠', lane: '#e67e22' },
     { name: 'Velvet Thunder', silks: '🟣', lane: '#9b59b6' },
@@ -19,32 +20,38 @@
     { name: 'Silver Blaze', silks: '✨', lane: '#95a5a6' },
     { name: 'Galloping Ghost', silks: '👻', lane: '#1abc9c' },
     { name: 'Copper Penny', silks: '🪙', lane: '#d35400' },
-    { name: 'Shadow Runner', silks: '👤', lane: '#2c3e50' }
+    { name: 'Shadow Runner', silks: '👤', lane: '#2c3e50' },
+    { name: 'Out of this World', silks: '👽', lane: '#2e50d5'},
+    { name: 'Bombs Away', silks: '💣', lane: '#44a3d3' }
   ];
 
+  // Core RaceEngine class responsible for managing race states, UI updates, and betting logic
   class RaceEngine {
     constructor(hub, { fx, jackpot, xp } = {}) {
-      this.hub = hub;
-      this.fx = fx;
-      this.jackpot = jackpot;
-      this.xp = xp;
-      this.bet = 10;
-      this.selectedHorseId = null;
-      this.targetRaceId = null;
-      this.trackRaceId = null;
-      this.ticket = null;
-      this.lastResultText = '';
-      this.isRaceInProgress = false;
-      this.isResultDisplay = false;
-      this.bindElements();
-      this.bindEvents();
-      this.loadProfileTicket();
-      this.update();
+      this.hub = hub; // Reference to the main casino hub/state manager
+      this.fx = fx; // Sound and visual effects handler
+      this.jackpot = jackpot; // Jackpot system reference
+      this.xp = xp; // Experience points system reference
+      this.bet = 10; // Default bet amount
+      this.selectedHorseId = null; // ID of the currently selected horse for betting
+      this.targetRaceId = null; // ID of the race currently targeted for bets
+      this.trackRaceId = null; // ID of the race currently rendered on the track
+      this.ticket = null; // Active player betting ticket, if any
+      this.lastResultText = ''; // Text summary of the most recent race outcome
+      this.isRaceInProgress = false; // Flag indicating if a race is actively running
+      this.isResultDisplay = false; // Flag indicating if the race results are currently being displayed
+      
+      this.bindElements(); // Cache DOM element references
+      this.bindEvents(); // Attach event listeners to UI controls
+      this.loadProfileTicket(); // Load any saved pending wager from profile storage
+      this.update(); // Initial update to render the UI state
 
       // The clock is local to this browser; no server, live-data feed, or paid service is needed.
+      // Poll the engine update method every 250ms to keep timers, countdowns, and race animations smooth.
       window.setInterval(() => this.update(), 250);
     }
 
+    // Cache all necessary DOM elements used by the race engine UI
     bindElements() {
       this.statusEl = document.getElementById('race-status');
       this.raceNumberEl = document.getElementById('race-number');
@@ -64,23 +71,29 @@
       this.placeBtn = document.getElementById('btn-race-bet');
     }
 
+    // Attach event listeners for betting controls (plus, minus, max, place bet) and runner selection
     bindEvents() {
+      // Decrease bet amount button handler
       this.minusBtn?.addEventListener('click', () => {
         this.fx?.playClick();
         this.bet = Math.max(BET_STEP, this.roundMoney(this.bet - BET_STEP));
         this.updateBetControls();
       });
+      // Increase bet amount button handler
       this.plusBtn?.addEventListener('click', () => {
         this.fx?.playClick();
         this.bet = Math.min(this.maxStake(), this.roundMoney(this.bet + BET_STEP));
         this.updateBetControls();
       });
+      // Maximize bet amount button handler
       this.maxBtn?.addEventListener('click', () => {
         this.fx?.playClick();
         this.bet = this.maxStake();
         this.updateBetControls();
       });
+      // Place bet button handler
       this.placeBtn?.addEventListener('click', () => this.placeBet());
+      // Runner list selection handler
       this.runnerListEl?.addEventListener('click', event => {
         const option = event.target.closest('[data-runner-id]');
         if (!option || option.disabled || this.ticket || this.isRaceInProgress) return;
@@ -91,11 +104,12 @@
       });
     }
 
+    // Load an unsettled wager from the encrypted profile save so a refresh cannot discard it
     loadProfileTicket() {
-      // Keep an unsettled wager inside the encrypted profile save so a refresh cannot discard it.
       this.ticket = window.LocalProfiles?.getCurrentSave().raceBet || null;
     }
 
+    // Reset race states when switching to a different active profile
     resetForActiveProfile() {
       this.bet = 10;
       this.selectedHorseId = null;
@@ -106,20 +120,23 @@
       this.update();
     }
 
+    // Returns true if there is currently an active, pending ticket
     hasPendingTicket() {
       return Boolean(this.ticket);
     }
 
+    // Utility function to round money values to two decimal places
     roundMoney(value) {
       return Math.round(Number(value) * CENTS) / CENTS;
     }
 
+    // Calculates the maximum allowable stake based on player balance and max bet limits
     maxStake() {
       return Math.max(0, this.roundMoney(Math.min(this.hub.balance, this.hub.player.maxBet)));
     }
 
+    // Seed each scheduled race by its start time so a saved ticket resolves to the same field after reload
     makeRandom(eventId) {
-      // Seed each scheduled race by its start time so a saved ticket resolves to the same field after reload.
       let state = (Math.floor(eventId / RACE_INTERVAL_MS) * 2_654_435_761 + 1_013_904_223) >>> 0;
       return () => {
         state = (state + 0x6D2B79F5) >>> 0;
@@ -130,6 +147,7 @@
       };
     }
 
+    // Generates a race object including randomized entrants, abilities, odds, and deterministically chosen winner
     createRace(eventId) {
       const random = this.makeRandom(eventId);
 
@@ -142,6 +160,7 @@
 
       const selectedHorses = shuffledMaster.slice(0, 6);
 
+      // Map selected horses into active entrants with abilities and finish factors
       const entrants = selectedHorses.map((horse, index) => ({
         ...horse,
         id: `horse-${index + 1}`,
@@ -150,6 +169,7 @@
         index
       }));
 
+      // Calculate win weights and probabilities
       const weights = entrants.map(horse => Math.pow(horse.ability, 8));
       const totalWeight = weights.reduce((sum, weight) => sum + weight, 0);
       entrants.forEach((horse, index) => {
@@ -158,6 +178,7 @@
         horse.odds = Math.max(1.2, Math.floor((0.92 / horse.winProbability) * 100) / 100);
       });
 
+      // Determine the winning horse based on weighted random draw
       let draw = random() * totalWeight;
       let winnerIndex = weights.findIndex(weight => {
         draw -= weight;
@@ -173,14 +194,17 @@
       };
     }
 
+    // Format event ID timestamp into a local time string
     raceStartTime(eventId) {
       return new Date(eventId).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
     }
 
+    // Format monetary value with currency symbol and two decimal places
     formatMoney(value) {
       return `$${Number(value).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
     }
 
+    // Format milliseconds into a MM:SS countdown string
     formatCountdown(milliseconds) {
       const seconds = Math.max(0, Math.ceil(milliseconds / 1000));
       const minutes = Math.floor(seconds / 60);
@@ -188,6 +212,7 @@
       return `${String(minutes).padStart(2, '0')}:${String(remainder).padStart(2, '0')}`;
     }
 
+    // Main update tick function executed regularly to handle state changes, settling tickets, and refreshing UI
     update() {
       const now = Date.now();
       const currentStart = Math.floor(now / RACE_INTERVAL_MS) * RACE_INTERVAL_MS;
@@ -223,6 +248,7 @@
       this.updateTicketNote();
     }
 
+    // Updates the clock, status messages, countdown timer, and header texts
     updateClockAndStatus(bettingRace, now, remaining) {
       const raceNumber = `#${bettingRace.number.toLocaleString('en-US')}`;
       const activeTicket = this.ticket;
@@ -266,6 +292,7 @@
       }
     }
 
+    // Helper to set the status bar text and style class
     setStatus(message, statusClass) {
       if (!this.statusEl) return;
       this.statusEl.textContent = message;
@@ -273,6 +300,7 @@
       this.statusEl.classList.add(statusClass);
     }
 
+    // Renders the list of selectable horses for betting in the UI
     renderRunnerOptions(race) {
       if (!this.runnerListEl) return;
       this.runnerListEl.replaceChildren();
@@ -305,6 +333,7 @@
       });
     }
 
+    // Renders the track lanes and horse tokens for the active/preview race
     renderTrack(race) {
       if (!this.trackEl) return;
       this.trackEl.replaceChildren();
@@ -334,6 +363,7 @@
       });
     }
 
+    // Updates the horizontal positions of horse tokens along the track lanes based on progress
     updateTrackPositions(race, progress, isRunning) {
       if (!this.trackEl) return;
       const winnerId = race.winnerId;
@@ -350,6 +380,7 @@
       });
     }
 
+    // Updates visual selection state and disabled attributes on runner buttons
     updateRunnerSelection() {
       if (!this.runnerListEl) return;
       this.runnerListEl.querySelectorAll('[data-runner-id]').forEach(button => {
@@ -360,6 +391,7 @@
       });
     }
 
+    // Updates bet amount displays, estimated returns, and control button states
     updateBetControls() {
       if (this.betDisplayEl) this.betDisplayEl.textContent = this.formatMoney(this.bet);
       const currentRace = this.createRace(this.targetRaceId || (Math.floor(Date.now() / RACE_INTERVAL_MS) + 1) * RACE_INTERVAL_MS);
@@ -379,6 +411,7 @@
       }
     }
 
+    // Updates informational notes regarding active tickets or recent results
     updateTicketNote() {
       if (!this.ticketNoteEl) return;
       if (this.lastResultText) {
@@ -395,6 +428,7 @@
       this.ticketNoteEl.textContent = 'One win bet per race. Your stake is virtual chips only.';
     }
 
+    // Handles placing a bet, updating wallet balances, saving profile data, and contributing to jackpots/XP
     placeBet() {
       const now = Date.now();
       const currentStart = Math.floor(now / RACE_INTERVAL_MS) * RACE_INTERVAL_MS;
@@ -426,6 +460,7 @@
       this.update();
     }
 
+    // Resolves a finished race ticket, calculates payouts, updates balances, and triggers audio/visual effects
     settleTicket() {
       const ticket = this.ticket;
       if (!ticket) return;
@@ -457,5 +492,11 @@
     }
   }
 
+  // Expose RaceEngine globally
   window.RaceEngine = RaceEngine;
 })();
+
+// Helper function to generate a random integer between min and max (inclusive)
+function getRandomInt(min, max) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
