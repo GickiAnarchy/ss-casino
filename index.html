@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>S&S Casino Hub — Simulated Racing</title>
-  <link rel="stylesheet" href="style.css?v=racing-circuits-20261015">
+  <link rel="stylesheet" href="style.css?v=lobby-services-room-20261016">
   <script src="models.js?v=shared-jackpot-20261012" defer></script>
   <script src="local-save.js?v=racing-circuits-20261015" defer></script>
   <script src="profiles.js?v=racing-circuits-20261015" defer></script>
@@ -53,14 +53,11 @@
     <div class="header-right">
       <button id="btn-profile-manager" class="profile-header-btn" type="button" aria-label="Switch local profile">👤 <span id="active-profile-name">Profile</span></button>
       <button id="btn-open-local-save" class="local-save-header-btn" aria-label="Manage local saves">💾 SAVE</button>
-      <button id="btn-open-wheel" class="wheel-header-btn">🎁 DAILY WHEEL</button>
-      <button id="btn-open-settings" class="icon-btn" title="Audio & Theme Settings">⚙️</button>
-      <button id="btn-open-bank" class="bank-btn">🏦 BANK</button>
+      <button id="btn-open-settings" class="icon-btn" type="button" title="Casino Settings">⚙️</button>
       <div class="wallet-display">
         <span class="wallet-label">BALANCE</span>
         <span id="global-balance" class="wallet-amount">$1,000.00</span>
       </div>
-      <button id="btn-reset-data" class="reset-data-btn" title="Reset Local Saved Data">🔄</button>
     </div>
   </header>
 
@@ -147,6 +144,12 @@
             High Roller Gold
           </button>
         </div>
+      </div>
+
+      <div class="settings-section settings-reset-section">
+        <h3>🛠️ CASINO DATA</h3>
+        <p class="settings-reset-note">Reset your balance, credit, debt, level, XP, and the shared jackpot. Your profile, settings, race progress, and daily-wheel cooldown will stay intact.</p>
+        <button id="btn-reset-data" class="reset-data-btn settings-reset-btn" type="button" title="Reset casino data">🔄 Reset casino data</button>
       </div>
     </div>
   </div>
@@ -246,6 +249,35 @@
           <button class="play-btn" data-game="horse-racing">RACE NOW</button>
         </div>
       </div>
+
+      <section class="lobby-services-room" aria-labelledby="lobby-services-title">
+        <div class="lobby-services-heading">
+          <div>
+            <p class="lobby-room-kicker">CASINO SERVICES</p>
+            <h3 id="lobby-services-title">Rewards &amp; Banking Room</h3>
+            <p>Claim a daily bonus or manage your virtual-chip credit.</p>
+          </div>
+          <span class="lobby-room-emblem" aria-hidden="true">🎁 🏦</span>
+        </div>
+        <div class="lobby-service-grid">
+          <article class="lobby-service-card">
+            <span class="lobby-service-icon" aria-hidden="true">🎡</span>
+            <div class="lobby-service-copy">
+              <h4>Daily Lucky Wheel</h4>
+              <p>Spin once every 24 hours for free bonus chips.</p>
+            </div>
+            <button id="btn-open-wheel" class="lobby-service-btn wheel-header-btn" type="button" aria-haspopup="dialog" aria-controls="modal-wheel">Open daily wheel</button>
+          </article>
+          <article class="lobby-service-card">
+            <span class="lobby-service-icon" aria-hidden="true">🏦</span>
+            <div class="lobby-service-copy">
+              <h4>Casino Bank</h4>
+              <p>Borrow virtual chips or repay outstanding debt.</p>
+            </div>
+            <button id="btn-open-bank" class="lobby-service-btn bank-btn" type="button" aria-haspopup="dialog" aria-controls="modal-bank">Visit the bank</button>
+          </article>
+        </div>
+      </section>
     </section>
 
     <!-- LOCAL SIMULATED RACING VIEW -->

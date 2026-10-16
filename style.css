@@ -1395,3 +1395,161 @@ body {
 @media (prefers-reduced-motion: reduce) {
   .splash-modal.active-view { animation-duration: 1ms; }
 }
+
+/* Lobby services room */
+.lobby-services-room {
+  margin-top: 24px;
+  padding: 22px;
+  border: 1px solid rgba(255, 215, 0, 0.42);
+  border-radius: 18px;
+  background: linear-gradient(145deg, rgba(42, 29, 58, 0.96), rgba(19, 15, 29, 0.96));
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.24);
+}
+
+.lobby-services-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  margin-bottom: 16px;
+}
+
+.lobby-room-kicker {
+  margin-bottom: 4px;
+  color: #c9b2e8;
+  font-size: 0.65rem;
+  font-weight: 900;
+  letter-spacing: 0.14em;
+}
+
+.lobby-services-heading h3 {
+  color: var(--gold-primary);
+  font-size: 1.35rem;
+  margin-bottom: 4px;
+}
+
+.lobby-services-heading > div > p:last-child {
+  color: #c8c1d0;
+  font-size: 0.82rem;
+}
+
+.lobby-room-emblem {
+  display: grid;
+  min-width: 64px;
+  min-height: 64px;
+  place-items: center;
+  border: 1px solid rgba(255, 215, 0, 0.3);
+  border-radius: 16px;
+  background: rgba(13, 10, 20, 0.6);
+  font-size: 1.55rem;
+  white-space: nowrap;
+}
+
+.lobby-service-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.lobby-service-card {
+  display: grid;
+  grid-template-columns: 46px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+  padding: 14px;
+  border: 1px solid #393143;
+  border-radius: 13px;
+  background: rgba(20, 18, 27, 0.88);
+  transition: border-color 0.18s ease, transform 0.18s ease;
+}
+
+.lobby-service-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(255, 215, 0, 0.5);
+}
+
+.lobby-service-icon {
+  display: grid;
+  width: 46px;
+  height: 46px;
+  place-items: center;
+  border: 1px solid #514465;
+  border-radius: 12px;
+  background: #292236;
+  font-size: 1.45rem;
+}
+
+.lobby-service-copy { min-width: 0; }
+.lobby-service-copy h4 { margin-bottom: 4px; color: #fff; font-size: 0.95rem; }
+.lobby-service-copy p { color: #b8b1c2; font-size: 0.75rem; line-height: 1.4; }
+
+.lobby-service-btn {
+  min-height: 42px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  color: #fff;
+  font-size: 0.78rem;
+  font-weight: 900;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.lobby-service-card .wheel-header-btn {
+  padding: 8px 12px;
+  font-size: 0.78rem;
+}
+
+.lobby-service-card .bank-btn {
+  padding: 8px 12px;
+  font-size: 0.78rem;
+}
+
+.lobby-service-btn:hover { filter: brightness(1.12); }
+.lobby-service-btn:focus-visible,
+.settings-reset-btn:focus-visible {
+  outline: 2px solid var(--gold-primary);
+  outline-offset: 3px;
+}
+
+/* Keep reset in Settings visually distinct without changing its handler. */
+.settings-reset-note {
+  margin: -3px 0 14px;
+  color: #bdb7c6;
+  font-size: 0.8rem;
+  line-height: 1.5;
+}
+
+.reset-data-btn.settings-reset-btn {
+  min-height: 42px;
+  padding: 9px 14px;
+  border-color: #995050;
+  background: #3a2222;
+  color: #ffdada;
+  font-size: 0.84rem;
+  font-weight: 800;
+}
+
+.reset-data-btn.settings-reset-btn:hover {
+  background: #4d2c2c;
+  border-color: #d06c6c;
+}
+
+#modal-settings .modal-card {
+  max-height: calc(100vh - 40px);
+  max-height: calc(100dvh - 40px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+@media (max-width: 640px) {
+  .lobby-services-room { padding: 16px; }
+  .lobby-services-heading { gap: 10px; }
+  .lobby-services-heading h3 { font-size: 1.15rem; }
+  .lobby-room-emblem { min-width: 52px; min-height: 52px; padding: 6px; font-size: 1.2rem; }
+  .lobby-service-grid { grid-template-columns: 1fr; }
+  .lobby-service-card { grid-template-columns: 42px minmax(0, 1fr); gap: 10px; padding: 12px; }
+  .lobby-service-icon { width: 42px; height: 42px; }
+  .lobby-service-btn { grid-column: 1 / -1; width: 100%; }
+  .reset-data-btn.settings-reset-btn { width: 100%; }
+}

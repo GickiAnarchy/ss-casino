@@ -1144,7 +1144,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       });
 
       document.getElementById('btn-reset-data')?.addEventListener('click', () => {
-        if (confirm('Are you sure you want to reset your casino balance, loans, XP, and daily wheel?')) {
+        if (confirm('Reset your casino balance, credit, debt, level, XP, and shared jackpot? Your daily-wheel cooldown and race progress will be kept.')) {
           if (RaceGame?.hasPendingTicket()) {
             alert('Wait for your simulated race to finish before resetting casino data.');
             return;
