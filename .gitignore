@@ -1,2 +1,2 @@
+# Keep the project's archived working directory out of commits; source, tests, docs, and assets remain tracked.
 .old/
-

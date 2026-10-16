@@ -1,3 +1,4 @@
+/* Theme tokens centralize repeated colors and reel sizes so palette changes do not rewrite every component. */
 :root {
   --gold-primary: #ffd700;
   --gold-dark: #b8860b;
@@ -10,6 +11,7 @@
   --spin-target-y: 0px;
 }
 
+/* Theme overrides replace shared tokens only; components inherit the selected palette automatically. */
 body[data-theme="midnight"] {
   --gold-primary: #00d2d3;
   --gold-dark: #00838f;
@@ -26,6 +28,7 @@ body[data-theme="gold"] {
   --header-bg: #120a05;
 }
 
+/* A predictable border-box reset makes card dimensions and responsive grids easier to calculate. */
 * {
   box-sizing: border-box;
   margin: 0;
@@ -53,6 +56,7 @@ body {
   z-index: 999;
 }
 
+/* The flex header wraps instead of pushing the balance and settings controls off narrow screens. */
 .global-bar {
   background: var(--header-bg);
   border-bottom: 2px solid var(--gold-dark);
@@ -232,6 +236,7 @@ body {
 }
 
 /* Modal Overlay Styling */
+/* Shared fixed overlays keep settings, saves, wheel, and bank dialogs visually consistent. */
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -466,6 +471,7 @@ body {
   padding: 20px;
 }
 
+/* Navigation toggles visibility classes on complete views rather than rebuilding game markup. */
 .view-screen { width: 100%; max-width: 900px; }
 .active-view { display: block; }
 .modal-overlay.active-view { display: flex; }
@@ -475,7 +481,44 @@ body {
 .lobby-header h2 { font-size: 2.2rem; color: var(--gold-primary); }
 .lobby-header p { color: #ccc; }
 
+/* The lobby's non-slot games use a fluid grid; slot cards have their own sibling grid so the Slot Room remains visually distinct. */
 .game-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+}
+
+/* Room containers make groups easy to scan and let each family of games grow without mixing unrelated cards. */
+.lobby-slot-room {
+  margin-bottom: 24px;
+  padding: 22px;
+  border: 1px solid rgba(255, 215, 0, 0.42);
+  border-radius: 18px;
+  background: linear-gradient(145deg, rgba(42, 29, 58, 0.96), rgba(19, 15, 29, 0.96));
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.24);
+}
+
+.lobby-slot-room-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  margin-bottom: 16px;
+}
+
+.lobby-slot-room-heading h3 {
+  margin-bottom: 4px;
+  color: var(--gold-primary);
+  font-size: 1.35rem;
+}
+
+.lobby-slot-room-heading > div > p:last-child {
+  color: #c8c1d0;
+  font-size: 0.82rem;
+}
+
+/* Auto-fit uses the same minimum comfortable card width as the main lobby grid, including when catalog cards are appended at runtime. */
+.slot-room-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   gap: 20px;
@@ -520,6 +563,7 @@ body {
   margin-bottom: 15px;
 }
 
+/* Shared cabinet surfaces visually connect game tables while each game keeps its own inner layout. */
 .slot-machine {
   background: linear-gradient(145deg, #2a2a35, #141419);
   border: 4px solid var(--gold-primary);
@@ -985,15 +1029,15 @@ body {
     gap: 14px;
   }
 
-  .slot-machine.slot-5reel, 
-  .slot-machine.coin-toss-machine, 
+  .slot-machine.slot-5reel,
+  .slot-machine.coin-toss-machine,
   .slot-machine.blackjack-table {
     max-width: 100%;
   }
 
   /* 3. 3-Reel & 5-Reel Slot Scaling */
   :root {
-    --symbol-size-3reel: 90px;    
+    --symbol-size-3reel: 90px;
     --symbol-size-5reel: 70px;
   }
 
@@ -1543,7 +1587,11 @@ body {
   overscroll-behavior: contain;
 }
 
+/* Mobile overrides stack dense controls and shrink room padding without changing desktop structure. */
 @media (max-width: 640px) {
+  .lobby-slot-room { padding: 16px; }
+  .lobby-slot-room-heading { gap: 10px; }
+  .lobby-slot-room-heading h3 { font-size: 1.15rem; }
   .lobby-services-room { padding: 16px; }
   .lobby-services-heading { gap: 10px; }
   .lobby-services-heading h3 { font-size: 1.15rem; }
@@ -1557,6 +1605,7 @@ body {
 
 
 /* Reusable slot-template theme tokens */
+/* Catalog themes set these custom properties inline; the shared rules below consume them for each machine. */
 .theme-slot-machine {
   background-image: linear-gradient(145deg, var(--slot-machine-start, #2a2a35), var(--slot-machine-end, #141419)), var(--slot-background-image, none);
   background-size: cover;

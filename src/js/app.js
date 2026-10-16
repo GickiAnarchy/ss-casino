@@ -1,3 +1,4 @@
+/* Browser bootstrap waits for the HTML, unlocks or creates the local profile, and only then wires game systems to that save. */
 document.addEventListener('DOMContentLoaded', async () => {
   const LocalProfiles = new window.LocalProfileManager();
   window.LocalProfiles = LocalProfiles;
@@ -6,6 +7,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   // ==========================================
   // 1. SOUND FX & PARTICLE CANVAS ENGINE
   // ==========================================
+  /** Small Web Audio and Canvas effects share one volume/mute control and need no external media files. */
   class FXEngine {
     constructor() {
       this.audioCtx = null;
@@ -56,13 +58,13 @@ document.addEventListener('DOMContentLoaded', async () => {
     playClick() {
       this.initAudio();
       if (!this.audioCtx || this.isMuted) return;
-      
+
       const osc = this.audioCtx.createOscillator();
       const gain = this.audioCtx.createGain();
       osc.type = 'sine';
       osc.frequency.setValueAtTime(600, this.audioCtx.currentTime);
       osc.frequency.exponentialRampToValueAtTime(100, this.audioCtx.currentTime + 0.05);
-      
+
       gain.gain.setValueAtTime(0.15, this.audioCtx.currentTime);
       gain.gain.linearRampToValueAtTime(0.01, this.audioCtx.currentTime + 0.05);
 
@@ -185,7 +187,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     spawnConfetti(count = 75) {
       if (!this.canvas) return;
       const colors = ['#ffd700', '#ff4d4d', '#4eef90', '#e056fd', '#00d2d3'];
-      
+
       for (let i = 0; i < count; i++) {
         this.particles.push({
           x: this.canvas.width / 2 + (Math.random() * 200 - 100),
@@ -236,6 +238,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   // ==========================================
   // 2. BLACKJACK 21 TABLE ENGINE
   // ==========================================
+  /** Blackjack is a state machine so betting, player actions, dealer play, and settlement cannot overlap. */
   class BlackjackEngine {
     constructor(hubController) {
       this.hub = hubController;
@@ -543,6 +546,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   // ==========================================
   // 3. DAILY WHEEL MANAGER
   // ==========================================
+  /** Draws the daily bonus wheel on Canvas and enforces a 24-hour cooldown using the active player save. */
   class DailyWheelManager {
     constructor(hubController) {
       this.hub = hubController;
@@ -604,7 +608,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
       for (let i = 0; i < numSlices; i++) {
         const angle = angleOffset + (i * arc);
-        
+
         this.ctx.beginPath();
         this.ctx.fillStyle = this.slices[i].color;
         this.ctx.moveTo(centerX, centerY);
@@ -664,7 +668,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
           const wonSlice = this.slices[targetSliceIndex];
           this.hub.modifyBalance(wonSlice.amount);
-          
+
           FX.playJackpotSound();
           FX.spawnConfetti(100);
 
@@ -716,6 +720,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   // ==========================================
   // 4. SETTINGS & THEME MANAGER
   // ==========================================
+  /** Keeps sound and CSS themes in sync with the controls and encrypted active-profile settings. */
   class SettingsManager {
     constructor(hubController) {
       this.hub = hubController;
@@ -834,6 +839,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   // ==========================================
   // 5. XP & PLAYER LEVELING ENGINE
   // ==========================================
+  /** Converts virtual wagers to level progress and non-monetary milestones; it does not change wager odds. */
   class XPManager {
     constructor(hubController) {
       this.hub = hubController;
@@ -916,6 +922,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   // ==========================================
   // 6. PROGRESSIVE JACKPOT MANAGER
   // ==========================================
+  /** A browser-origin-local demo jackpot; storage events refresh other tabs without a game server. */
   class ProgressiveJackpotManager {
     constructor(initialAmount = 10000) {
       this.storageKey = 'ss_casino_shared_jackpot_v1';
@@ -1010,11 +1017,12 @@ document.addEventListener('DOMContentLoaded', async () => {
   // ==========================================
   // 7. BANK & LOAN MANAGER
   // ==========================================
+  /** Implements virtual-chip borrowing and repayment in the player model; no payment rail or real credit is involved. */
   class BankManager {
     constructor(hubController) {
       this.hub = hubController;
       this.interestRate = 0.10;
-      
+
       this.bindElements();
       this.initEvents();
     }
@@ -1061,7 +1069,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       const totalCharge = amount * (1 + this.interestRate);
       this.hub.player.debt += totalCharge;
       this.hub.modifyBalance(amount);
-      
+
       FX.playWinSound();
       this.saveState();
       this.updateModalUI();
@@ -1111,6 +1119,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   // ==========================================
   // 8. CENTRAL CASINO HUB CONTROLLER
   // ==========================================
+  /** Owns the active Player, lobby navigation, and shared wallet display; games call it to settle chips. */
   class CasinoHubController {
     constructor(startingBalance = 100) {
       this.globalBalanceEl = document.getElementById('global-balance');
@@ -1121,7 +1130,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       this.coinTossView = document.getElementById('view-coin-toss');
       this.blackjackView = document.getElementById('view-blackjack');
       this.raceView = document.getElementById('view-horse-racing');
-      
+
       this.currentView = 'lobby';
       const profileSave = window.LocalProfiles.getCurrentSave();
       this.player = Player.fromProfile(profileSave.player, window.LocalProfiles.activeProfile?.name || 'Player');
@@ -1136,7 +1145,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     set balance(value) {
       this.player.balance = value;
     }
-    
+
     modifyBalance(amount) {
       this.balance = Math.round((this.balance + amount + Number.EPSILON) * 100) / 100;
       this.saveState();
@@ -1169,10 +1178,10 @@ document.addEventListener('DOMContentLoaded', async () => {
           JackpotManager.resetState();
           window.Bank.resetState();
           window.XP.resetState();
-          
+
           // Don't reset wheel
           // window.DailyWheel.resetState();
-          
+
           alert('Casino state has been reset to defaults!');
         }
       });
@@ -1232,7 +1241,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         this.globalBalanceEl.textContent = `$${this.balance.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
       }
     }
-    
+
   }
 
   let RaceGame = null;
@@ -1245,6 +1254,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   // ==========================================
   // 9. COIN TOSS TABLE ENGINE
   // ==========================================
+  /** Handles a virtual double-or-nothing round and uses a busy flag to block duplicate flips. */
   class CoinTossEngine {
     constructor(hubController) {
       this.hub = hubController;
@@ -1339,7 +1349,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       this.coinEl.addEventListener('animationend', () => {
         this.coinEl.style.transform = isHeads ? 'rotateY(0deg)' : 'rotateY(180deg)';
         this.coinEl.classList.remove('animate-heads', 'animate-tails');
-        
+
         this.evaluateFlip(outcome);
         this.isFlipping = false;
         this.updateUI();
@@ -1362,6 +1372,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   // ==========================================
   // 10. CLASSIC 3-REEL SLOT ENGINE
   // ==========================================
+  /** Reusable three-reel engine: each cabinet supplies its template, theme, and cent-safe wager limits. */
   class ClassicSlotEngine {
     constructor(hubController, options = {}) {
       this.hub = hubController;
@@ -1557,8 +1568,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         const sym3 = this.currentGrid[p3[0]][p3[1]];
 
         const nonWilds = [sym1, sym2, sym3].filter(s => s.id !== 'wild');
-        const matchedSymbol = nonWilds.length === 0 
-          ? this.SYMBOLS.find(s => s.id === 'wild') 
+        const matchedSymbol = nonWilds.length === 0
+          ? this.SYMBOLS.find(s => s.id === 'wild')
           : ([sym1, sym2, sym3].every(s => s.id === nonWilds[0].id || s.id === 'wild') ? nonWilds[0] : null);
 
         if (matchedSymbol) {
@@ -1587,6 +1598,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   // ==========================================
   // 11. HIGH VOLATILITY 5-REEL ENGINE
   // ==========================================
+  /** Five-reel engine adds ten paylines, scatter-triggered free spins, and sticky wilds to the shared chip loop. */
   class HighVolatilitySlotEngine {
     constructor(hubController, options = {}) {
       this.hub = hubController;
@@ -1599,7 +1611,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       });
       this.theme = options.theme || {};
       window.SlotGameCatalog.applyTheme(this.rootEl, this.theme);
-      
+
       this.SYMBOL_SIZE = 70;
       this.REEL_COUNT = 5;
       this.VISIBLE_ROWS = 3;
@@ -1686,7 +1698,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     updateUI() {
       this.betEl.textContent = window.SlotBetRules.format(this.bet);
-      
+
       const inFreeSpins = this.freeSpinsRemaining > 0;
       const maximum = this.betRules.getMaximum(this.hub.balance, this.hub.player.maxBet);
       this.spinBtn.disabled = this.isSpinning || (!inFreeSpins && this.hub.balance < this.bet);
@@ -1944,8 +1956,9 @@ document.addEventListener('DOMContentLoaded', async () => {
   class PRS {
     //TODO
   }
-  
-  
+
+
+  // Instantiate the two hand-authored high-stakes tables, then build catalog tables with their matching shared engine.
   // Slot rooms share reusable mechanics and are configured by the theme/template catalog.
   const ClassicSlots = new ClassicSlotEngine(CasinoHub, { theme: window.SlotGameCatalog.getTheme('classicGold') });
   const FiveReelGame = new HighVolatilitySlotEngine(CasinoHub, { theme: window.SlotGameCatalog.getTheme('royalGems') });
@@ -1959,6 +1972,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   const CoinTossGame = new CoinTossEngine(CasinoHub);
   const BlackjackGame = new BlackjackEngine(CasinoHub);
 
+  // Initialize save controls before racing so startup overlays and linked-file state are settled predictably.
   window.LocalSave = new window.LocalSaveManager({
     hub: CasinoHub,
     jackpot: JackpotManager,
@@ -1971,6 +1985,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   RaceGame = new window.RaceEngine(CasinoHub, { fx: FX, jackpot: JackpotManager, xp: window.XP });
   window.RaceGame = RaceGame;
 
+  // Switching replaces ephemeral round memory, so permit it only when every game is safely between rounds.
   LocalProfiles.canSwitchProfile = () => (
     CasinoHub.currentView === 'lobby' &&
     SlotGames.every(game => !game.isSpinning && !(game.freeSpinsRemaining > 0)) && !CoinTossGame.isFlipping &&
@@ -1978,6 +1993,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     !RaceGame.hasPendingTicket() &&
     ['BETTING', 'ENDED'].includes(BlackjackGame.gameState)
   );
+  // Rebind each manager to the newly decrypted profile; the stable DOM stays while per-round memory is cleared.
   LocalProfiles.onProfileChanged = async (save, profile) => {
     await window.LocalSave.switchProfile();
     CasinoHub.player = Player.fromProfile(save.player, profile.name);

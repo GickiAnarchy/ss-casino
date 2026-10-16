@@ -1,3 +1,4 @@
+// Headless tests exercise seeded race generation, schedules, recovery, and UI guardrails without changing a real profile.
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
@@ -5,7 +6,7 @@ const test = require('node:test');
 const vm = require('node:vm');
 
 const context = { window: {}, document: {} };
-vm.runInNewContext(fs.readFileSync(path.join(__dirname, 'race-engine.js'), 'utf8'), context);
+vm.runInNewContext(fs.readFileSync(path.join(__dirname, '../src/js/race-engine.js'), 'utf8'), context);
 const engine = Object.create(context.window.RaceEngine.prototype);
 
 function finalTrackPositions(race) {

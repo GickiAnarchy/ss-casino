@@ -1,6 +1,7 @@
+// Exercise bet math at the boundaries where binary floating-point often creates visible one-cent errors.
 const assert = require('node:assert/strict');
 const test = require('node:test');
-const SlotBetRules = require('./slot-bet-rules.js');
+const SlotBetRules = require('../src/js/slot-bet-rules.js');
 
 test('penny slots step in five-cent increments and cap at five dollars', () => {
   const bets = new SlotBetRules({ minimum: 0.05, step: 0.05, maximum: 5, startingBet: 0.05 });

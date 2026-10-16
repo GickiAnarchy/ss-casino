@@ -1,3 +1,4 @@
+// Use a tiny VM browser shim so encrypted-profile save normalization can be tested without a real browser or touching user storage.
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
@@ -5,7 +6,7 @@ const test = require('node:test');
 const vm = require('node:vm');
 
 const context = { window: {}, document: { getElementById: () => null } };
-vm.runInNewContext(fs.readFileSync(path.join(__dirname, 'profiles.js'), 'utf8'), context);
+vm.runInNewContext(fs.readFileSync(path.join(__dirname, '../src/js/profiles.js'), 'utf8'), context);
 const manager = Object.create(context.window.LocalProfileManager.prototype);
 
 test('new profiles default to $100 while existing saved balances are preserved', () => {

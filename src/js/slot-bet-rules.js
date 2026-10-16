@@ -1,4 +1,6 @@
+/* Shared slot currency rules use integer cents to avoid familiar binary floating-point drift in wager steps and payouts. */
 (function installSlotBetRules() {
+  /** Encapsulates each table's minimum, increment, ceiling, and starting wager as reusable configuration. */
   class SlotBetRules {
     constructor({ minimum, step, maximum = Infinity, startingBet = minimum } = {}) {
       const minimumCents = SlotBetRules.toCents(minimum);
@@ -13,6 +15,7 @@
       this.startingBet = Math.max(minimumCents, SlotBetRules.toCents(startingBet)) / 100;
     }
 
+    // Convert at the input boundary; perform stake arithmetic as integers until the UI needs dollars again.
     static toCents(amount) {
       return Math.round((Number(amount) + Number.EPSILON) * 100);
     }
@@ -30,6 +33,7 @@
       }).format(SlotBetRules.roundMoney(amount));
     }
 
+    // The affordable ceiling must also be a legal table increment, not merely an amount below the wallet balance.
     getMaximum(balance, playerMaximum) {
       const affordableCents = Math.min(
         SlotBetRules.toCents(balance),
@@ -41,6 +45,7 @@
       return (this.minimumCents + steps * this.stepCents) / 100;
     }
 
+    // Stop at the highest affordable legal step so a button cannot create a rejected wager.
     increase(current, balance, playerMaximum) {
       const maximum = this.getMaximum(balance, playerMaximum);
       if (maximum === 0) return current;

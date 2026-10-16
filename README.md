@@ -1,23 +1,95 @@
 # S&S Casino Hub
 
-A static, virtual-chip casino game with Classic Slots, Gem Quest 5-Reel Slots, Coin Toss, Blackjack 21, simulated horse and car races, a daily bonus wheel, player leveling, and a demo jackpot shared locally across profiles in the same browser.
+S&S Casino Hub is a static, vanilla HTML/CSS/JavaScript casino-style game. It uses **virtual chips only**: there are no deposits, cashouts, payment services, real-money wagers, or online game server.
 
-## Local saves
+The lobby includes five slot tables grouped in a dedicated **Slot Room**, plus Coin Toss, Blackjack, simulated horse/car racing, a daily bonus wheel, player levels, virtual-chip banking, and a browser-local demo jackpot.
 
-Game data stays local in password-protected profiles encrypted in this browser; no Firebase project or online save service is used. Each profile keeps separate progress and preferences, while the demo jackpot is shared in browser-local storage. From the **LOCAL SAVE** button, download or import a JSON backup for the active profile. Supported desktop browsers can also link a JSON file and update it automatically as you play. Backups contain game data only and are not encrypted; profile passwords cannot be recovered.
+## Start here
 
-See [`LOCAL_SAVES.md`](./LOCAL_SAVES.md) for backup, restore, and linked-file details.
+- [Beginner build-from-scratch tutorial](docs/building-from-scratch.md) — a guided explanation of the project, its architecture, how to run and test it, and how to add a themed slot table.
+- [Local saves and profile guide](docs/local-saves.md) — profile encryption, browser storage, backups, imports, and linked files.
 
-This game uses virtual credits only. It does not support deposits, cashouts, or real-money gambling.
+## Run and test locally
 
-New profiles and an intentional casino-data reset start with **$100.00**. Existing saved profile balances are preserved. Classic 3-Reel and Gem Quest remain high-stakes rooms with a $5 minimum; the lobby also includes Citrus Garden Penny Slots ($0.05–$5.00), Neon Midway Quarter Slots ($0.25–$25.00), and Deep Sea Gem Quest ($0.25–$25.00). Wagers step in the table's displayed denomination and payouts retain cent precision.
+You need a modern browser and Node.js 18 or newer for the included tests. There are no npm packages or build step.
 
-## Reusable slot themes
+From the repository root, start a local HTTP server:
 
-The three-reel and Gem Quest layouts are reusable HTML templates in `index.html`. `slot-templates.js` supplies game configurations, stake limits, theme palettes, symbol overrides (emoji or image assets), and reel-stop/win sound presets. To add a themed game, add a catalog entry that selects `classic` or `five-reel`, points at the matching template, and references a theme; the shared engines handle wagers, spins, and payouts.
+```sh
+python3 -m http.server 8000 --bind 127.0.0.1
+```
 
-## Simulated horse and car racing
+On Windows, the equivalent command is usually:
 
-Horse and car races are generated in the browser every hour from 7 AM through 9 PM, alternating between the two circuits on the device's local clock. Horse races start at 7 AM and every two hours after that; car races start at 8 AM and every two hours after that. There are no scheduled races overnight; racing stays closed until previews and betting reopen 45 minutes before the next morning's 7 AM race. Upcoming race details remain hidden until that 45-minute window opens. Horse races field six entrants and car races field eight from their larger stables; bets close five minutes before a start. Every race receives a repeatable pseudo-random sprint duration between 110 and 200 seconds (1:50–3:20), so a refresh does not change its timing or result. Starts and wins are tracked for each horse and car, and experience/form feed into future ability, displayed win chances, and odds.
+```powershell
+py -m http.server 8000 --bind 127.0.0.1
+```
 
-An unsettled ticket, runner experience, and unread result notice are saved with the active encrypted local profile and included in save backups. If a player leaves before the finish, missed races advance experience and the wager settles when they return. Only one ticket can be open across both circuits at a time. These local simulations do not use a live sports feed or server.
+Then visit <http://localhost:8000/>. **Use localhost instead of opening `index.html` as a `file://` URL**: password-protected profiles require the browser's Web Crypto API in a secure context, and modern browsers treat localhost as secure.
+
+Run the automated tests in a second terminal from the project root:
+
+```sh
+node --test tests/*.test.js
+```
+
+The tests use Node's built-in test runner and do not install dependencies.
+
+## Project layout
+
+```text
+.
+├── index.html                 # GitHub Pages entry point and reusable game markup/templates
+├── assets/
+│   ├── splash.png             # Locally served visual asset
+│   └── README.md              # Asset purpose and path guidance
+├── src/
+│   ├── css/style.css          # Shared layout, themes, animation, and responsive rules
+│   └── js/
+│       ├── models.js          # Validated in-memory Player model
+│       ├── local-save.js      # JSON backup/import and optional linked-file support
+│       ├── profiles.js        # Encrypted browser-local profiles and migration
+│       ├── race-engine.js     # Deterministic local horse/car simulation
+│       ├── slot-bet-rules.js  # Cent-precision wager constraints shared by slot tables
+│       ├── slot-templates.js  # Slot themes/catalog and generated Slot Room cards/views
+│       └── app.js             # Browser bootstrap, game engines, and shared managers
+├── tests/                     # Node test-runner suites; no third-party test framework
+├── docs/
+│   ├── building-from-scratch.md
+│   └── local-saves.md
+└── .vscode/launch.json        # Optional Chrome debugging configurations
+```
+
+`index.html` deliberately stays at the repository root because GitHub Pages can serve it directly as the site home page. Source code and tests live below it so the root stays easy to navigate.
+
+## Slot Room
+
+All five slot tables are grouped inside the lobby's **Slot Room**:
+
+1. Classic 3-Reel — high-stakes table, $5 minimum.
+2. 5-Reel Gem Quest — high-stakes table, $5 minimum, free spins and sticky wilds.
+3. Citrus Garden Penny Slots — $0.05–$5.00, in 5-cent steps.
+4. Neon Midway Quarter Slots — $0.25–$25.00, in 25-cent steps.
+5. Deep Sea Gem Quest — five-reel table, $0.25–$25.00, in 25-cent steps.
+
+The original two slot cards are written in `index.html`. The three additional themed cards are generated from the catalog in `src/js/slot-templates.js` and appended to the same `.slot-room-grid`. The matching reusable machine markup is stored in HTML `<template>` elements in `index.html`. `src/js/slot-bet-rules.js` performs wager calculations as integer cents to avoid floating-point rounding surprises.
+
+## Local-only player data
+
+Player progress is kept in this browser and website origin. Password-protected profiles derive a key from the profile password and encrypt profile data with AES-GCM. The demo jackpot is intentionally shared between profiles in the same browser origin and stored separately in local storage. Nothing is uploaded or synchronized by the game.
+
+The **LOCAL SAVE** dialog can download a JSON backup, import a backup, or link a JSON file for automatic updates in supported desktop browsers. **Downloaded and linked JSON backups are not encrypted.** They contain game state and preferences, not the profile password or encryption key. See [Local saves and profiles](docs/local-saves.md) before moving or restoring data.
+
+New profiles and intentional casino-data resets start at $100.00. Valid saved balances are preserved when loading existing profiles. Save schemas are normalized and versioned so malformed or unsupported data is rejected rather than silently treated as a new save.
+
+## Simulated racing
+
+Horse and car events are generated in the browser on the device's local clock. Events run hourly from 7 AM through 9 PM, alternating circuits: horses start at 7 AM and every two hours after; cars start at 8 AM and every two hours after. Previews and betting open 45 minutes before a race; betting closes five minutes before the start. Horse fields contain six runners, car fields eight, chosen from larger stable lists.
+
+A seeded pseudo-random generator makes race fields, duration, odds, and results repeatable after a refresh. Starts and wins affect later simulated ability and displayed chances. An open ticket, runner records, and unread result notice are saved to the active profile and portable backups. The game does not use a live sports feed, racing server, or external odds source.
+
+## Development and publishing
+
+Work on the `dev` branch for this project. This code organization keeps asset links relative to the root, so a static host can serve the same files without a bundler. The current reorganization and documentation were pushed to `dev` in commit `46e9692`; do not push future changes without the project owner’s explicit approval. Also check which branch GitHub Pages is configured to serve: a change on `dev` is not necessarily the public site source.
+
+This is a virtual-credit entertainment project, not a gambling or payment product.

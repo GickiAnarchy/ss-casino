@@ -1,4 +1,10 @@
+/*
+ * Catalog data is separate from spin mechanics so a new themed table can select a template, palette, and stake policy
+ * without copying an engine. The catalog also creates its lobby card and hidden play view.
+ */
+/* Slot themes and stake presets live in one catalog so new tables reuse the same engines and the dedicated Slot Room. */
 (function installSlotGameCatalog() {
+  // A theme is data: CSS colors, optional symbol substitutions, and sound-preset names.
   const themes = {
     classicGold: {
       id: 'classic-gold',
@@ -61,6 +67,7 @@
     }
   };
 
+  // One configuration describes a cabinet; decimal stake values are later validated by integer-cent rules.
   const games = [
     {
       id: 'penny-slots',
@@ -103,6 +110,7 @@
     }
   ];
 
+  // CSS custom properties let one reusable stylesheet skin different machines without duplicating layout rules.
   function applyTheme(root, theme) {
     if (!root || !theme) return;
     const target = root.classList.contains('slot-machine') ? root : (root.querySelector('.slot-machine') || root);
@@ -117,6 +125,7 @@
     target.style.setProperty('--slot-background-image', image);
   }
 
+  // Clone symbol records before replacement so one cabinet cannot mutate another cabinet's shared paytable data.
   function applySymbolTheme(symbol, theme) {
     const override = theme?.symbols?.[symbol.id];
     if (typeof override === 'string') return { ...symbol, icon: override };
@@ -131,11 +140,12 @@
     return { ...symbol };
   }
 
+  // Add catalog cards before DOMContentLoaded so the central controller can wire all play buttons in one pass.
   function render() {
-    const cardGrid = document.querySelector('.game-grid');
+    // The static high-stakes tables and generated catalog tables share this container, keeping every slot choice in one lobby room.
+    const cardGrid = document.querySelector('.slot-room-grid');
     const viewHost = document.getElementById('app-container');
     if (!cardGrid || !viewHost) return;
-    const nonSlotAnchor = cardGrid.querySelector('[data-game="coin-toss"]')?.closest('.game-card');
 
     games.forEach(game => {
       const theme = themes[game.themeId];
@@ -157,7 +167,7 @@
       button.dataset.game = game.id;
       button.textContent = 'PLAY NOW';
       card.append(icon, heading, description, stakes, button);
-      cardGrid.insertBefore(card, nonSlotAnchor || null);
+      cardGrid.appendChild(card);
 
       const template = document.getElementById(game.templateId);
       if (!template?.content?.firstElementChild) throw new Error(`Missing slot template: ${game.templateId}`);
@@ -178,6 +188,7 @@
     });
   }
 
+  // Expose only the small catalog API required by the engines; keep configuration tables private in this closure.
   window.SlotGameCatalog = {
     games,
     themes,

@@ -1,8 +1,13 @@
+/*
+ * Password-protected profiles stay on this browser origin. PBKDF2 derives an AES-GCM key; only profile metadata
+ * and ciphertext are stored outside the encrypted save. This is local privacy, not an online identity service.
+ */
 /* Browser-local multi-user profiles; profile data is encrypted with a password-derived AES-GCM key. */
 (function installLocalProfileManager() {
   const DATABASE_KEY = 'ss_casino_profiles_v1';
   const DATABASE_VERSION = 1;
   const FORMAT = 'ss-casino-encrypted-profile';
+  // Expensive password derivation slows offline guessing; keep this setting stable so existing profiles still unlock.
   const PBKDF2_ITERATIONS = 310000;
   const LEGACY_PROFILE_PREFIX = 'ss_casino_profile_v1_';
   const LEGACY_KEYS = [
@@ -10,6 +15,7 @@
     'casino_hub_wheel', 'casino_hub_credit_limit', 'casino_hub_max_bet', 'casino_hub_settings',
     'casino_hub_jackpot'
   ];
+  // Defaults create a new profile or fill missing fields; valid balances from existing profiles are preserved.
   const DEFAULT_SAVE = Object.freeze({
     player: { balance: 100, lastSpinTime: 0, level: 1, xp: 0, debt: 0, creditLimit: 2000, maxBet: 100 },
     settings: { volume: 80, isMuted: false, theme: 'vegas' },
@@ -19,6 +25,7 @@
     raceExperience: null
   });
 
+  /** Owns profile creation, unlock, AES-GCM encryption, legacy migration, and ordered localStorage writes. */
   class LocalProfileManager {
     constructor() {
       this.activeProfile = null;
@@ -54,6 +61,7 @@
       this.updateProfileButton();
     }
 
+    // Treat the persisted envelope as untrusted input and stop if its schema is incomplete or unknown.
     readDatabase() {
       const raw = localStorage.getItem(DATABASE_KEY);
       if (!raw) return { version: DATABASE_VERSION, profiles: [] };
@@ -144,6 +152,7 @@
       return profiles.sort((a, b) => b.updatedAtMs - a.updatedAtMs).slice(0, 100);
     }
 
+    // Trust boundary for stored or imported values: whitelist fields, clamp preferences, and reject impossible race data.
     normalizeSave(value = {}) {
       const input = value && typeof value === 'object' ? value : {};
       const player = input.player && typeof input.player === 'object' ? input.player : {};
@@ -241,6 +250,7 @@
       };
     }
 
+    // PBKDF2 uses a random per-profile salt; the derived key itself is not written into browser storage.
     async deriveKey(password, salt) {
       const material = await crypto.subtle.importKey('raw', new TextEncoder().encode(password), 'PBKDF2', false, ['deriveKey']);
       return crypto.subtle.deriveKey(
@@ -256,6 +266,7 @@
       return new TextEncoder().encode(`${FORMAT}:${profile.id}:${profile.name}`);
     }
 
+    // AES-GCM authenticates contents and profile identity; every encryption uses a fresh random 96-bit IV.
     async encryptSave(profile, key, save) {
       const iv = crypto.getRandomValues(new Uint8Array(12));
       const profileSave = this.normalizeSave(save);
@@ -268,6 +279,7 @@
       return { iv: this.toBase64(iv), ciphertext: this.toBase64(new Uint8Array(ciphertext)) };
     }
 
+    // Wrong passwords or modified ciphertext fail authentication instead of returning partial profile data.
     async decryptSave(profile, key) {
       const plaintext = await crypto.subtle.decrypt(
         { name: 'AES-GCM', iv: this.fromBase64(profile.iv), additionalData: this.additionalData(profile) },
@@ -470,6 +482,7 @@
       });
     }
 
+    // Validate and normalize names before generating fresh salt and encrypting the new profile save.
     async createProfile(nameValue, password, initialSave) {
       const name = nameValue.trim().replace(/\s+/g, ' ');
       if (!name || name.length > 24) throw new Error('Profile names must be 1–24 characters.');
@@ -525,6 +538,7 @@
       return this.normalizeSave(this.currentSave || DEFAULT_SAVE);
     }
 
+    // Snapshot normalized data and queue encryption so rapid updates stay ordered and profile switches cannot cross-write.
     saveCurrent(partial = {}) {
       if (!this.activeProfile || !this.activeKey) return Promise.resolve(false);
       this.currentSave = this.normalizeSave({ ...this.currentSave, ...partial });
@@ -548,6 +562,7 @@
       return task;
     }
 
+    // Wait for the previous profile write before changing the active encryption key.
     async flushSave() { await this.saveQueue.catch(() => false); }
 
     updateProfileButton() {
