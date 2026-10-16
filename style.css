@@ -1245,7 +1245,7 @@ body {
 .race-mode-switch { display: flex; justify-content: center; gap: 8px; margin: 10px 0 14px; }
 .race-mode-switch > span { min-height: 40px; padding: 8px 16px; display: flex; align-items: center; border: 1px solid #584a68; border-radius: 9px; color: #e6dfef; background: #211c2b; font-weight: 800; }
 .race-mode-switch > span.is-active { border-color: var(--gold-primary); color: #211707; background: var(--gold-primary); box-shadow: 0 0 12px rgba(255,215,0,0.18); }
-.race-info-strip { width: 100%; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 8px; }
+.race-info-strip { width: 100%; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; }
 .race-info-item { display: grid; gap: 4px; padding: 10px 8px; background: #17131f; border: 1px solid #423853; border-radius: 9px; text-align: center; }
 .race-info-item span { color: #aaa2ba; font-size: 0.62rem; font-weight: 800; letter-spacing: 0.08em; }
 .race-info-item strong { color: var(--gold-primary); font-size: 0.9rem; }
