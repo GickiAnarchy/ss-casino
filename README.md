@@ -90,6 +90,6 @@ A seeded pseudo-random generator makes race fields, duration, odds, and results 
 
 ## Development and publishing
 
-Work on the `dev` branch for this project. This code organization keeps asset links relative to the root, so a static host can serve the same files without a bundler. The current reorganization and documentation are local changes only; **nothing has been pushed**. Do not publish or push these changes until the project owner explicitly allows it. Also check which branch GitHub Pages is configured to serve: a change on `dev` is not necessarily the public site source.
+Work on the `dev` branch for this project. This code organization keeps asset links relative to the root, so a static host can serve the same files without a bundler. The current reorganization and documentation were pushed to `dev` in commit `46e9692`; do not push future changes without the project owner’s explicit approval. Also check which branch GitHub Pages is configured to serve: a change on `dev` is not necessarily the public site source.
 
 This is a virtual-credit entertainment project, not a gambling or payment product.
