@@ -349,6 +349,7 @@ body {
   margin-bottom: 16px;
 }
 
+.settings-hr { margin: 15px; }
 .settings-section h3 { font-size: 0.95rem; color: var(--gold-primary); margin-bottom: 12px; }
 
 .setting-row {
