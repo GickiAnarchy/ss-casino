@@ -28,6 +28,14 @@ body[data-theme="gold"] {
   --header-bg: #120a05;
 }
 
+body[data-theme="money"] {
+  --gold-primary: #4eec5c;
+  --gold-dark: #039634;
+  --bg-primary: radial-gradient(circle, #5b7e4f 0%, #1f3d21 100%);
+  --panel-bg: #08250d;
+  --header-bg: #495b4b;
+}
+
 /* A predictable border-box reset makes card dimensions and responsive grids easier to calculate. */
 * {
   box-sizing: border-box;
@@ -352,6 +360,7 @@ body {
   border-radius: 12px;
   padding: 16px;
   margin-bottom: 16px;
+  justify-content: center;
 }
 
 .settings-hr { margin: 15px; }
@@ -408,6 +417,7 @@ body {
 .swatch-vegas { background: linear-gradient(135deg, #4a0d66, #ffd700); }
 .swatch-midnight { background: linear-gradient(135deg, #1a202c, #00d2d3); }
 .swatch-gold { background: linear-gradient(135deg, #3d2b1f, #ffe066); }
+.swatch-money { background: linear-gradient(135deg, #1f3d21, #4eec5c); }
 
 /* Bank Grid Styling */
 .bank-stats-grid {
@@ -1585,6 +1595,14 @@ body {
   max-height: calc(100dvh - 40px);
   overflow-y: auto;
   overscroll-behavior: contain;
+}
+
+.data-row {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  justify-content: center;
+  align-items: center;
 }
 
 /* Mobile overrides stack dense controls and shrink room padding without changing desktop structure. */

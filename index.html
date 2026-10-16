@@ -145,16 +145,24 @@
             <span class="theme-swatch swatch-gold"></span>
             High Roller Gold
           </button>
+          <button class="theme-btn" data-theme="money">
+            <span class="theme-swatch swatch-money"></span>
+            Money Green
+          </button>
         </div>
       </div>
 
       <div class="settings-section settings-reset-section">
-        <h3>🛠️ CASINO DATA</h3>
-        <p class="settings-reset-note">Local save file import or export. Bind a file to save data to.</p>
-        <button id="btn-open-local-save" class="settings-reset-btn reset-data-btn" aria-label="Manage local saves">💾 SAVE</button>
+        <h3>🛠️ CASINO DATA</h3> 
+        <div class="data-row">
+          <p class="settings-reset-note">Local save file import or export. Bind a file to save data to.</p>
+          <button id="btn-open-local-save" class="settings-reset-btn reset-data-btn" aria-label="Manage local saves">💾 SAVE</button>
+        </div>
         <hr class="settings-hr">
-        <p class="settings-reset-note">Reset your balance, credit, debt, level, XP, and the shared jackpot. Your profile, settings, race progress, and daily-wheel cooldown will stay intact.</p>
-        <button id="btn-reset-data" class="reset-data-btn settings-reset-btn" type="button" title="Reset casino data">🔄 Reset casino data</button>
+        <div class="data-row">
+          <p class="settings-reset-note">Reset your balance, credit, debt, level, XP, and the shared jackpot. Your profile, settings, race progress, and daily-wheel cooldown will stay intact.</p>
+          <button id="btn-reset-data" class="reset-data-btn settings-reset-btn" type="button" title="Reset casino data">🔄 Reset casino data</button>
+        </div>
       </div>
     </div>
   </div>
