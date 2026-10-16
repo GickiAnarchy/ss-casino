@@ -1,3 +1,7 @@
+/*
+ * Deterministic, browser-only racing: seeded schedules make previews, results, and unsettled tickets reproducible
+ * after refresh; the encrypted active profile stores runner experience and pending outcomes.
+ */
 /* Local-only horse and car racing circuits for the virtual-chip casino. */
 (function installRaceEngine() {
   // Race slots use the browser's local time: 7 AM through 9 PM, alternating circuits hourly.
@@ -89,6 +93,7 @@
     { name: 'Bombs Away', silks: '💣', lane: '#44a3d3' }
   ];
 
+  /** Controls local race timing, generated fields, animation, betting, tickets, and between-session settlement. */
   class RaceEngine {
     constructor(hub, { fx, jackpot, xp } = {}) {
       this.hub = hub;
@@ -246,6 +251,7 @@
     }
 
     // Race slots are created in local time, so the quiet overnight window follows the user's device clock.
+    // Use the device calendar and timezone so daytime race times match the player clock.
     getScheduledRaceAtOrBefore(timestamp) {
       const instant = new Date(timestamp);
       for (let dayOffset = 0; dayOffset <= 2; dayOffset += 1) {
@@ -261,6 +267,7 @@
       return null;
     }
 
+    // Scan local calendar hours instead of adding fixed 24-hour blocks, which can fail across daylight-saving changes.
     getNextRaceStart(timestamp) {
       const instant = new Date(timestamp);
       for (let dayOffset = 0; dayOffset <= 2; dayOffset += 1) {
@@ -310,6 +317,7 @@
     }
 
     // Seed each event and race type so refreshes and profile reloads reproduce the same field and outcome.
+    // This small seeded PRNG provides repeatability, not cryptographic security; outcomes are virtual local simulations.
     makeRandom(eventId, type = this.raceType, stream = 0) {
       const typeSeed = type === 'car' ? 0x5bd1e995 : 0x27d4eb2f;
       let state = (Math.floor(eventId / RACE_SEED_INTERVAL_MS) * 2_654_435_761 + 1_013_904_223 + typeSeed + stream) >>> 0;
@@ -322,6 +330,7 @@
       };
     }
 
+    // Stable inputs derive entrants, odds, duration, and winner so a refresh cannot reroll an offered event.
     createRace(eventId, type = this.getScheduledRaceType(eventId)) {
       const random = this.makeRandom(eventId, type);
       const durationRandom = this.makeRandom(eventId, type, 0x9e3779b9);
@@ -382,6 +391,7 @@
     }
 
     // Re-create tickets from the previous 11-minute schedule only for old saved horse bets/notices.
+    // Preserve the old seed and runner IDs only to settle saved tickets created by the former schedule format.
     createLegacyRace(eventId) {
       const oldInterval = 660_000;
       const random = () => {
@@ -497,6 +507,7 @@
     }
 
     // Simulate completed events missed while the browser was closed, so experience keeps progressing.
+    // Advance missed events when the player returns so runner records do not require an open tab all day.
     processCompletedRaces(now) {
       let changed = false;
       for (const type of ['horse', 'car']) {
@@ -530,6 +541,7 @@
       window.LocalSave?.queueFileSave();
     }
 
+    // One clock tick derives the live race and next betting race, then refreshes the dependent UI.
     update() {
       const now = Date.now();
       this.processCompletedRaces(now);
@@ -807,6 +819,7 @@
           : 'Betting closes five minutes before each start. Your chips are virtual only.');
     }
 
+    // Record the event, runner, stake, odds, and duration before settlement; deduct the stake only once.
     placeBet() {
       const now = Date.now();
       const raceId = this.getNextRaceStart(now);
@@ -838,6 +851,7 @@
       this.update();
     }
 
+    // Reconstruct the recorded seeded result and settle the saved ticket even if the player returns later.
     settleTicket() {
       const ticket = this.ticket;
       if (!ticket) return;

@@ -1,17 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <!-- Keep the public entry point at the repository root for GitHub Pages. Deferred scripts execute in this order after HTML parsing, so each global API exists before its dependants and before app.js boots. -->
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>S&S Casino Hub — Simulated Racing</title>
-  <link rel="stylesheet" href="style.css?v=themed-slot-templates-20261016">
-  <script src="models.js?v=shared-jackpot-20261012" defer></script>
-  <script src="local-save.js?v=racing-circuits-20261015" defer></script>
-  <script src="profiles.js?v=racing-circuits-20261015" defer></script>
-  <script src="race-engine.js?v=race-preview-20261015" defer></script>
-  <script src="slot-bet-rules.js?v=cent-bets-20261016" defer></script>
-  <script src="slot-templates.js?v=slot-themes-20261016" defer></script>
-  <script src="app.js?v=low-stakes-themed-slots-20261016" defer></script>
+  <link rel="stylesheet" href="src/css/style.css?v=slot-room-reorg-20261016">
+  <script src="src/js/models.js?v=shared-jackpot-20261012" defer></script>
+  <script src="src/js/local-save.js?v=racing-circuits-20261015" defer></script>
+  <script src="src/js/profiles.js?v=racing-circuits-20261015" defer></script>
+  <script src="src/js/race-engine.js?v=race-preview-20261015" defer></script>
+  <script src="src/js/slot-bet-rules.js?v=cent-bets-20261016" defer></script>
+  <script src="src/js/slot-templates.js?v=slot-themes-20261016" defer></script>
+  <script src="src/js/app.js?v=slot-room-reorg-20261016" defer></script>
 </head>
 <body>
 
@@ -205,30 +206,41 @@
 
   <main id="app-container">
     
-    <!-- LOBBY VIEW -->
+    <!-- The lobby groups every slot choice in one dedicated room; the general game grid below is reserved for non-slot tables. -->
     <section id="view-lobby" class="view-screen active-view">
       <div class="lobby-header">
         <h2>SELECT A ROOM</h2>
         <p>Pick a room to travel to.</p>
       </div>
 
+      <section class="lobby-slot-room" aria-labelledby="slot-room-title">
+        <div class="lobby-slot-room-heading">
+          <div>
+            <p class="lobby-room-kicker">SLOT TABLES</p>
+            <h3 id="slot-room-title">Slot Room</h3>
+            <p>Choose a three-reel or five-reel machine and its stake level.</p>
+          </div>
+          <span class="lobby-room-emblem" aria-hidden="true">🎰 💎</span>
+        </div>
+        <div class="slot-room-grid">
+          <!-- The two original high-stakes tables stay hand-authored; themed catalog tables are added to this same grid by slot-templates.js. -->
+          <article class="game-card">
+            <div class="card-icon" aria-hidden="true">🎰</div>
+            <h3>Classic 3-Reel</h3>
+            <p>High stakes: $5 minimum. Traditional 3-reel slot machine with wild payouts.</p>
+            <button class="play-btn" type="button" data-game="classic-slots">PLAY NOW</button>
+          </article>
+          <article class="game-card">
+            <div class="card-icon" aria-hidden="true">💎</div>
+            <h3>5-Reel Gem Quest</h3>
+            <p>High stakes: $5 minimum. Five reels, Free Spins, Sticky Wilds &amp; Jackpot.</p>
+            <button class="play-btn" type="button" data-game="5reel-slots">PLAY NOW</button>
+          </article>
+        </div>
+      </section>
+
+      <!-- These cards intentionally exclude all slot games; their launch buttons share one data-game navigation contract. -->
       <div class="game-grid">
-        <!-- Classic 3-Reel Card -->
-        <div class="game-card">
-          <div class="card-icon">🎰</div>
-          <h3>Classic 3-Reel</h3>
-          <p>High stakes: $5 minimum. Traditional 3-reel slot machine with wild payouts.</p>
-          <button class="play-btn" data-game="classic-slots">PLAY NOW</button>
-        </div>
-
-        <!-- 5-Reel Gem Quest Card -->
-        <div class="game-card">
-          <div class="card-icon">💎</div>
-          <h3>5-Reel Gem Quest</h3>
-          <p>High stakes: $5 minimum. Five reels, Free Spins, Sticky Wilds &amp; Jackpot.</p>
-          <button class="play-btn" data-game="5reel-slots">PLAY NOW</button>
-        </div>
-
         <!-- Coin Toss Card -->
         <div class="game-card">
           <div class="card-icon">🪙</div>

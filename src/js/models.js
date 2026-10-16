@@ -1,7 +1,9 @@
+/* Player is the validated in-memory value object shared by game logic and local persistence. */
 /**
  * In-memory game profile. Only virtual-chip progress is persisted locally;
  * credentials are not part of the game or save data.
  */
+/** Keeps numeric game state together and exposes an explicit save shape instead of serializing runtime objects. */
 class Player {
   constructor({
     name = 'Guest',
@@ -22,12 +24,12 @@ class Player {
     this.creditLimit = Player.numberOr(creditLimit, 2000, 0);
     this._maxBet = Player.numberOr(maxBet, 100, 1);
   }
-  
+
   get maxBet() {
     // Returns the configured max bet, safely capped by the current balance
     return Math.min(this._maxBet, this.balance);
   }
-  
+
   set maxBet(amount) {
     this._maxBet = Player.numberOr(amount, 100, 1);
   }
@@ -118,6 +120,7 @@ class Player {
     storage.setItem('casino_hub_max_bet', String(this._maxBet));
   }
 
+  /** Accept only finite numbers above the caller-provided floor; malformed saved values fall back safely. */
   static numberOr(value, fallback, minimum) {
     if (value === null || value === undefined || value === '') return fallback;
     const number = Number(value);

@@ -1,3 +1,7 @@
+/*
+ * Local save-file controller: encrypted browser profiles are the normal store; JSON backups and linked files are
+ * optional portability tools. Backup JSON is unencrypted, so this module never describes it as an encrypted profile.
+ */
 /* global Player */
 (function installLocalSaveManager() {
   const FILE_FORMAT = 'ss-casino-local-save';
@@ -8,6 +12,7 @@
   const DEFAULT_SETTINGS = Object.freeze({ volume: 80, isMuted: false, theme: 'vegas' });
   const THEMES = new Set(['vegas', 'midnight', 'gold']);
 
+  /** Coordinates backup/import, optional File System Access linking, and UI refresh after a save is loaded. */
   class LocalSaveManager {
     constructor({ hub, jackpot, bank, xp, dailyWheel, settings }) {
       this.hub = hub;
@@ -34,6 +39,7 @@
       this.bindEvents();
     }
 
+    // Keep event wiring together so each control has one clear save action.
     bindEvents() {
       this.openButton?.addEventListener('click', () => this.openModal());
       this.closeButton?.addEventListener('click', () => this.closeModal());
@@ -61,6 +67,7 @@
       });
     }
 
+    // Restore an authorized file handle when possible, while retaining browser-local saving as the fallback.
     async initialize() {
       this.setStatus('Saved automatically in this browser. Choose a JSON file to enable direct file auto-save where supported.', 'local');
       try {
@@ -122,6 +129,7 @@
       this.status.dataset.state = state;
     }
 
+    // Whitelist portable game fields; never include the profile password, encryption key, or browser credentials.
     createSave() {
       return {
         format: FILE_FORMAT,
@@ -136,6 +144,7 @@
       };
     }
 
+    // Validate the versioned envelope and normalize fields before imported JSON reaches live game state.
     parseSave(text) {
       const data = JSON.parse(text);
       if (!data || data.format !== FILE_FORMAT || data.schemaVersion !== FILE_SCHEMA_VERSION) {
@@ -211,6 +220,7 @@
       if (this.fileHandle) this.queueFileSave();
     }
 
+    // Apply validated data through existing managers so profile storage and visible controls stay consistent.
     applySave(save) {
       this.hub.player = Player.fromProfile(save.player, window.LocalProfiles?.activeProfile?.name || 'Player');
       this.settings.applySettings(save.settings);
@@ -230,6 +240,7 @@
       this.setStatus('Local save loaded. Your browser data has been updated.', 'local');
     }
 
+    // Linking needs the user's explicit browser file-picker choice; unsupported browsers keep download/import backups.
     async linkFile() {
       if (typeof window.showSaveFilePicker !== 'function') {
         this.setStatus('Direct file auto-save is not supported in this browser. Use Download save backup and Import save file instead.', 'warning');
@@ -266,6 +277,7 @@
       }
     }
 
+    // A promise queue keeps rapid writes ordered so an older save cannot finish after and replace a newer one.
     queueFileSave() {
       if (!this.fileHandle) return;
       const fileHandle = this.fileHandle;
@@ -295,6 +307,7 @@
       this.setStatus('Encrypted profile save is active in this browser. Choose a save file to link this profile.', 'local');
     }
 
+    // A Blob URL lets the browser download a portable JSON copy without uploading anything.
     downloadBackup() {
       const blob = new Blob([JSON.stringify(this.createSave(), null, 2)], { type: 'application/json' });
       const url = URL.createObjectURL(blob);
@@ -308,6 +321,7 @@
       this.setStatus('Save backup downloaded to your device.', this.fileHandle ? 'linked' : 'local');
     }
 
+    // Confirm before replacing the active save and clear the input so the same file can be selected again.
     async importSelectedFile(event) {
       const file = event.target.files?.[0];
       if (!file) return;
@@ -323,6 +337,7 @@
       }
     }
 
+    // IndexedDB stores FileSystemFileHandle objects because localStorage cannot structured-clone browser file handles.
     openHandleDatabase() {
       if (!window.indexedDB) return Promise.resolve(null);
       return new Promise((resolve, reject) => {
