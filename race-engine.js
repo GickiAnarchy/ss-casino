@@ -10,7 +10,8 @@
   const RESULT_DISPLAY_MS = 120_000;
   const BET_STEP = 5;
   const CENTS = 100;
-  const FIELD_SIZE = 10;
+  const HORSE_FIELD_SIZE = 6;
+  const CAR_FIELD_SIZE = 8;
   const MAX_EXPERIENCE_BOOST = 0.22;
 
   // Each stable keeps an identity across races so its experience and record persist.
@@ -318,7 +319,8 @@
         [master[i], master[j]] = [master[j], master[i]];
       }
 
-      const entrants = master.slice(0, FIELD_SIZE).map((runner, index) => {
+      const fieldSize = type === 'car' ? CAR_FIELD_SIZE : HORSE_FIELD_SIZE;
+      const entrants = master.slice(0, fieldSize).map((runner, index) => {
         const stats = this.getRunnerStats(type, runner.id);
         const experienceBoost = Math.min(MAX_EXPERIENCE_BOOST, stats.starts * 0.0033);
         const form = (stats.wins + 1) / (stats.starts + 2);

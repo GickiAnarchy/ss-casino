@@ -23,12 +23,12 @@ function finalTrackPositions(race) {
   return new Map(lanes.map(lane => [lane.dataset.runnerId, Number.parseFloat(lane.token.style.left)]));
 }
 
-test('horse and car fields each contain ten unique entrants from larger stables', () => {
+test('horse fields contain six entrants and car fields contain eight unique entrants from larger stables', () => {
   const eventId = new Date(2026, 9, 15, 9).getTime();
-  for (const type of ['horse', 'car']) {
+  for (const [type, expectedFieldSize] of [['horse', 6], ['car', 8]]) {
     const race = engine.createRace(eventId, type);
-    assert.equal(race.entrants.length, 10);
-    assert.equal(new Set(race.entrants.map(runner => runner.id)).size, 10);
+    assert.equal(race.entrants.length, expectedFieldSize);
+    assert.equal(new Set(race.entrants.map(runner => runner.id)).size, expectedFieldSize);
     assert.ok(race.entrants.every(runner => runner.id.startsWith(`${type}-`)));
   }
 });
@@ -106,14 +106,14 @@ test('completed scheduled races advance starts and win records on both circuits'
 
   engine.processCompletedRaces(now);
 
-  for (const type of ['horse', 'car']) {
+  for (const [type, expectedStarts] of [['horse', 6], ['car', 8]]) {
     const circuit = engine.experience[type];
     const totals = Object.values(circuit.runners).reduce((total, runner) => ({
       starts: total.starts + runner.starts,
       wins: total.wins + runner.wins
     }), { starts: 0, wins: 0 });
     assert.equal(circuit.lastProcessedRaceId, morningRace);
-    assert.equal(totals.starts, 10);
+    assert.equal(totals.starts, expectedStarts);
     assert.equal(totals.wins, 1);
   }
   assert.equal(saveCount, 1);
