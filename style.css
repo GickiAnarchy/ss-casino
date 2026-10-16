@@ -1236,9 +1236,13 @@ body {
 .profile-migration-note { padding: 10px 12px; border: 1px solid #5c4b16; border-radius: 8px; color: #f0d991; background: rgba(184, 134, 11, 0.12); }
 
 /* Simulated racing stays visually consistent with the casino while making live movement and betting state clear. */
-.race-machine { max-width: 760px; }
+.race-machine { max-width: 900px; }
 .race-header { width: 100%; }
 .race-local-note { margin: 5px 0 12px; color: #b9b4c6; font-size: 0.82rem; text-align: center; }
+.race-mode-switch { display: flex; justify-content: center; gap: 8px; margin: 10px 0 14px; }
+.race-mode-switch button { min-height: 40px; padding: 8px 16px; border: 1px solid #584a68; border-radius: 9px; color: #e6dfef; background: #211c2b; font-weight: 800; cursor: pointer; }
+.race-mode-switch button.is-active { border-color: var(--gold-primary); color: #211707; background: var(--gold-primary); box-shadow: 0 0 12px rgba(255,215,0,0.18); }
+.race-mode-switch button:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
 .race-info-strip { width: 100%; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 8px; }
 .race-info-item { display: grid; gap: 4px; padding: 10px 8px; background: #17131f; border: 1px solid #423853; border-radius: 9px; text-align: center; }
 .race-info-item span { color: #aaa2ba; font-size: 0.62rem; font-weight: 800; letter-spacing: 0.08em; }
@@ -1253,6 +1257,7 @@ body {
 .race-lane-rail::before { content: ''; position: absolute; inset: 50% 0 auto; border-top: 1px dashed rgba(255,255,255,0.16); }
 .race-finish-line { position: absolute; top: 0; right: 4%; z-index: 1; height: 100%; border-left: 3px solid #fff; box-shadow: 1px 0 #111; }
 .race-horse-token { position: absolute; top: 50%; left: 0; z-index: 2; width: 30px; height: 30px; display: grid; place-items: center; border: 2px solid var(--silks-color, #fff); border-radius: 50%; background: #101017; font-size: 1rem; transform: translate(-50%, -50%); transition: left 220ms linear, box-shadow 180ms ease; }
+.race-car-token { width: 34px; height: 28px; border-radius: 8px; font-size: 1.15rem; }
 .race-lane-name { overflow: hidden; color: #d7d3df; font-size: 0.72rem; text-overflow: ellipsis; white-space: nowrap; }
 .race-lane.is-race-running .race-horse-token { box-shadow: 0 0 10px var(--silks-color); }
 .race-lane.is-race-winner .race-horse-token { box-shadow: 0 0 16px #ffd700; border-color: #ffd700; }
@@ -1290,6 +1295,7 @@ body {
   .profile-header-btn { flex: 1 1 100%; max-width: none; }
   .profile-card { padding: 22px 18px; }
   .race-machine { padding: 14px 10px; }
+  .race-mode-switch button { flex: 1; padding: 8px 10px; }
   .race-info-strip { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .race-runner-list { grid-template-columns: 1fr; }
   .race-stage, .race-betting-panel { padding: 10px; }
