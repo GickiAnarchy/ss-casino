@@ -11,7 +11,7 @@
     'casino_hub_jackpot'
   ];
   const DEFAULT_SAVE = Object.freeze({
-    player: { balance: 1000, lastSpinTime: 0, level: 1, xp: 0, debt: 0, creditLimit: 2000, maxBet: 100 },
+    player: { balance: 100, lastSpinTime: 0, level: 1, xp: 0, debt: 0, creditLimit: 2000, maxBet: 100 },
     settings: { volume: 80, isMuted: false, theme: 'vegas' },
     jackpot: 10000,
     raceBet: null,
@@ -96,7 +96,7 @@
       };
       return this.normalizeSave({
         player: {
-          balance: readNumber(oldPlayer.balance, 1000),
+          balance: readNumber(oldPlayer.balance, 100),
           lastSpinTime: readNumber(localStorage.getItem('casino_hub_wheel'), 0),
           level: Math.max(1, Math.floor(readNumber(oldXp.level, 1, 1))),
           xp: readNumber(oldXp.xp, 0),
@@ -216,7 +216,7 @@
         : null;
       return {
         player: {
-          balance: numberOr(player.balance, 1000),
+          balance: numberOr(player.balance, 100),
           lastSpinTime: numberOr(player.lastSpinTime, 0),
           level: Math.max(1, Math.floor(numberOr(player.level, 1, 1))),
           xp: numberOr(player.xp, 0),

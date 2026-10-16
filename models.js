@@ -5,7 +5,7 @@
 class Player {
   constructor({
     name = 'Guest',
-    balance = 1000,
+    balance = 100,
     lastSpinTime = 0,
     level = 1,
     xp = 0,
@@ -14,7 +14,7 @@ class Player {
     maxBet = 100
   } = {}) {
     this.name = name;
-    this.balance = Player.numberOr(balance, 1000, 0);
+    this.balance = Player.numberOr(balance, 100, 0);
     this.lastSpinTime = Player.numberOr(lastSpinTime, 0, 0);
     this.level = Math.max(1, Math.floor(Player.numberOr(level, 1, 1)));
     this.xp = Player.numberOr(xp, 0, 0);
@@ -33,7 +33,7 @@ class Player {
   }
 
   /** Load the existing browser-local save keys so current guest progress survives. */
-  static fromLocalStorage(defaultBalance = 1000, storage = window.localStorage) {
+  static fromLocalStorage(defaultBalance = 100, storage = window.localStorage) {
     const player = new Player({ balance: defaultBalance });
     player.loadLocalState(storage);
     return player;

@@ -8,6 +8,11 @@ const context = { window: {}, document: { getElementById: () => null } };
 vm.runInNewContext(fs.readFileSync(path.join(__dirname, 'profiles.js'), 'utf8'), context);
 const manager = Object.create(context.window.LocalProfileManager.prototype);
 
+test('new profiles default to $100 while existing saved balances are preserved', () => {
+  assert.equal(manager.normalizeSave({}).player.balance, 100);
+  assert.equal(manager.normalizeSave({ player: { balance: 812.34 } }).player.balance, 812.34);
+});
+
 test('profile saves preserve horse and car records and typed betting tickets', () => {
   const save = manager.normalizeSave({
     raceBet: {

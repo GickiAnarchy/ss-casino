@@ -73,15 +73,23 @@ document.addEventListener('DOMContentLoaded', async () => {
       osc.stop(this.audioCtx.currentTime + 0.05);
     }
 
-    playReelStop() {
+    playReelStop(soundPreset = 'classic') {
       this.initAudio();
       if (!this.audioCtx || this.isMuted) return;
 
+      const presets = {
+        classic: { start: 180, end: 40, type: 'triangle' },
+        royal: { start: 330, end: 110, type: 'triangle' },
+        garden: { start: 520, end: 260, type: 'sine' },
+        neon: { start: 760, end: 180, type: 'square' },
+        ocean: { start: 390, end: 95, type: 'sine' }
+      };
+      const preset = presets[soundPreset] || presets.classic;
       const osc = this.audioCtx.createOscillator();
       const gain = this.audioCtx.createGain();
-      osc.type = 'triangle';
-      osc.frequency.setValueAtTime(180, this.audioCtx.currentTime);
-      osc.frequency.exponentialRampToValueAtTime(40, this.audioCtx.currentTime + 0.08);
+      osc.type = preset.type;
+      osc.frequency.setValueAtTime(preset.start, this.audioCtx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(preset.end, this.audioCtx.currentTime + 0.08);
 
       gain.gain.setValueAtTime(0.3, this.audioCtx.currentTime);
       gain.gain.linearRampToValueAtTime(0.01, this.audioCtx.currentTime + 0.08);
@@ -114,11 +122,18 @@ document.addEventListener('DOMContentLoaded', async () => {
       }
     }
 
-    playWinSound() {
+    playWinSound(soundPreset = 'classic') {
       this.initAudio();
       if (!this.audioCtx || this.isMuted) return;
 
-      const notes = [523.25, 659.25, 783.99, 1046.50];
+      const melodies = {
+        classic: [523.25, 659.25, 783.99, 1046.50],
+        royal: [392, 523.25, 659.25, 783.99],
+        garden: [440, 554.37, 659.25, 880],
+        neon: [587.33, 739.99, 880, 1174.66],
+        ocean: [329.63, 392, 493.88, 659.25]
+      };
+      const notes = melodies[soundPreset] || melodies.classic;
       notes.forEach((freq, idx) => {
         const osc = this.audioCtx.createOscillator();
         const gain = this.audioCtx.createGain();
@@ -1097,11 +1112,12 @@ document.addEventListener('DOMContentLoaded', async () => {
   // 8. CENTRAL CASINO HUB CONTROLLER
   // ==========================================
   class CasinoHubController {
-    constructor(startingBalance = 1000) {
+    constructor(startingBalance = 100) {
       this.globalBalanceEl = document.getElementById('global-balance');
       this.lobbyView = document.getElementById('view-lobby');
       this.slotClassicView = document.getElementById('view-classic-slots');
       this.slot5ReelView = document.getElementById('view-5reel-slots');
+      this.extraSlotViews = Array.from(document.querySelectorAll('[data-extra-slot-view]'));
       this.coinTossView = document.getElementById('view-coin-toss');
       this.blackjackView = document.getElementById('view-blackjack');
       this.raceView = document.getElementById('view-horse-racing');
@@ -1122,7 +1138,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
     
     modifyBalance(amount) {
-      this.balance += amount;
+      this.balance = Math.round((this.balance + amount + Number.EPSILON) * 100) / 100;
       this.saveState();
       this.updateGlobalUI();
     }
@@ -1144,7 +1160,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       });
 
       document.getElementById('btn-reset-data')?.addEventListener('click', () => {
-        if (confirm('Reset your casino balance, credit, debt, level, XP, and shared jackpot? Your daily-wheel cooldown and race progress will be kept.')) {
+        if (confirm('Reset your casino balance to $100.00, credit, debt, level, XP, and shared jackpot? Your daily-wheel cooldown and race progress will be kept.')) {
           if (RaceGame?.hasPendingTicket()) {
             alert('Wait for your simulated race to finish before resetting casino data.');
             return;
@@ -1167,6 +1183,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       this.lobbyView.classList.replace('active-view', 'hidden-view');
       this.slotClassicView.classList.replace('active-view', 'hidden-view');
       this.slot5ReelView.classList.replace('active-view', 'hidden-view');
+      this.extraSlotViews.forEach(view => view.classList.replace('active-view', 'hidden-view'));
       this.coinTossView.classList.replace('active-view', 'hidden-view');
       this.blackjackView.classList.replace('active-view', 'hidden-view');
       this.raceView?.classList.replace('active-view', 'hidden-view');
@@ -1177,7 +1194,11 @@ document.addEventListener('DOMContentLoaded', async () => {
         this.slotClassicView.classList.replace('hidden-view', 'active-view');
       } else if (viewName === '5reel-slots') {
         this.slot5ReelView.classList.replace('hidden-view', 'active-view');
-      } else if (viewName === 'coin-toss') {
+      } else {
+        const extraSlotView = this.extraSlotViews.find(view => view.dataset.gameView === viewName);
+        if (extraSlotView) extraSlotView.classList.replace('hidden-view', 'active-view');
+      }
+      if (viewName === 'coin-toss') {
         this.coinTossView.classList.replace('hidden-view', 'active-view');
       } else if (viewName === 'blackjack') {
         this.blackjackView.classList.replace('hidden-view', 'active-view');
@@ -1196,7 +1217,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     resetState() {
-      this.balance = 1000;
+      this.balance = 100;
       this.player.debt = 0;
       this.player.creditLimit = 500;
       this.player.maxBet = 100;
@@ -1215,7 +1236,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 
   let RaceGame = null;
-  const CasinoHub = new CasinoHubController(1000);
+  const CasinoHub = new CasinoHubController(100);
   window.Bank = new BankManager(CasinoHub);
   window.XP = new XPManager(CasinoHub);
   window.DailyWheel = new DailyWheelManager(CasinoHub);
@@ -1342,8 +1363,17 @@ document.addEventListener('DOMContentLoaded', async () => {
   // 10. CLASSIC 3-REEL SLOT ENGINE
   // ==========================================
   class ClassicSlotEngine {
-    constructor(hubController) {
+    constructor(hubController, options = {}) {
       this.hub = hubController;
+      this.rootEl = document.getElementById(options.rootId || 'view-classic-slots');
+      this.betRules = new window.SlotBetRules({
+        minimum: options.minimumBet ?? 5,
+        step: options.betStep ?? 5,
+        maximum: options.maximumBet ?? Infinity,
+        startingBet: options.startingBet ?? 10
+      });
+      this.theme = options.theme || {};
+      window.SlotGameCatalog.applyTheme(this.rootEl, this.theme);
       this.SYMBOL_SIZE = 90;
       this.REEL_COUNT = 3;
       this.VISIBLE_ROWS = 3;
@@ -1356,7 +1386,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         { id: 'bell',   icon: '🔔', multiplier: 4,  weight: 18 },
         { id: 'wild',   icon: '🃏', multiplier: 8,  weight: 5 },
         { id: 'seven',  icon: '7️⃣', multiplier: 15, weight: 2 }
-      ];
+      ].map(symbol => window.SlotGameCatalog.applySymbolTheme(symbol, this.theme));
 
       this.PAYLINES = [
         [[0,0], [1,0], [2,0]],
@@ -1366,7 +1396,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         [[0,2], [1,1], [2,0]]
       ];
 
-      this.bet = 10;
+      this.bet = this.betRules.startingBet;
       this.isSpinning = false;
       this.currentGrid = [];
 
@@ -1375,17 +1405,13 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     bindElements() {
-      this.betEl = document.getElementById('bet-display');
-      this.statusEl = document.getElementById('status');
-      this.spinBtn = document.getElementById('btn-spin');
-      this.maxBtn = document.getElementById('btn-max');
-      this.minusBtn = document.getElementById('btn-minus');
-      this.plusBtn = document.getElementById('btn-plus');
-      this.reelStrips = [
-        document.querySelector('#reel-0 .strip'),
-        document.querySelector('#reel-1 .strip'),
-        document.querySelector('#reel-2 .strip')
-      ];
+      this.betEl = this.rootEl?.querySelector('[data-slot-bet]');
+      this.statusEl = this.rootEl?.querySelector('[data-slot-status]');
+      this.spinBtn = this.rootEl?.querySelector('[data-slot-spin]');
+      this.maxBtn = this.rootEl?.querySelector('[data-slot-max]');
+      this.minusBtn = this.rootEl?.querySelector('[data-slot-minus]');
+      this.plusBtn = this.rootEl?.querySelector('[data-slot-plus]');
+      this.reelStrips = Array.from(this.rootEl?.querySelectorAll('.reel .strip') || []);
     }
 
     init() {
@@ -1397,23 +1423,27 @@ document.addEventListener('DOMContentLoaded', async () => {
       }
 
       this.spinBtn.addEventListener('click', () => this.startSpin());
-      this.maxBtn.addEventListener('click', () => { FX.playClick(); this.bet = this.hub.player.maxBet; this.updateUI(); });
-      this.minusBtn.addEventListener('click', () => { FX.playClick(); if (this.bet > 5) { this.bet -= 5; this.updateUI(); } });
+      this.maxBtn.addEventListener('click', () => {
+        FX.playClick();
+        const maximum = this.betRules.getMaximum(this.hub.balance, this.hub.player.maxBet);
+        if (maximum > 0) this.bet = maximum;
+        this.updateUI();
+      });
+      this.minusBtn.addEventListener('click', () => { FX.playClick(); this.bet = this.betRules.decrease(this.bet); this.updateUI(); });
       this.plusBtn.addEventListener('click', () => {
         FX.playClick();
-        if (this.bet + 5 <= Math.min(this.hub.balance, this.hub.player.maxBet)) {
-          this.bet += 5;
-          this.updateUI();
-        }
+        this.bet = this.betRules.increase(this.bet, this.hub.balance, this.hub.player.maxBet);
+        this.updateUI();
       });
     }
 
     updateUI() {
-      this.betEl.textContent = `$${this.bet}`;
+      this.betEl.textContent = window.SlotBetRules.format(this.bet);
       this.spinBtn.disabled = this.isSpinning || this.hub.balance < this.bet;
-      this.maxBtn.disabled = this.isSpinning;
-      this.minusBtn.disabled = this.isSpinning;
-      this.plusBtn.disabled = this.isSpinning;
+      const maximum = this.betRules.getMaximum(this.hub.balance, this.hub.player.maxBet);
+      this.maxBtn.disabled = this.isSpinning || maximum === 0 || maximum <= this.bet;
+      this.minusBtn.disabled = this.isSpinning || this.bet <= this.betRules.minimumCents / 100;
+      this.plusBtn.disabled = this.isSpinning || maximum === 0 || this.bet + this.betRules.stepCents / 100 > maximum;
       this.hub.updateGlobalUI();
     }
 
@@ -1439,7 +1469,15 @@ document.addEventListener('DOMContentLoaded', async () => {
       symbolArray.forEach(sym => {
         const div = document.createElement('div');
         div.className = 'symbol';
-        div.textContent = sym.icon;
+        if (sym.image) {
+          const image = document.createElement('img');
+          image.className = 'slot-symbol-image';
+          image.src = sym.image;
+          image.alt = sym.alt || '';
+          div.appendChild(image);
+        } else {
+          div.textContent = sym.icon;
+        }
         stripEl.appendChild(div);
       });
     }
@@ -1499,14 +1537,14 @@ document.addEventListener('DOMContentLoaded', async () => {
         stripEl.classList.add('is-spinning');
 
         setTimeout(() => {
-          FX.playReelStop();
+          FX.playReelStop(this.theme.sounds?.reelStop);
           resolve();
         }, duration);
       });
     }
 
     clearHighlights() {
-      document.querySelectorAll('#view-classic-slots .symbol.highlight').forEach(el => el.classList.remove('highlight'));
+      this.rootEl.querySelectorAll('.symbol.highlight').forEach(el => el.classList.remove('highlight'));
     }
 
     evaluateResults() {
@@ -1534,11 +1572,12 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
       });
 
+      totalWin = window.SlotBetRules.roundMoney(totalWin);
       if (totalWin > 0) {
         this.hub.modifyBalance(totalWin);
-        FX.playWinSound();
+        FX.playWinSound(this.theme.sounds?.win);
         FX.spawnConfetti(50);
-        this.setStatus(`WINNER! +$${totalWin.toLocaleString()}`, 'status-win');
+        this.setStatus(`WINNER! +${window.SlotBetRules.format(totalWin)}`, 'status-win');
       } else {
         this.setStatus(this.hub.balance < this.bet ? 'NO FUNDS AVAILABLE' : 'TRY AGAIN!', 'status-loss');
       }
@@ -1549,8 +1588,17 @@ document.addEventListener('DOMContentLoaded', async () => {
   // 11. HIGH VOLATILITY 5-REEL ENGINE
   // ==========================================
   class HighVolatilitySlotEngine {
-    constructor(hubController) {
+    constructor(hubController, options = {}) {
       this.hub = hubController;
+      this.rootEl = document.getElementById(options.rootId || 'view-5reel-slots');
+      this.betRules = new window.SlotBetRules({
+        minimum: options.minimumBet ?? 5,
+        step: options.betStep ?? 5,
+        maximum: options.maximumBet ?? Infinity,
+        startingBet: options.startingBet ?? 10
+      });
+      this.theme = options.theme || {};
+      window.SlotGameCatalog.applyTheme(this.rootEl, this.theme);
       
       this.SYMBOL_SIZE = 70;
       this.REEL_COUNT = 5;
@@ -1567,7 +1615,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         { id: 'crown',   icon: '👑', mult: { 3: 4, 4: 20, 5: 40 }, weight: 1 },
         { id: 'wild',    icon: '🃏', mult: { 3: 6, 4: 25, 5: 60 }, weight: 2, isWild: true },
         { id: 'scatter', icon: '⭐', mult: { 3: 1, 4: 4, 5: 20 },  weight: 1, isScatter: true }
-      ];
+      ].map(symbol => window.SlotGameCatalog.applySymbolTheme(symbol, this.theme));
 
       this.PAYLINES = [
         [[0,1], [1,1], [2,1], [3,1], [4,1]],
@@ -1582,7 +1630,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         [[0,0], [1,1], [2,0], [3,1], [4,0]]
       ];
 
-      this.bet = 10;
+      this.bet = this.betRules.startingBet;
       this.isSpinning = false;
       this.currentGrid = [];
 
@@ -1595,23 +1643,16 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     bindElements() {
-      this.betEl = document.getElementById('bet5-display');
-      this.statusEl = document.getElementById('status-5reel');
-      this.spinBtn = document.getElementById('btn5-spin');
-      this.maxBtn = document.getElementById('btn5-max');
-      this.minusBtn = document.getElementById('btn5-minus');
-      this.plusBtn = document.getElementById('btn5-plus');
-      this.bonusHudEl = document.getElementById('bonus-hud-5reel');
-      this.fsCountEl = document.getElementById('fs-remaining-count');
-      this.fsWinEl = document.getElementById('fs-total-win');
-
-      this.reelStrips = [
-        document.querySelector('#reel5-0 .strip'),
-        document.querySelector('#reel5-1 .strip'),
-        document.querySelector('#reel5-2 .strip'),
-        document.querySelector('#reel5-3 .strip'),
-        document.querySelector('#reel5-4 .strip')
-      ];
+      this.betEl = this.rootEl?.querySelector('[data-slot-bet]');
+      this.statusEl = this.rootEl?.querySelector('[data-slot-status]');
+      this.spinBtn = this.rootEl?.querySelector('[data-slot-spin]');
+      this.maxBtn = this.rootEl?.querySelector('[data-slot-max]');
+      this.minusBtn = this.rootEl?.querySelector('[data-slot-minus]');
+      this.plusBtn = this.rootEl?.querySelector('[data-slot-plus]');
+      this.bonusHudEl = this.rootEl?.querySelector('[data-slot-bonus-hud]');
+      this.fsCountEl = this.rootEl?.querySelector('[data-slot-fs-count]');
+      this.fsWinEl = this.rootEl?.querySelector('[data-slot-fs-win]');
+      this.reelStrips = Array.from(this.rootEl?.querySelectorAll('.reel-5reel .strip') || []);
     }
 
     init() {
@@ -1623,30 +1664,40 @@ document.addEventListener('DOMContentLoaded', async () => {
       }
 
       this.spinBtn.addEventListener('click', () => this.startSpin());
-      this.maxBtn.addEventListener('click', () => { FX.playClick(); if (this.freeSpinsRemaining === 0) { this.bet = this.hub.player.maxBet; this.updateUI(); } });
-      this.minusBtn.addEventListener('click', () => { FX.playClick(); if (this.freeSpinsRemaining === 0 && this.bet > 5) { this.bet -= 5; this.updateUI(); } });
-      this.plusBtn.addEventListener('click', () => {
+      this.maxBtn.addEventListener('click', () => {
         FX.playClick();
-        if (this.freeSpinsRemaining === 0 && this.bet + 5 <= Math.min(this.hub.balance, this.hub.player.maxBet)) {
-          this.bet += 5;
+        if (this.freeSpinsRemaining === 0) {
+          const maximum = this.betRules.getMaximum(this.hub.balance, this.hub.player.maxBet);
+          if (maximum > 0) this.bet = maximum;
           this.updateUI();
         }
+      });
+      this.minusBtn.addEventListener('click', () => {
+        FX.playClick();
+        if (this.freeSpinsRemaining === 0) this.bet = this.betRules.decrease(this.bet);
+        this.updateUI();
+      });
+      this.plusBtn.addEventListener('click', () => {
+        FX.playClick();
+        if (this.freeSpinsRemaining === 0) this.bet = this.betRules.increase(this.bet, this.hub.balance, this.hub.player.maxBet);
+        this.updateUI();
       });
     }
 
     updateUI() {
-      this.betEl.textContent = `$${this.bet}`;
+      this.betEl.textContent = window.SlotBetRules.format(this.bet);
       
       const inFreeSpins = this.freeSpinsRemaining > 0;
+      const maximum = this.betRules.getMaximum(this.hub.balance, this.hub.player.maxBet);
       this.spinBtn.disabled = this.isSpinning || (!inFreeSpins && this.hub.balance < this.bet);
-      this.maxBtn.disabled = this.isSpinning || inFreeSpins;
-      this.minusBtn.disabled = this.isSpinning || inFreeSpins;
-      this.plusBtn.disabled = this.isSpinning || inFreeSpins;
+      this.maxBtn.disabled = this.isSpinning || inFreeSpins || maximum === 0 || maximum <= this.bet;
+      this.minusBtn.disabled = this.isSpinning || inFreeSpins || this.bet <= this.betRules.minimumCents / 100;
+      this.plusBtn.disabled = this.isSpinning || inFreeSpins || maximum === 0 || this.bet + this.betRules.stepCents / 100 > maximum;
 
       if (inFreeSpins) {
         this.bonusHudEl.classList.replace('hidden-view', 'active-view');
         this.fsCountEl.textContent = this.freeSpinsRemaining;
-        this.fsWinEl.textContent = `$${this.bonusTotalWin.toLocaleString('en-US', { minimumFractionDigits: 2 })}`;
+        this.fsWinEl.textContent = window.SlotBetRules.format(this.bonusTotalWin);
       } else {
         this.bonusHudEl.classList.replace('active-view', 'hidden-view');
       }
@@ -1676,7 +1727,15 @@ document.addEventListener('DOMContentLoaded', async () => {
       symbolArray.forEach(sym => {
         const div = document.createElement('div');
         div.className = 'symbol';
-        div.textContent = sym.icon;
+        if (sym.image) {
+          const image = document.createElement('img');
+          image.className = 'slot-symbol-image';
+          image.src = sym.image;
+          image.alt = sym.alt || '';
+          div.appendChild(image);
+        } else {
+          div.textContent = sym.icon;
+        }
         stripEl.appendChild(div);
       });
     }
@@ -1771,14 +1830,14 @@ document.addEventListener('DOMContentLoaded', async () => {
         stripEl.classList.add('is-spinning');
 
         setTimeout(() => {
-          FX.playReelStop();
+          FX.playReelStop(this.theme.sounds?.reelStop);
           resolve();
         }, duration);
       });
     }
 
     clearHighlights() {
-      document.querySelectorAll('#view-5reel-slots .symbol.highlight').forEach(el => el.classList.remove('highlight'));
+      this.rootEl.querySelectorAll('.symbol.highlight').forEach(el => el.classList.remove('highlight'));
     }
 
     applyStickyWildClasses() {
@@ -1849,12 +1908,13 @@ document.addEventListener('DOMContentLoaded', async () => {
           this.bonusTotalWin = 0;
           this.stickyWildsGrid = Array(5).fill(null).map(() => Array(3).fill(false));
           this.setStatus('🎉 10 FREE SPINS TRIGGERED!', 'status-bonus');
-          FX.playWinSound();
+          FX.playWinSound(this.theme.sounds?.win);
           FX.spawnConfetti(60);
         }
       }
 
       // 3. Process Jackpot / Standard Payouts
+      spinWin = window.SlotBetRules.roundMoney(spinWin);
       if (jackpotHit) {
         const jackpotPayout = JackpotManager.claimJackpot();
         this.hub.modifyBalance(jackpotPayout);
@@ -1863,14 +1923,14 @@ document.addEventListener('DOMContentLoaded', async () => {
         this.setStatus(`🚨 MEGA JACKPOT WIN! +$${jackpotPayout.toLocaleString()}`, 'status-jackpot');
       } else if (spinWin > 0) {
         this.hub.modifyBalance(spinWin);
-        FX.playWinSound();
+        FX.playWinSound(this.theme.sounds?.win);
         FX.spawnConfetti(40);
 
         if (this.freeSpinsRemaining > 0 || this.bonusTotalWin > 0) {
-          this.bonusTotalWin += spinWin;
+          this.bonusTotalWin = window.SlotBetRules.roundMoney(this.bonusTotalWin + spinWin);
         }
 
-        this.setStatus(`WIN! +$${spinWin.toLocaleString()}`, 'status-win');
+        this.setStatus(`WIN! +${window.SlotBetRules.format(spinWin)}`, 'status-win');
       } else if (this.freeSpinsRemaining === 0 && this.bonusTotalWin === 0) {
         this.setStatus(this.hub.balance < this.bet ? 'OUT OF FUNDS' : 'TRY AGAIN!', 'status-loss');
       }
@@ -1886,9 +1946,16 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
   
   
-  // Instantiation
-  const ClassicSlots = new ClassicSlotEngine(CasinoHub);
-  const FiveReelGame = new HighVolatilitySlotEngine(CasinoHub);
+  // Slot rooms share reusable mechanics and are configured by the theme/template catalog.
+  const ClassicSlots = new ClassicSlotEngine(CasinoHub, { theme: window.SlotGameCatalog.getTheme('classicGold') });
+  const FiveReelGame = new HighVolatilitySlotEngine(CasinoHub, { theme: window.SlotGameCatalog.getTheme('royalGems') });
+  const ThemedSlotGames = window.SlotGameCatalog.games.map(game => {
+    const options = { ...game, theme: game.theme };
+    return game.engine === 'classic'
+      ? new ClassicSlotEngine(CasinoHub, options)
+      : new HighVolatilitySlotEngine(CasinoHub, options);
+  });
+  const SlotGames = [ClassicSlots, FiveReelGame, ...ThemedSlotGames];
   const CoinTossGame = new CoinTossEngine(CasinoHub);
   const BlackjackGame = new BlackjackEngine(CasinoHub);
 
@@ -1906,8 +1973,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   LocalProfiles.canSwitchProfile = () => (
     CasinoHub.currentView === 'lobby' &&
-    !ClassicSlots.isSpinning && !FiveReelGame.isSpinning &&
-    FiveReelGame.freeSpinsRemaining === 0 && !CoinTossGame.isFlipping &&
+    SlotGames.every(game => !game.isSpinning && !(game.freeSpinsRemaining > 0)) && !CoinTossGame.isFlipping &&
     !window.DailyWheel.isSpinning &&
     !RaceGame.hasPendingTicket() &&
     ['BETTING', 'ENDED'].includes(BlackjackGame.gameState)
@@ -1922,15 +1988,16 @@ document.addEventListener('DOMContentLoaded', async () => {
     window.XP.updateUI();
     window.DailyWheel.updateUI();
 
-    ClassicSlots.bet = 10;
-    ClassicSlots.setStatus('PRESS SPIN TO PLAY');
-    ClassicSlots.updateUI();
-    FiveReelGame.bet = 10;
-    FiveReelGame.freeSpinsRemaining = 0;
-    FiveReelGame.bonusTotalWin = 0;
-    FiveReelGame.stickyWildsGrid = Array(5).fill(null).map(() => Array(3).fill(false));
-    FiveReelGame.setStatus('PRESS SPIN TO PLAY');
-    FiveReelGame.updateUI();
+    SlotGames.forEach(game => {
+      game.bet = game.betRules.startingBet;
+      if ('freeSpinsRemaining' in game) {
+        game.freeSpinsRemaining = 0;
+        game.bonusTotalWin = 0;
+        game.stickyWildsGrid = Array(5).fill(null).map(() => Array(3).fill(false));
+      }
+      game.setStatus('PRESS SPIN TO PLAY');
+      game.updateUI();
+    });
     CoinTossGame.bet = 10;
     CoinTossGame.selectedChoice = 'HEADS';
     CoinTossGame.setStatus('PICK HEADS OR TAILS');

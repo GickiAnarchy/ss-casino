@@ -4,12 +4,14 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>S&S Casino Hub — Simulated Racing</title>
-  <link rel="stylesheet" href="style.css?v=lobby-services-room-20261016">
+  <link rel="stylesheet" href="style.css?v=themed-slot-templates-20261016">
   <script src="models.js?v=shared-jackpot-20261012" defer></script>
   <script src="local-save.js?v=racing-circuits-20261015" defer></script>
   <script src="profiles.js?v=racing-circuits-20261015" defer></script>
   <script src="race-engine.js?v=race-preview-20261015" defer></script>
-  <script src="app.js?v=racing-circuits-20261015" defer></script>
+  <script src="slot-bet-rules.js?v=cent-bets-20261016" defer></script>
+  <script src="slot-templates.js?v=slot-themes-20261016" defer></script>
+  <script src="app.js?v=low-stakes-themed-slots-20261016" defer></script>
 </head>
 <body>
 
@@ -55,7 +57,7 @@
       <button id="btn-open-settings" class="icon-btn" type="button" title="Casino Settings">⚙️</button>
       <div class="wallet-display">
         <span class="wallet-label">BALANCE</span>
-        <span id="global-balance" class="wallet-amount">$1,000.00</span>
+          <span id="global-balance" class="wallet-amount">$100.00</span>
       </div>
     </div>
   </header>
@@ -215,7 +217,7 @@
         <div class="game-card">
           <div class="card-icon">🎰</div>
           <h3>Classic 3-Reel</h3>
-          <p>Traditional 3-reel slot machine with wild payouts.</p>
+          <p>High stakes: $5 minimum. Traditional 3-reel slot machine with wild payouts.</p>
           <button class="play-btn" data-game="classic-slots">PLAY NOW</button>
         </div>
 
@@ -223,7 +225,7 @@
         <div class="game-card">
           <div class="card-icon">💎</div>
           <h3>5-Reel Gem Quest</h3>
-          <p>High-volatility 5-reel slot with Free Spins, Sticky Wilds & Jackpot.</p>
+          <p>High stakes: $5 minimum. Five reels, Free Spins, Sticky Wilds &amp; Jackpot.</p>
           <button class="play-btn" data-game="5reel-slots">PLAY NOW</button>
         </div>
 
@@ -443,12 +445,13 @@
       <div class="slot-machine slot-5reel">
         <div class="header">
           <h1>Gem Quest 5x3</h1>
-          <div id="status-5reel" class="status-banner">PRESS SPIN TO PLAY</div>
+          <p class="slot-theme-stakes">HIGH STAKES · $5 MINIMUM</p>
+          <div id="status-5reel" class="status-banner" data-slot-status>PRESS SPIN TO PLAY</div>
         </div>
 
-        <div id="bonus-hud-5reel" class="bonus-hud hidden-view">
-          <div class="bonus-stat">FREE SPINS: <span id="fs-remaining-count">0</span></div>
-          <div class="bonus-stat">BONUS WIN: <span id="fs-total-win">$0.00</span></div>
+        <div id="bonus-hud-5reel" class="bonus-hud hidden-view" data-slot-bonus-hud>
+          <div class="bonus-stat">FREE SPINS: <span id="fs-remaining-count" data-slot-fs-count>0</span></div>
+          <div class="bonus-stat">BONUS WIN: <span id="fs-total-win" data-slot-fs-win>$0.00</span></div>
         </div>
 
         <div class="reels-viewport-5reel">
@@ -463,16 +466,16 @@
           <div class="card">
             <span class="label">Current Bet (10 Lines)</span>
             <div class="bet-controls">
-              <button id="btn5-minus" class="btn-small">-</button>
-              <span id="bet5-display" class="value">$10</span>
-              <button id="btn5-plus" class="btn-small">+</button>
+              <button id="btn5-minus" class="btn-small" data-slot-minus type="button" aria-label="Decrease bet">-</button>
+              <span id="bet5-display" class="value" data-slot-bet>$10.00</span>
+              <button id="btn5-plus" class="btn-small" data-slot-plus type="button" aria-label="Increase bet">+</button>
             </div>
           </div>
         </div>
 
         <div class="actions">
-          <button id="btn5-max" class="max-btn">MAX</button>
-          <button id="btn5-spin" class="spin-btn">SPIN</button>
+          <button id="btn5-max" class="max-btn" data-slot-max type="button">MAX</button>
+          <button id="btn5-spin" class="spin-btn" data-slot-spin type="button">SPIN</button>
         </div>
       </div>
     </section>
@@ -484,7 +487,8 @@
       <div class="slot-machine">
         <div class="header">
           <h1>Classic 3-Reel</h1>
-          <div id="status" class="status-banner">PRESS SPIN TO PLAY</div>
+          <p class="slot-theme-stakes">HIGH STAKES · $5 MINIMUM</p>
+          <div id="status" class="status-banner" data-slot-status>PRESS SPIN TO PLAY</div>
         </div>
 
         <div class="reels-viewport">
@@ -498,21 +502,92 @@
           <div class="card">
             <span class="label">Current Bet</span>
             <div class="bet-controls">
-              <button id="btn-minus" class="btn-small">-</button>
-              <span id="bet-display" class="value">$10</span>
-              <button id="btn-plus" class="btn-small">+</button>
+              <button id="btn-minus" class="btn-small" data-slot-minus type="button" aria-label="Decrease bet">-</button>
+              <span id="bet-display" class="value" data-slot-bet>$10.00</span>
+              <button id="btn-plus" class="btn-small" data-slot-plus type="button" aria-label="Increase bet">+</button>
             </div>
           </div>
         </div>
 
         <div class="actions">
-          <button id="btn-max" class="max-btn">MAX</button>
-          <button id="btn-spin" class="spin-btn">SPIN</button>
+          <button id="btn-max" class="max-btn" data-slot-max type="button">MAX</button>
+          <button id="btn-spin" class="spin-btn" data-slot-spin type="button">SPIN</button>
         </div>
       </div>
     </section>
 
   </main>
+
+  <template id="slot-template-classic">
+    <section>
+      <button class="back-lobby-btn" type="button">⬅ BACK TO LOBBY</button>
+      <div class="slot-machine theme-slot-machine">
+        <div class="header">
+          <h1 data-slot-title></h1>
+          <p class="slot-theme-stakes" data-slot-stakes></p>
+          <div class="status-banner" data-slot-status role="status" aria-live="polite"></div>
+        </div>
+        <div class="reels-viewport">
+          <div class="payline-overlay"></div>
+          <div class="reel"><div class="strip"></div></div>
+          <div class="reel"><div class="strip"></div></div>
+          <div class="reel"><div class="strip"></div></div>
+        </div>
+        <div class="dashboard">
+          <div class="card">
+            <span class="label">Current Bet · 5 Paylines</span>
+            <div class="bet-controls">
+              <button class="btn-small" data-slot-minus type="button" aria-label="Decrease bet">−</button>
+              <span class="value" data-slot-bet></span>
+              <button class="btn-small" data-slot-plus type="button" aria-label="Increase bet">+</button>
+            </div>
+          </div>
+        </div>
+        <div class="actions">
+          <button class="max-btn" data-slot-max type="button">MAX</button>
+          <button class="spin-btn" data-slot-spin type="button">SPIN</button>
+        </div>
+      </div>
+    </section>
+  </template>
+
+  <template id="slot-template-gem-quest">
+    <section>
+      <button class="back-lobby-btn" type="button">⬅ BACK TO LOBBY</button>
+      <div class="slot-machine slot-5reel theme-slot-machine">
+        <div class="header">
+          <h1 data-slot-title></h1>
+          <p class="slot-theme-stakes" data-slot-stakes></p>
+          <div class="status-banner" data-slot-status role="status" aria-live="polite"></div>
+        </div>
+        <div class="bonus-hud hidden-view" data-slot-bonus-hud>
+          <div class="bonus-stat">FREE SPINS: <span data-slot-fs-count>0</span></div>
+          <div class="bonus-stat">BONUS WIN: <span data-slot-fs-win>$0.00</span></div>
+        </div>
+        <div class="reels-viewport-5reel">
+          <div class="reel-5reel"><div class="strip"></div></div>
+          <div class="reel-5reel"><div class="strip"></div></div>
+          <div class="reel-5reel"><div class="strip"></div></div>
+          <div class="reel-5reel"><div class="strip"></div></div>
+          <div class="reel-5reel"><div class="strip"></div></div>
+        </div>
+        <div class="dashboard">
+          <div class="card">
+            <span class="label">Current Bet · 10 Lines</span>
+            <div class="bet-controls">
+              <button class="btn-small" data-slot-minus type="button" aria-label="Decrease bet">−</button>
+              <span class="value" data-slot-bet></span>
+              <button class="btn-small" data-slot-plus type="button" aria-label="Increase bet">+</button>
+            </div>
+          </div>
+        </div>
+        <div class="actions">
+          <button class="max-btn" data-slot-max type="button">MAX</button>
+          <button class="spin-btn" data-slot-spin type="button">SPIN</button>
+        </div>
+      </div>
+    </section>
+  </template>
 
   <div class="splash-modal hidden-view" id="splash-modal" role="dialog" aria-modal="true" aria-labelledby="splash-title">
     <img src="assets/splash.png" alt="" class="splash-logo" id="splash-logo" />
