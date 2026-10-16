@@ -15,7 +15,8 @@
     settings: { volume: 80, isMuted: false, theme: 'vegas' },
     jackpot: 10000,
     raceBet: null,
-    raceResultNotice: null
+    raceResultNotice: null,
+    raceExperience: null
   });
 
   class LocalProfileManager {
@@ -155,13 +156,38 @@
       const themes = ['vegas', 'midnight', 'gold'];
       const raceBet = input.raceBet && typeof input.raceBet === 'object' ? input.raceBet : null;
       const raceResultNotice = input.raceResultNotice && typeof input.raceResultNotice === 'object' ? input.raceResultNotice : null;
-      const validHorseId = value => typeof value === 'string' && /^horse-[1-6]$/.test(value);
+      const validRunnerId = value => typeof value === 'string' && /^(horse-(?:[1-6]|[a-z0-9-]+)|car-[a-z0-9-]+)$/.test(value);
+      const raceExperience = input.raceExperience && typeof input.raceExperience === 'object' ? input.raceExperience : null;
+      const normalizeCircuit = (circuit, type) => {
+        if (!circuit || typeof circuit !== 'object') return null;
+        const runners = {};
+        const prefix = type === 'car' ? 'car-' : 'horse-';
+        for (const [runnerId, value] of Object.entries(circuit.runners || {}).slice(0, 64)) {
+          if (!runnerId.startsWith(prefix) || !validRunnerId(runnerId) || !value || typeof value !== 'object') continue;
+          const starts = numberOr(value.starts, 0, 0);
+          const wins = numberOr(value.wins, 0, 0);
+          if (Number.isSafeInteger(starts) && Number.isSafeInteger(wins) && starts <= 1_000_000 && wins <= starts) {
+            runners[runnerId] = { starts, wins };
+          }
+        }
+        const cursor = circuit.lastProcessedRaceId;
+        return {
+          lastProcessedRaceId: Number.isSafeInteger(cursor) && cursor >= 0 ? cursor : null,
+          runners
+        };
+      };
+      const safeRaceExperience = raceExperience ? {
+        horse: normalizeCircuit(raceExperience.horse, 'horse'),
+        car: normalizeCircuit(raceExperience.car, 'car')
+      } : null;
       const safeRaceBet = raceBet && Number.isSafeInteger(Number(raceBet.raceId)) && Number(raceBet.raceId) >= 0 &&
-        validHorseId(raceBet.runnerId) && validHorseId(raceBet.winnerId) &&
+        validRunnerId(raceBet.runnerId) && validRunnerId(raceBet.winnerId) &&
+        (raceBet.raceType === undefined || raceBet.raceType === null || ['horse', 'car'].includes(raceBet.raceType)) &&
         Number.isFinite(Number(raceBet.stake)) && Number(raceBet.stake) > 0 &&
         Number.isFinite(Number(raceBet.odds)) && Number(raceBet.odds) >= 1 && Number(raceBet.odds) <= 100
         ? {
           raceId: Number(raceBet.raceId),
+          raceType: ['horse', 'car'].includes(raceBet.raceType) ? raceBet.raceType : null,
           runnerId: raceBet.runnerId,
           winnerId: raceBet.winnerId,
           stake: Math.round(Number(raceBet.stake) * 100) / 100,
@@ -173,12 +199,14 @@
         }
         : null;
       const safeRaceResultNotice = raceResultNotice && Number.isSafeInteger(Number(raceResultNotice.raceId)) && Number(raceResultNotice.raceId) >= 0 &&
-        validHorseId(raceResultNotice.runnerId) && validHorseId(raceResultNotice.winnerId) &&
+        validRunnerId(raceResultNotice.runnerId) && validRunnerId(raceResultNotice.winnerId) &&
+        (raceResultNotice.raceType === undefined || raceResultNotice.raceType === null || ['horse', 'car'].includes(raceResultNotice.raceType)) &&
         Number.isFinite(Number(raceResultNotice.stake)) && Number(raceResultNotice.stake) > 0 &&
         Number.isFinite(Number(raceResultNotice.payout)) && Number(raceResultNotice.payout) >= 0 &&
         typeof raceResultNotice.won === 'boolean'
         ? {
           raceId: Number(raceResultNotice.raceId),
+          raceType: ['horse', 'car'].includes(raceResultNotice.raceType) ? raceResultNotice.raceType : null,
           runnerId: raceResultNotice.runnerId,
           winnerId: raceResultNotice.winnerId,
           stake: Math.round(Number(raceResultNotice.stake) * 100) / 100,
@@ -204,6 +232,7 @@
         jackpot: numberOr(input.jackpot, 10000),
         raceBet: safeRaceBet,
         raceResultNotice: safeRaceResultNotice,
+        raceExperience: safeRaceExperience,
         legacyProfiles: Array.isArray(input.legacyProfiles) ? input.legacyProfiles.slice(0, 100).map(profile => {
           const archived = profile && typeof profile === 'object' ? profile : {};
           const archivedSave = this.normalizeSave({ player: archived.player, settings: archived.settings });

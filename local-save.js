@@ -131,7 +131,8 @@
         settings: this.normalizeSettings(this.settings.getSettings()),
         jackpot: Player.numberOr(this.jackpot.currentJackpot, 10000, 0),
         raceBet: window.LocalProfiles?.getCurrentSave().raceBet || null,
-        raceResultNotice: window.LocalProfiles?.getCurrentSave().raceResultNotice || null
+        raceResultNotice: window.LocalProfiles?.getCurrentSave().raceResultNotice || null,
+        raceExperience: window.LocalProfiles?.getCurrentSave().raceExperience || null
       };
     }
 
@@ -151,7 +152,8 @@
         settings: this.normalizeSettings(data.settings),
         jackpot,
         raceBet: window.LocalProfiles?.normalizeSave({ raceBet: data.raceBet })?.raceBet || null,
-        raceResultNotice: window.LocalProfiles?.normalizeSave({ raceResultNotice: data.raceResultNotice })?.raceResultNotice || null
+        raceResultNotice: window.LocalProfiles?.normalizeSave({ raceResultNotice: data.raceResultNotice })?.raceResultNotice || null,
+        raceExperience: window.LocalProfiles?.normalizeSave({ raceExperience: data.raceExperience })?.raceExperience || null
       };
     }
 
@@ -217,7 +219,8 @@
         player: this.hub.player.toProfile(),
         settings: save.settings,
         raceBet: Object.hasOwn(save, 'raceBet') ? save.raceBet : window.LocalProfiles?.getCurrentSave().raceBet || null,
-        raceResultNotice: Object.hasOwn(save, 'raceResultNotice') ? save.raceResultNotice : null
+        raceResultNotice: Object.hasOwn(save, 'raceResultNotice') ? save.raceResultNotice : null,
+        raceExperience: Object.hasOwn(save, 'raceExperience') ? save.raceExperience : window.LocalProfiles?.getCurrentSave().raceExperience || null
       });
       window.RaceGame?.resetForActiveProfile();
       this.hub.updateGlobalUI();

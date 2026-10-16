@@ -1,6 +1,6 @@
 # S&S Casino Hub
 
-A static, virtual-chip casino game with Classic Slots, Gem Quest 5-Reel Slots, Coin Toss, Blackjack 21, simulated horse races, a daily bonus wheel, player leveling, and a demo jackpot shared locally across profiles in the same browser.
+A static, virtual-chip casino game with Classic Slots, Gem Quest 5-Reel Slots, Coin Toss, Blackjack 21, simulated horse and car races, a daily bonus wheel, player leveling, and a demo jackpot shared locally across profiles in the same browser.
 
 ## Local saves
 
@@ -10,8 +10,8 @@ See [`LOCAL_SAVES.md`](./LOCAL_SAVES.md) for backup, restore, and linked-file de
 
 This game uses virtual credits only. It does not support deposits, cashouts, or real-money gambling.
 
-## Simulated horse racing
+## Simulated horse and car racing
 
-Horse races are generated in the browser on an 11-minute local schedule. Every scheduled race receives its own repeatable pseudo-random sprint duration between 110 and 200 seconds (1:50–3:20), so a refresh does not change that race's timing. Players can place one virtual-chip win bet on a six-horse field before the start. Race timing and results do not use a live sports feed or server.
+Horse and car races are generated in the browser every hour from 7 AM through 9 PM, alternating between the two circuits on the device's local clock. Horse races start at 7 AM and every two hours after that; car races start at 8 AM and every two hours after that. There are no scheduled races overnight. Horse races field six entrants and car races field eight from their larger stables; bets close five minutes before a start. Every race receives a repeatable pseudo-random sprint duration between 110 and 200 seconds (1:50–3:20), so a refresh does not change its timing or result. Starts and wins are tracked for each horse and car, and experience/form feed into future ability, displayed win chances, and odds.
 
-An unsettled ticket is saved with the active encrypted local profile and included in save backups. If a player leaves before the finish, the race is settled and any payout is saved when they return; a persistent result notice stays visible until they view or dismiss it. Save backups also preserve unread race-result notices.
+An unsettled ticket, runner experience, and unread result notice are saved with the active encrypted local profile and included in save backups. If a player leaves before the finish, missed races advance experience and the wager settles when they return. Only one ticket can be open across both circuits at a time. These local simulations do not use a live sports feed or server.

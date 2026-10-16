@@ -4,12 +4,12 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>S&S Casino Hub — Simulated Racing</title>
-  <link rel="stylesheet" href="style.css?v=random-race-notice-20261015">
+  <link rel="stylesheet" href="style.css?v=racing-circuits-20261015">
   <script src="models.js?v=shared-jackpot-20261012" defer></script>
-  <script src="local-save.js?v=random-race-notice-20261015" defer></script>
-  <script src="profiles.js?v=random-race-notice-20261015" defer></script>
-  <script src="race-engine.js?v=random-race-notice-20261015" defer></script>
-  <script src="app.js?v=random-race-notice-20261015" defer></script>
+  <script src="local-save.js?v=racing-circuits-20261015" defer></script>
+  <script src="profiles.js?v=racing-circuits-20261015" defer></script>
+  <script src="race-engine.js?v=race-fields-20261015" defer></script>
+  <script src="app.js?v=racing-circuits-20261015" defer></script>
 </head>
 <body>
 
@@ -241,7 +241,7 @@
         <div class="game-card">
           <div class="card-icon">🏇</div>
           <h3>Horse Racing</h3>
-          <p>Pick a winner in races with animated 1:50–3:20 randomized sprints and virtual-chip odds.</p>
+          <p>Back a horse or car in daytime races. Form and race experience affect each runner's simulated win chance.</p>
           <button class="play-btn" data-game="horse-racing">RACE NOW</button>
         </div>
       </div>
@@ -252,8 +252,12 @@
       <button class="back-lobby-btn" type="button">⬅ BACK TO LOBBY</button>
       <div class="slot-machine race-machine">
         <div class="header race-header">
-          <h1> Race Track</h1>
-          <p class="race-local-note">11-minute race schedule • each sprint randomly lasts 1:50–3:20 • virtual chips only • no live race data</p>
+          <h1 id="race-title">Horse Racing</h1>
+          <p class="race-local-note">A race every hour from 7 AM–9 PM local time, alternating horse and car • no overnight races • bets close 5 minutes before each start • virtual chips only</p>
+          <div class="race-mode-switch" role="group" aria-label="Alternating hourly race schedule; highlighted circuit is next">
+            <span class="is-active" data-race-type="horse">🏇 Horse Racing · 7 AM, then every 2 hours</span>
+            <span data-race-type="car">🏎️ Car Racing · 8 AM, then every 2 hours</span>
+          </div>
           <div id="race-status" class="status-banner status-spinning" role="status" aria-live="polite">Loading the next local race…</div>
         </div>
 
@@ -261,7 +265,7 @@
           <div class="race-info-item"><span>BETTING FOR</span><strong id="race-number">—</strong></div>
           <div class="race-info-item"><span>PHASE</span><strong id="race-phase-label">—</strong></div>
           <div class="race-info-item"><span>STARTS IN</span><strong id="race-countdown">—</strong></div>
-          <div class="race-info-item"><span>LOCAL START</span><strong id="race-start-time">—</strong></div>
+          <div class="race-info-item"><span>NEXT LOCAL START</span><strong id="race-start-time">—</strong></div>
           <div class="race-info-item"><span>SPRINT LENGTH</span><strong id="race-duration">—</strong></div>
         </div>
 
@@ -273,7 +277,7 @@
         <div class="race-betting-panel">
           <div class="race-panel-heading">
             <h2>Choose a winner</h2>
-            <p id="race-target-text">Pick one horse to win. Bets close when the race starts.</p>
+            <p id="race-target-text">Choose a runner. Betting closes five minutes before the race starts.</p>
           </div>
           <div id="race-runner-list" class="race-runner-list" role="group" aria-label="Choose a horse to win"></div>
         </div>
@@ -297,8 +301,8 @@
           <button id="btn-race-max" class="max-btn" type="button">MAX BET</button>
           <button id="btn-race-bet" class="spin-btn" type="button" disabled>SELECT A HORSE</button>
         </div>
-        <p id="race-ticket-note" class="race-ticket-note" role="status" aria-live="polite">One win bet per race. Your stake is virtual chips only.</p>
-        <p class="race-odds-note">Displayed odds are a total return including your original stake. If you leave with an open bet, its result and any payout are saved in your encrypted local profile and shown when you return. Race results are local to this browser and are not linked to real sporting events.</p>
+        <p id="race-ticket-note" class="race-ticket-note" role="status" aria-live="polite">One open ticket at a time across both circuits. Your stake is virtual chips only.</p>
+        <p class="race-odds-note">Horse races field 6 runners and car races field 8 from expanding stables. Starts and wins affect future simulated ability and displayed win chances. Odds show total return including your stake. Race schedules and results use this device's local clock; there is no live sports feed.</p>
       </div>
     </section>
 
