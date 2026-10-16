@@ -8,7 +8,7 @@
   <script src="models.js?v=shared-jackpot-20261012" defer></script>
   <script src="local-save.js?v=racing-circuits-20261015" defer></script>
   <script src="profiles.js?v=racing-circuits-20261015" defer></script>
-  <script src="race-engine.js?v=race-fields-20261015" defer></script>
+  <script src="race-engine.js?v=race-preview-20261015" defer></script>
   <script src="app.js?v=racing-circuits-20261015" defer></script>
 </head>
 <body>
@@ -253,9 +253,9 @@
       <div class="slot-machine race-machine">
         <div class="header race-header">
           <h1 id="race-title">Horse Racing</h1>
-          <p class="race-local-note">A race every hour from 7 AM–9 PM local time, alternating horse and car • no overnight races • bets close 5 minutes before each start • virtual chips only</p>
-          <div class="race-mode-switch" role="group" aria-label="Alternating hourly race schedule; highlighted circuit is next">
-            <span class="is-active" data-race-type="horse">🏇 Horse Racing · 7 AM, then every 2 hours</span>
+          <p class="race-local-note">A race every hour from 7 AM–9 PM local time, alternating horse and car • previews and betting open 45 minutes before each start • bets close 5 minutes before • closed overnight • virtual chips only</p>
+          <div class="race-mode-switch" role="group" aria-label="Alternating hourly race schedule">
+            <span data-race-type="horse">🏇 Horse Racing · 7 AM, then every 2 hours</span>
             <span data-race-type="car">🏎️ Car Racing · 8 AM, then every 2 hours</span>
           </div>
           <div id="race-status" class="status-banner status-spinning" role="status" aria-live="polite">Loading the next local race…</div>

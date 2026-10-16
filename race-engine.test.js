@@ -94,11 +94,124 @@ test('horse and car races alternate on every daytime hourly slot', () => {
   assert.equal(engine.getScheduledRaceType(new Date(2026, 9, 16, 7, 0).getTime()), 'horse');
 });
 
-test('betting closes exactly five minutes before each race start', () => {
+test('race previews and betting open 45 minutes before each race; betting closes five minutes before start', () => {
   const start = new Date(2026, 9, 15, 13, 0).getTime();
-  assert.equal(engine.isBettingOpenFor(start, start - 5 * 60 * 1000 - 1), true);
-  assert.equal(engine.isBettingOpenFor(start, start - 5 * 60 * 1000), false);
-  assert.equal(engine.isBettingOpenFor(start, start - 4 * 60 * 1000), false);
+  const previewOpens = start - 45 * 60 * 1000;
+  const bettingCloses = start - 5 * 60 * 1000;
+  assert.equal(engine.isRacePreviewOpenFor(start, previewOpens - 1), false);
+  assert.equal(engine.isBettingOpenFor(start, previewOpens - 1), false);
+  assert.equal(engine.isRacePreviewOpenFor(start, previewOpens), true);
+  assert.equal(engine.isBettingOpenFor(start, previewOpens), true);
+  assert.equal(engine.isBettingOpenFor(start, bettingCloses - 1), true);
+  assert.equal(engine.isRacePreviewOpenFor(start, bettingCloses), true);
+  assert.equal(engine.isBettingOpenFor(start, bettingCloses), false);
+  assert.equal(engine.isBettingOpenFor(start, bettingCloses + 60 * 1000), false);
+});
+
+test('overnight racing stays closed until the next 6:15 AM preview and betting window', () => {
+  const ninePm = new Date(2026, 9, 15, 21, 0).getTime();
+  const nextMorning = new Date(2026, 9, 16, 7, 0).getTime();
+  const opensAt = new Date(2026, 9, 16, 6, 15).getTime();
+  for (const now of [
+    new Date(2026, 9, 15, 21, 6).getTime(),
+    new Date(2026, 9, 15, 23, 59, 59).getTime(),
+    opensAt - 1
+  ]) {
+    assert.equal(engine.getNextRaceStart(now), nextMorning);
+    assert.equal(engine.getNextBettingOpen(now), opensAt);
+    assert.equal(engine.isRacePreviewOpenFor(nextMorning, now), false);
+    assert.equal(engine.canBetNow.call({ ticket: null, getNextRaceStart: engine.getNextRaceStart, isBettingOpenFor: engine.isBettingOpenFor }, now), false);
+  }
+  assert.equal(engine.isRacePreviewOpenFor(nextMorning, opensAt), true);
+  assert.equal(engine.isBettingOpenFor(nextMorning, opensAt), true);
+  assert.equal(engine.getNextBettingOpen(opensAt - 1), opensAt);
+  assert.equal(engine.getNextRaceStart(ninePm), nextMorning);
+});
+
+test('closed race UI hides upcoming details and disables all betting actions', () => {
+  const start = new Date(2026, 9, 16, 7, 0).getTime();
+  const opensAt = start - 45 * 60 * 1000;
+  const label = { textContent: '' };
+  const classes = new Set();
+  const status = { textContent: '', classList: {
+    remove: (...names) => names.forEach(name => classes.delete(name)),
+    add: name => classes.add(name)
+  } };
+  const closed = Object.assign(Object.create(context.window.RaceEngine.prototype), {
+    isRacePreviewOpen: false,
+    isRaceInProgress: false,
+    isResultDisplay: false,
+    raceTitleEl: { textContent: '' },
+    raceNumberEl: { textContent: '' },
+    phaseEl: { textContent: '' },
+    countdownEl: { textContent: '', parentElement: { querySelector: () => label } },
+    startTimeEl: { textContent: '' },
+    raceDurationEl: { textContent: '' },
+    targetTextEl: { textContent: '' },
+    trackCaptionEl: { textContent: '' },
+    statusEl: status,
+    getNextBettingOpen: () => opensAt,
+    raceStartTime: () => '6:15 AM',
+    formatCountdown: () => '00:15:00'
+  });
+  closed.updateClockAndStatus(null, null, opensAt - 15 * 60 * 1000, 0);
+  assert.equal(closed.raceTitleEl.textContent, 'Racing Closed');
+  assert.equal(closed.raceNumberEl.textContent, '—');
+  assert.equal(closed.phaseEl.textContent, 'CLOSED');
+  assert.equal(label.textContent, 'BETTING OPENS IN');
+  assert.equal(closed.countdownEl.textContent, '00:15:00');
+  assert.equal(closed.startTimeEl.textContent, '—');
+  assert.equal(closed.raceDurationEl.textContent, '—');
+  assert.match(status.textContent, /^CLOSED — RACING RESUMES AT 6:15 AM$/);
+
+  const runnerList = { children: [{ name: 'leaked preview' }], replaceChildren() { this.children = []; }, setAttribute(name, value) { this[name] = value; } };
+  const track = { children: [{ name: 'leaked track' }], replaceChildren() { this.children = []; } };
+  closed.runnerListEl = runnerList;
+  closed.trackEl = track;
+  closed.renderRunnerOptions(null);
+  closed.renderTrack(null);
+  assert.deepEqual(runnerList.children, []);
+  assert.deepEqual(track.children, []);
+  assert.equal(runnerList['aria-label'], 'Race runners hidden until the preview opens');
+
+  const makeButton = () => ({ disabled: false, textContent: '', listeners: {}, addEventListener(type, handler) { this.listeners[type] = handler; } });
+  const option = {
+    dataset: { runnerId: 'horse-copper-comet' }, disabled: false,
+    classList: { toggle() {} }, setAttribute() {}
+  };
+  const runnerListWithOption = { addEventListener(type, handler) { this.listeners[type] = handler; }, listeners: {}, querySelectorAll: () => [option] };
+  const controls = Object.assign(Object.create(context.window.RaceEngine.prototype), {
+    bet: 10, selectedHorseId: null, targetRaceId: start, raceType: 'horse',
+    isRacePreviewOpen: false, isBettingOpen: false, ticket: null,
+    hub: { balance: 100, player: { maxBet: 100 } },
+    minusBtn: makeButton(), plusBtn: makeButton(), maxBtn: makeButton(), placeBtn: makeButton(),
+    runnerListEl: runnerListWithOption, betDisplayEl: { textContent: '' }, estimatedReturnEl: { textContent: '' },
+    canBetNow: () => false,
+    maxStake: () => 100,
+    formatMoney: amount => `$${amount.toFixed(2)}`,
+    createRace: () => ({ entrants: [{ id: 'horse-copper-comet', odds: 2 }] }),
+    getNextRaceStart: () => start
+  });
+  controls.bindEvents();
+  controls.updateRunnerSelection();
+  controls.updateBetControls();
+  assert.equal(option.disabled, true);
+  assert.equal(controls.minusBtn.disabled, true);
+  assert.equal(controls.plusBtn.disabled, true);
+  assert.equal(controls.maxBtn.disabled, true);
+  assert.equal(controls.placeBtn.disabled, true);
+  assert.equal(controls.placeBtn.textContent, 'RACING CLOSED');
+
+  for (const button of [controls.minusBtn, controls.plusBtn, controls.maxBtn]) button.listeners.click();
+  option.disabled = false;
+  runnerListWithOption.listeners.click({ target: { closest: () => option } });
+  assert.equal(controls.selectedHorseId, null);
+  controls.selectedHorseId = 'horse-copper-comet';
+  controls.placeBtn.listeners.click();
+  assert.equal(controls.bet, 10);
+  assert.equal(controls.selectedHorseId, 'horse-copper-comet');
+  assert.equal(controls.hub.balance, 100);
+  assert.equal(controls.ticket, null);
 });
 
 test('race starts and wins change a returning runner’s simulated win chance', () => {
