@@ -1240,9 +1240,8 @@ body {
 .race-header { width: 100%; }
 .race-local-note { margin: 5px 0 12px; color: #b9b4c6; font-size: 0.82rem; text-align: center; }
 .race-mode-switch { display: flex; justify-content: center; gap: 8px; margin: 10px 0 14px; }
-.race-mode-switch button { min-height: 40px; padding: 8px 16px; border: 1px solid #584a68; border-radius: 9px; color: #e6dfef; background: #211c2b; font-weight: 800; cursor: pointer; }
-.race-mode-switch button.is-active { border-color: var(--gold-primary); color: #211707; background: var(--gold-primary); box-shadow: 0 0 12px rgba(255,215,0,0.18); }
-.race-mode-switch button:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+.race-mode-switch > span { min-height: 40px; padding: 8px 16px; display: flex; align-items: center; border: 1px solid #584a68; border-radius: 9px; color: #e6dfef; background: #211c2b; font-weight: 800; }
+.race-mode-switch > span.is-active { border-color: var(--gold-primary); color: #211707; background: var(--gold-primary); box-shadow: 0 0 12px rgba(255,215,0,0.18); }
 .race-info-strip { width: 100%; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 8px; }
 .race-info-item { display: grid; gap: 4px; padding: 10px 8px; background: #17131f; border: 1px solid #423853; border-radius: 9px; text-align: center; }
 .race-info-item span { color: #aaa2ba; font-size: 0.62rem; font-weight: 800; letter-spacing: 0.08em; }
@@ -1295,7 +1294,7 @@ body {
   .profile-header-btn { flex: 1 1 100%; max-width: none; }
   .profile-card { padding: 22px 18px; }
   .race-machine { padding: 14px 10px; }
-  .race-mode-switch button { flex: 1; padding: 8px 10px; }
+  .race-mode-switch > span { flex: 1; padding: 8px 10px; }
   .race-info-strip { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .race-runner-list { grid-template-columns: 1fr; }
   .race-stage, .race-betting-panel { padding: 10px; }
