@@ -56,20 +56,27 @@ body {
 .global-bar {
   background: var(--header-bg);
   border-bottom: 2px solid var(--gold-dark);
-  padding: 10px 20px;
+  padding: 8px 16px;
   display: flex;
   justify-content: space-between;
   align-items: center;
   box-shadow: 0 4px 15px rgba(0,0,0,0.5);
   z-index: 100;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.logo-area {
+  display: flex;
+  align-items: center;
   gap: 12px;
 }
 
 .logo-title {
-  font-size: 1.3rem;
+  font-size: 1.2rem;
   font-weight: 900;
   color: var(--gold-primary);
-  letter-spacing: 2px;
+  letter-spacing: 1px;
 }
 
 .wheel-header-btn {
@@ -77,7 +84,7 @@ body {
   color: #fff;
   border: 1px solid #ff7f50;
   border-radius: 8px;
-  padding: 8px 12px;
+  padding: 6px 10px;
   font-weight: bold;
   cursor: pointer;
   box-shadow: 0 0 10px rgba(255, 71, 87, 0.5);
@@ -92,29 +99,29 @@ body {
 .xp-header-widget {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
   background: #151022;
   border: 1px solid #3d345a;
-  padding: 6px 12px;
-  border-radius: 12px;
+  padding: 4px 10px;
+  border-radius: 10px;
 }
 
 .level-badge {
   background: linear-gradient(135deg, #e056fd, #686de0);
   color: #fff;
   font-weight: 900;
-  font-size: 0.75rem;
-  padding: 4px 8px;
-  border-radius: 6px;
-  box-shadow: 0 0 8px rgba(224, 86, 253, 0.5);
+  font-size: 0.7rem;
+  padding: 3px 6px;
+  border-radius: 5px;
+  box-shadow: 0 0 6px rgba(224, 86, 253, 0.5);
 }
 
 .xp-bar-container {
-  width: 110px;
-  height: 14px;
+  width: 90px;
+  height: 12px;
   background: #090610;
   border: 1px solid #444;
-  border-radius: 8px;
+  border-radius: 6px;
   position: relative;
   overflow: hidden;
 }
@@ -131,7 +138,7 @@ body {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  font-size: 0.58rem;
+  font-size: 0.52rem;
   font-weight: bold;
   color: #fff;
   text-shadow: 0 0 3px #000;
@@ -139,46 +146,46 @@ body {
 }
 
 .vip-tier-tag {
-  font-size: 0.65rem;
+  font-size: 0.6rem;
   font-weight: 900;
   color: var(--gold-primary);
-  letter-spacing: 1px;
+  letter-spacing: 0.5px;
 }
 
 .jackpot-ticker-container {
   background: radial-gradient(circle, #8a1313 0%, #300000 100%);
-  border: 2px solid var(--gold-primary);
-  border-radius: 10px;
-  padding: 4px 16px;
+  border: 1px solid var(--gold-primary);
+  border-radius: 8px;
+  padding: 2px 10px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  box-shadow: 0 0 12px rgba(255, 215, 0, 0.5);
+  box-shadow: 0 0 8px rgba(255, 215, 0, 0.4);
   animation: pulse-jackpot 2s infinite alternate;
 }
 
 @keyframes pulse-jackpot {
-  0% { transform: scale(1); box-shadow: 0 0 10px rgba(255, 215, 0, 0.4); }
-  100% { transform: scale(1.03); box-shadow: 0 0 20px rgba(255, 215, 0, 0.8); }
+  0% { transform: scale(1); box-shadow: 0 0 8px rgba(255, 215, 0, 0.3); }
+  100% { transform: scale(1.02); box-shadow: 0 0 14px rgba(255, 215, 0, 0.7); }
 }
 
-.jackpot-label { font-size: 0.6rem; color: #ffcccc; letter-spacing: 1.5px; font-weight: bold; }
-.jackpot-amount { font-size: 1.2rem; font-weight: 900; color: var(--gold-primary); }
+.jackpot-label { font-size: 0.5rem; color: #ffcccc; letter-spacing: 1px; font-weight: bold; }
+.jackpot-amount { font-size: 0.95rem; font-weight: 900; color: var(--gold-primary); }
 
 .header-right {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
 }
 
 .icon-btn {
   background: #2a2a35;
   border: 1px solid #555;
   color: #fff;
-  padding: 8px 10px;
+  padding: 6px 8px;
   border-radius: 8px;
   cursor: pointer;
-  font-size: 1.1rem;
+  font-size: 1rem;
 }
 
 .icon-btn:hover { background: #444; }
@@ -188,10 +195,10 @@ body {
   color: #fff;
   border: 1px solid #4a90e2;
   border-radius: 8px;
-  padding: 8px 14px;
+  padding: 6px 12px;
   font-weight: bold;
   cursor: pointer;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
 }
 
 .bank-btn:hover { background: #4a90e2; }
@@ -200,23 +207,23 @@ body {
   background: #171026;
   border: 1px solid var(--gold-primary);
   border-radius: 8px;
-  padding: 4px 12px;
+  padding: 3px 10px;
   display: flex;
   flex-direction: column;
   align-items: flex-end;
 }
 
-.wallet-label { font-size: 0.6rem; color: #aaa; letter-spacing: 1px; }
-.wallet-amount { font-size: 1.1rem; font-weight: bold; color: #4eef90; }
+.wallet-label { font-size: 0.55rem; color: #aaa; letter-spacing: 0.5px; }
+.wallet-amount { font-size: 1rem; font-weight: bold; color: #4eef90; }
 
 .reset-data-btn {
   background: #2a2a35;
   border: 1px solid #555;
   color: #fff;
-  padding: 8px 10px;
+  padding: 6px 8px;
   border-radius: 8px;
   cursor: pointer;
-  font-size: 1.1rem;
+  font-size: 1rem;
 }
 
 .reset-data-btn:hover {
@@ -985,10 +992,6 @@ body {
 
   /* 3. 3-Reel & 5-Reel Slot Scaling */
   :root {
-    /* Changing these from then original values
-    * above messed up the game, causing the reels to disappear
-    * when spun */
-  
     --symbol-size-3reel: 90px;    
     --symbol-size-5reel: 70px;
   }
@@ -1078,7 +1081,7 @@ body {
   color: #fff;
   border: 1px solid #8f75d6;
   border-radius: 8px;
-  padding: 8px 12px;
+  padding: 6px 10px;
   font-weight: 800;
   cursor: pointer;
 }
@@ -1151,10 +1154,10 @@ body {
   border: 1px solid var(--gold-primary);
   color: #fff;
   border-radius: 8px;
-  padding: 8px 12px;
+  padding: 6px 10px;
   font-weight: 800;
   cursor: pointer;
-  max-width: 190px;
+  max-width: 150px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;

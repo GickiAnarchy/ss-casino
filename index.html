@@ -31,7 +31,14 @@
 
   <!-- Global Casino Header -->
   <header class="global-bar">
-    <div class="logo-title">Sluts and Slots</div>
+    <div class="logo-area">
+      <div class="logo-title">Sluts and Slots</div>
+      <!-- Progressive Jackpot Ticker moved right under the title for compactness -->
+      <div class="jackpot-ticker-container">
+        <span class="jackpot-label">JACKPOT</span>
+        <span id="global-jackpot" class="jackpot-amount">$10,000.00</span>
+      </div>
+    </div>
 
     <!-- XP Level & Progress Header Widget -->
     <div class="xp-header-widget">
@@ -43,15 +50,9 @@
       <span class="vip-tier-tag" id="vip-tier-tag">BRONZE</span>
     </div>
 
-    <!-- Progressive Jackpot Ticker -->
-    <div class="jackpot-ticker-container">
-      <span class="jackpot-label">JACKPOT</span>
-      <span id="global-jackpot" class="jackpot-amount">$10,000.00</span>
-    </div>
-
     <div class="header-right">
       <button id="btn-profile-manager" class="profile-header-btn" type="button" aria-label="Switch local profile">👤 <span id="active-profile-name">Profile</span></button>
-      <button id="btn-open-local-save" class="local-save-header-btn" aria-label="Manage local saves">💾 LOCAL SAVE</button>
+      <button id="btn-open-local-save" class="local-save-header-btn" aria-label="Manage local saves">💾 SAVE</button>
       <button id="btn-open-wheel" class="wheel-header-btn">🎁 DAILY WHEEL</button>
       <button id="btn-open-settings" class="icon-btn" title="Audio & Theme Settings">⚙️</button>
       <button id="btn-open-bank" class="bank-btn">🏦 BANK</button>
@@ -200,8 +201,8 @@
     <!-- LOBBY VIEW -->
     <section id="view-lobby" class="view-screen active-view">
       <div class="lobby-header">
-        <h2>SELECT A GAME</h2>
-        <p>Pick a game to start playing</p>
+        <h2>SELECT A ROOM</h2>
+        <p>Pick a room to travel to.</p>
       </div>
 
       <div class="game-grid">

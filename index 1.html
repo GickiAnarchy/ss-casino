@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>S&S Casino Hub — Simulated Racing</title>
+  <link rel="stylesheet" href="style.css?v=racing-circuits-20261015">
+  <script src="models.js?v=shared-jackpot-20261012" defer></script>
+  <script src="local-save.js?v=racing-circuits-20261015" defer></script>
+  <script src="profiles.js?v=racing-circuits-20261015" defer></script>
+  <script src="race-engine.js?v=race-preview-20261015" defer></script>
+  <script src="app.js?v=racing-circuits-20261015" defer></script>
+</head>
+<body>
+
+  <!-- Fullscreen Particle FX Canvas -->
+  <canvas id="fx-canvas"></canvas>
+
+  <div id="startup-overlay" class="startup-overlay" role="status" aria-live="polite">
+    <div class="startup-card">
+      <span class="startup-spinner" aria-hidden="true"></span>
+      <span id="startup-message">Loading your local save…</span>
+    </div>
+  </div>
+
+  <div id="profile-gate" class="profile-gate" role="dialog" aria-modal="true" aria-labelledby="profile-gate-title">
+    <div class="profile-card">
+      <div id="profile-gate-content"></div>
+    </div>
+  </div>
+
+  <!-- Global Casino Header -->
+  <header class="global-bar">
+    <div class="logo-title">Sluts and Slots</div>
+
+    <!-- XP Level & Progress Header Widget -->
+    <div class="xp-header-widget">
+      <div class="level-badge" id="player-level-badge">LVL 1</div>
+      <div class="xp-bar-container">
+        <div class="xp-bar-fill" id="xp-bar-fill" style="width: 0%;"></div>
+        <span class="xp-bar-text" id="xp-bar-text">0 / 100 XP</span>
+      </div>
+      <span class="vip-tier-tag" id="vip-tier-tag">BRONZE</span>
+    </div>
+
+    <!-- Progressive Jackpot Ticker -->
+    <div class="jackpot-ticker-container">
+      <span class="jackpot-label">JACKPOT</span>
+      <span id="global-jackpot" class="jackpot-amount">$10,000.00</span>
+    </div>
+
+    <div class="header-right">
+      <button id="btn-profile-manager" class="profile-header-btn" type="button" aria-label="Switch local profile">👤 <span id="active-profile-name">Profile</span></button>
+      <button id="btn-open-local-save" class="local-save-header-btn" aria-label="Manage local saves">💾 LOCAL SAVE</button>
+      <button id="btn-open-wheel" class="wheel-header-btn">🎁 DAILY WHEEL</button>
+      <button id="btn-open-settings" class="icon-btn" title="Audio & Theme Settings">⚙️</button>
+      <button id="btn-open-bank" class="bank-btn">🏦 BANK</button>
+      <div class="wallet-display">
+        <span class="wallet-label">BALANCE</span>
+        <span id="global-balance" class="wallet-amount">$1,000.00</span>
+      </div>
+      <button id="btn-reset-data" class="reset-data-btn" title="Reset Local Saved Data">🔄</button>
+    </div>
+  </header>
+
+  <aside id="race-result-notice" class="race-result-notice hidden-view" role="status" aria-live="polite">
+    <p id="race-result-notice-text"></p>
+    <div class="race-result-actions">
+      <button id="btn-view-race-results" class="race-result-action-btn" type="button">View race results</button>
+      <button id="btn-dismiss-race-result" class="race-result-dismiss-btn" type="button">Dismiss</button>
+    </div>
+  </aside>
+
+  <!-- LOCAL SAVE CONTROLS -->
+  <div id="modal-local-save" class="modal-overlay hidden-view" role="dialog" aria-modal="true" aria-labelledby="local-save-title">
+    <div class="modal-card local-save-modal-card">
+      <button id="btn-close-local-save" class="modal-close-btn" type="button" aria-label="Close local save dialog">&times;</button>
+      <h2 id="local-save-title">💾 LOCAL SAVE</h2>
+      <p class="modal-subtitle">Game progress and preferences stay on this device.</p>
+      <div id="local-save-status" class="local-save-status" aria-live="polite" data-state="local">Saved automatically in this browser.</div>
+      <div class="local-save-actions">
+        <button id="btn-link-save-file" class="local-save-action-btn" type="button">Choose / link a save file</button>
+        <button id="btn-export-save" class="local-save-secondary-btn" type="button">Download save backup</button>
+        <button id="btn-import-save" class="local-save-secondary-btn" type="button">Import save file</button>
+        <button id="btn-recover-legacy-save" class="local-save-secondary-btn hidden-view" type="button">Recover older local profile</button>
+        <input id="local-save-import-input" type="file" accept=".json,application/json" hidden>
+      </div>
+      <p class="local-save-note">Browser saves are automatic on this device. On supported desktop browsers, link a JSON file to keep it updated automatically. Otherwise, download a backup and import it when needed.</p>
+    </div>
+  </div>
+
+  <!-- DAILY WHEEL MODAL OVERLAY -->
+  <div id="modal-wheel" class="modal-overlay hidden-view">
+    <div class="modal-card wheel-modal-card">
+      <button id="btn-close-wheel" class="modal-close-btn">&times;</button>
+      <h2>🎡 DAILY LUCKY WHEEL</h2>
+      <p class="modal-subtitle">Spin once every 24 hours to claim free bonus chips!</p>
+
+      <div class="wheel-stage-container">
+        <div class="wheel-pointer">▼</div>
+        <canvas id="wheel-canvas" width="320" height="320"></canvas>
+      </div>
+
+      <div class="wheel-action-area">
+        <div id="wheel-cooldown-timer" class="cooldown-badge hidden-view">NEXT SPIN IN: 23:59:59</div>
+        <button id="btn-spin-wheel" class="spin-wheel-btn">SPIN WHEEL NOW</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SETTINGS MODAL OVERLAY -->
+  <div id="modal-settings" class="modal-overlay hidden-view">
+    <div class="modal-card">
+      <button id="btn-close-settings" class="modal-close-btn">&times;</button>
+      <h2>⚙️ CASINO SETTINGS</h2>
+      <p class="modal-subtitle">Customize sound effects and visual appearance.</p>
+
+      <div class="settings-section">
+        <h3>🔊 AUDIO MIXER</h3>
+        <div class="setting-row">
+          <label for="slider-volume">Master Volume</label>
+          <div class="volume-control">
+            <input type="range" id="slider-volume" min="0" max="100" value="80">
+            <span id="volume-display-val">80%</span>
+          </div>
+        </div>
+        <div class="setting-row">
+          <label>Mute Sound Effects</label>
+          <button id="btn-toggle-mute" class="toggle-btn">MUTE: OFF</button>
+        </div>
+      </div>
+
+      <div class="settings-section">
+        <h3>🎨 VISUAL THEME</h3>
+        <div class="theme-selector-grid">
+          <button class="theme-btn active-theme" data-theme="vegas">
+            <span class="theme-swatch swatch-vegas"></span>
+            Vegas Purple
+          </button>
+          <button class="theme-btn" data-theme="midnight">
+            <span class="theme-swatch swatch-midnight"></span>
+            Midnight Dark
+          </button>
+          <button class="theme-btn" data-theme="gold">
+            <span class="theme-swatch swatch-gold"></span>
+            High Roller Gold
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BANK MODAL OVERLAY -->
+  <div id="modal-bank" class="modal-overlay hidden-view">
+    <div class="modal-card">
+      <button id="btn-close-bank" class="modal-close-btn">&times;</button>
+      <h2>🏦 CASINO BANK & LOAN VAULT</h2>
+      <p class="modal-subtitle">Borrow extra funds or repay your outstanding debt.</p>
+
+      <div class="bank-stats-grid">
+        <div class="bank-stat-card">
+          <span class="stat-label">OUTSTANDING DEBT</span>
+          <span id="bank-debt-display" class="stat-value debt-color">$0.00</span>
+        </div>
+        <div class="bank-stat-card">
+          <span class="stat-label">CREDIT LIMIT</span>
+          <span id="bank-credit-display" class="stat-value">$2,000.00</span>
+        </div>
+        <div class="bank-stat-card">
+          <span class="stat-label">INTEREST RATE</span>
+          <span class="stat-value">10%</span>
+        </div>
+      </div>
+
+      <div class="bank-actions-container">
+        <div class="bank-action-box">
+          <h3>BORROW CASH</h3>
+          <p>Get instant chip credit (10% flat fee added to debt).</p>
+          <div class="action-inputs">
+            <button class="btn-preset-loan" data-amount="100">+$100</button>
+            <button class="btn-preset-loan" data-amount="250">+$250</button>
+            <button class="btn-preset-loan" data-amount="500">+$500</button>
+          </div>
+        </div>
+
+        <div class="bank-action-box">
+          <h3>REPAY DEBT</h3>
+          <p>Deduct debt balance from your current wallet.</p>
+          <div class="action-inputs">
+            <button id="btn-repay-100" class="btn-repay">Pay $100</button>
+            <button id="btn-repay-all" class="btn-repay btn-repay-max">Pay All Debt</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <main id="app-container">
+    
+    <!-- LOBBY VIEW -->
+    <section id="view-lobby" class="view-screen active-view">
+      <div class="lobby-header">
+        <h2>SELECT A GAME</h2>
+        <p>Pick a game to start playing</p>
+      </div>
+
+      <div class="game-grid">
+        <!-- Classic 3-Reel Card -->
+        <div class="game-card">
+          <div class="card-icon">🎰</div>
+          <h3>Classic 3-Reel</h3>
+          <p>Traditional 3-reel slot machine with wild payouts.</p>
+          <button class="play-btn" data-game="classic-slots">PLAY NOW</button>
+        </div>
+
+        <!-- 5-Reel Gem Quest Card -->
+        <div class="game-card">
+          <div class="card-icon">💎</div>
+          <h3>5-Reel Gem Quest</h3>
+          <p>High-volatility 5-reel slot with Free Spins, Sticky Wilds & Jackpot.</p>
+          <button class="play-btn" data-game="5reel-slots">PLAY NOW</button>
+        </div>
+
+        <!-- Coin Toss Card -->
+        <div class="game-card">
+          <div class="card-icon">🪙</div>
+          <h3>High Roller Coin Toss</h3>
+          <p>Double or nothing! Flip the gold coin for instant 2x payouts.</p>
+          <button class="play-btn" data-game="coin-toss">PLAY NOW</button>
+        </div>
+
+        <!-- Blackjack 21 Card -->
+        <div class="game-card">
+          <div class="card-icon">🃏</div>
+          <h3>Blackjack 21</h3>
+          <p>Beat the dealer! Hit, Stand, or Double Down for 3:2 Blackjack payouts.</p>
+          <button class="play-btn" data-game="blackjack">PLAY NOW</button>
+        </div>
+
+        <!-- Race Card -->
+        <div class="game-card">
+          <div class="card-icon">🏁</div>
+          <h3>Racing</h3>
+          <p>Back a horse or car in daytime races. Form and race experience affect each runner's simulated win chance.</p>
+          <button class="play-btn" data-game="horse-racing">RACE NOW</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- LOCAL SIMULATED RACING VIEW -->
+    <section id="view-horse-racing" class="view-screen hidden-view">
+      <button class="back-lobby-btn" type="button">⬅ BACK TO LOBBY</button>
+      <div class="slot-machine race-machine">
+        <div class="header race-header">
+          <h1 id="race-title">Horse Racing</h1>
+          <p class="race-local-note">A race every hour from 7 AM–9 PM local time, alternating horse and car • previews and betting open 45 minutes before each start • bets close 5 minutes before • closed overnight • virtual chips only</p>
+          <div class="race-mode-switch" role="group" aria-label="Alternating hourly race schedule">
+            <span data-race-type="horse">🏇 Horse Racing · 7 AM, then every 2 hours</span>
+            <span data-race-type="car">🏎️ Car Racing · 8 AM, then every 2 hours</span>
+          </div>
+          <div id="race-status" class="status-banner status-spinning" role="status" aria-live="polite">Loading the next local race…</div>
+        </div>
+
+        <div class="race-info-strip" aria-label="Race details">
+          <div class="race-info-item"><span>BETTING FOR</span><strong id="race-number">—</strong></div>
+          <div class="race-info-item"><span>PHASE</span><strong id="race-phase-label">—</strong></div>
+          <div class="race-info-item"><span>STARTS IN</span><strong id="race-countdown">—</strong></div>
+          <div class="race-info-item"><span>NEXT LOCAL START</span><strong id="race-start-time">—</strong></div>
+          <div class="race-info-item"><span>SPRINT LENGTH</span><strong id="race-duration">—</strong></div>
+        </div>
+
+        <div class="race-stage">
+          <div class="race-track-heading"><span id="race-track-caption">NEXT RACE PREVIEW</span><span class="race-finish-label">FINISH</span></div>
+          <div id="race-track" class="race-track" aria-label="Animated simulated race track"></div>
+        </div>
+
+        <div class="race-betting-panel">
+          <div class="race-panel-heading">
+            <h2>Choose a winner</h2>
+            <p id="race-target-text">Choose a runner. Betting closes five minutes before the race starts.</p>
+          </div>
+          <div id="race-runner-list" class="race-runner-list" role="group" aria-label="Choose a horse to win"></div>
+        </div>
+
+        <div class="dashboard race-dashboard">
+          <div class="card">
+            <span class="label">Win Bet</span>
+            <div class="bet-controls">
+              <button id="btn-race-minus" class="btn-small" type="button" aria-label="Decrease race bet">−</button>
+              <span id="race-bet-display" class="value">$10.00</span>
+              <button id="btn-race-plus" class="btn-small" type="button" aria-label="Increase race bet">+</button>
+            </div>
+          </div>
+          <div class="card race-return-card">
+            <span class="label">Potential total return</span>
+            <span id="race-estimated-return" class="value">$0.00</span>
+          </div>
+        </div>
+
+        <div class="actions race-actions">
+          <button id="btn-race-max" class="max-btn" type="button">MAX BET</button>
+          <button id="btn-race-bet" class="spin-btn" type="button" disabled>SELECT A HORSE</button>
+        </div>
+        <p id="race-ticket-note" class="race-ticket-note" role="status" aria-live="polite">One open ticket at a time across both circuits. Your stake is virtual chips only.</p>
+        <p class="race-odds-note">Horse races field 6 runners and car races field 8 from expanding stables. Starts and wins affect future simulated ability and displayed win chances. Odds show total return including your stake. Race schedules and results use this device's local clock; there is no live sports feed.</p>
+      </div>
+    </section>
+
+    <!-- BLACKJACK 21 VIEW -->
+    <section id="view-blackjack" class="view-screen hidden-view">
+      <button class="back-lobby-btn">⬅ BACK TO LOBBY</button>
+      
+      <div class="slot-machine blackjack-table">
+        <div class="header">
+          <h1>Blackjack 21</h1>
+          <div id="status-bj" class="status-banner">PLACE YOUR BET TO DEAL</div>
+        </div>
+
+        <!-- Felt Play Table Area -->
+        <div class="felt-table">
+          <!-- Dealer Area -->
+          <div class="hand-section">
+            <div class="hand-header">
+              <span>DEALER HAND</span>
+              <span id="bj-dealer-score" class="score-badge">0</span>
+            </div>
+            <div id="bj-dealer-cards" class="cards-container"></div>
+          </div>
+
+          <!-- Divider Line -->
+          <div class="table-divider"><span>BLACKJACK PAYS 3 TO 2 — DEALER MUST STAND ON 17</span></div>
+
+          <!-- Player Area -->
+          <div class="hand-section">
+            <div class="hand-header">
+              <span>YOUR HAND</span>
+              <span id="bj-player-score" class="score-badge">0</span>
+            </div>
+            <div id="bj-player-cards" class="cards-container"></div>
+          </div>
+        </div>
+
+        <!-- Controls Dashboard -->
+        <div class="dashboard">
+          <div class="card">
+            <span class="label">Current Bet</span>
+            <div class="bet-controls">
+              <button id="btn-bj-minus" class="btn-small">-</button>
+              <span id="bet-bj-display" class="value">$10</span>
+              <button id="btn-bj-plus" class="btn-small">+</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="actions">
+          <button id="btn-bj-deal" class="spin-btn">DEAL HAND</button>
+          <button id="btn-bj-hit" class="action-btn-green hidden-view">HIT</button>
+          <button id="btn-bj-stand" class="action-btn-red hidden-view">STAND</button>
+          <button id="btn-bj-double" class="action-btn-gold hidden-view">DOUBLE DOWN</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- COIN TOSS VIEW -->
+    <section id="view-coin-toss" class="view-screen hidden-view">
+      <button class="back-lobby-btn">⬅ BACK TO LOBBY</button>
+      
+      <div class="slot-machine coin-toss-machine">
+        <div class="header">
+          <h1>Coin Toss</h1>
+          <div id="status-coin" class="status-banner">PICK HEADS OR TAILS</div>
+        </div>
+
+        <div class="coin-stage">
+          <div id="coin-element" class="coin">
+            <div class="coin-face coin-heads">🪙<br><span>HEADS</span></div>
+            <div class="coin-face coin-tails">👑<br><span>TAILS</span></div>
+          </div>
+        </div>
+
+        <div class="choice-selector">
+          <button id="btn-pick-heads" class="choice-btn active-choice">HEADS (2x)</button>
+          <button id="btn-pick-tails" class="choice-btn">TAILS (2x)</button>
+        </div>
+
+        <div class="dashboard">
+          <div class="card">
+            <span class="label">Current Bet</span>
+            <div class="bet-controls">
+              <button id="btn-coin-minus" class="btn-small">-</button>
+              <span id="bet-coin-display" class="value">$10</span>
+              <button id="btn-coin-plus" class="btn-small">+</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="actions">
+          <button id="btn-coin-max" class="max-btn">MAX</button>
+          <button id="btn-coin-flip" class="spin-btn">FLIP COIN</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5-REEL SLOTS VIEW -->
+    <section id="view-5reel-slots" class="view-screen hidden-view">
+      <button class="back-lobby-btn">⬅ BACK TO LOBBY</button>
+      
+      <div class="slot-machine slot-5reel">
+        <div class="header">
+          <h1>Gem Quest 5x3</h1>
+          <div id="status-5reel" class="status-banner">PRESS SPIN TO PLAY</div>
+        </div>
+
+        <div id="bonus-hud-5reel" class="bonus-hud hidden-view">
+          <div class="bonus-stat">FREE SPINS: <span id="fs-remaining-count">0</span></div>
+          <div class="bonus-stat">BONUS WIN: <span id="fs-total-win">$0.00</span></div>
+        </div>
+
+        <div class="reels-viewport-5reel">
+          <div class="reel-5reel" id="reel5-0"><div class="strip"></div></div>
+          <div class="reel-5reel" id="reel5-1"><div class="strip"></div></div>
+          <div class="reel-5reel" id="reel5-2"><div class="strip"></div></div>
+          <div class="reel-5reel" id="reel5-3"><div class="strip"></div></div>
+          <div class="reel-5reel" id="reel5-4"><div class="strip"></div></div>
+        </div>
+
+        <div class="dashboard">
+          <div class="card">
+            <span class="label">Current Bet (10 Lines)</span>
+            <div class="bet-controls">
+              <button id="btn5-minus" class="btn-small">-</button>
+              <span id="bet5-display" class="value">$10</span>
+              <button id="btn5-plus" class="btn-small">+</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="actions">
+          <button id="btn5-max" class="max-btn">MAX</button>
+          <button id="btn5-spin" class="spin-btn">SPIN</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- CLASSIC SLOTS VIEW -->
+    <section id="view-classic-slots" class="view-screen hidden-view">
+      <button class="back-lobby-btn">⬅ BACK TO LOBBY</button>
+      
+      <div class="slot-machine">
+        <div class="header">
+          <h1>Classic 3-Reel</h1>
+          <div id="status" class="status-banner">PRESS SPIN TO PLAY</div>
+        </div>
+
+        <div class="reels-viewport">
+          <div class="payline-overlay"></div>
+          <div class="reel" id="reel-0"><div class="strip"></div></div>
+          <div class="reel" id="reel-1"><div class="strip"></div></div>
+          <div class="reel" id="reel-2"><div class="strip"></div></div>
+        </div>
+
+        <div class="dashboard">
+          <div class="card">
+            <span class="label">Current Bet</span>
+            <div class="bet-controls">
+              <button id="btn-minus" class="btn-small">-</button>
+              <span id="bet-display" class="value">$10</span>
+              <button id="btn-plus" class="btn-small">+</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="actions">
+          <button id="btn-max" class="max-btn">MAX</button>
+          <button id="btn-spin" class="spin-btn">SPIN</button>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <div class="splash-modal hidden-view" id="splash-modal" role="dialog" aria-modal="true" aria-labelledby="splash-title">
+    <img src="assets/splash.png" alt="" class="splash-logo" id="splash-logo" />
+    <div class="splash-copy">
+      <p class="splash-kicker">WELCOME TO</p>
+      <h1 id="splash-title">Sluts &amp; Slots Casino Hub</h1>
+      <p class="splash-tagline">Slots · table games · simulated racing</p>
+      <p class="splash-disclaimer">Just-for-fun play with virtual credits</p>
+    </div>
+    <button class="splash-skip" id="btn-skip-splash" type="button">Skip intro</button>
+  </div>
+
+</body>
+</html>
