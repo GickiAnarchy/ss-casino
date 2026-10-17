@@ -53,7 +53,7 @@
       this.importInput?.addEventListener('change', (event) => this.importSelectedFile(event));
       this.skipSplashButton?.addEventListener('click', () => this.dismissSplash());
       this.splashModal?.addEventListener('animationend', (event) => {
-        if (event.target === this.splashModal && event.animationName === 'splash-intro') {
+        if (event.target === this.splashModal && event.animationName === 'ambientGlow') {
           this.dismissSplash();
         }
       });

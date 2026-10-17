@@ -1387,14 +1387,32 @@ summary::marker {
   background:
     radial-gradient(ellipse at 50% 34%, rgba(105, 25, 125, 0.38), transparent 55%),
     linear-gradient(180deg, #100817 0%, #080510 100%);
-  animation: splash-intro 8.6s ease-in-out both;
+  //animation: splash-intro 8.6s ease-in-out both;
+  object-fit: cover;
+  /* Traces alpha transparency of the asset */
+  filter: drop-shadow(0 0 0px rgba(99, 102, 241, 0));
+  animation: ambientGlow 7.5s ease-in-out alternate;
 }
 
 .splash-logo {
   width: min(62vw, 46vh, 520px);
   max-height: 46vh;
-  object-fit: contain;
-  filter: drop-shadow(0 14px 30px rgba(0, 0, 0, 0.6));
+  }
+
+@keyframes ambientGlow {
+  0% {
+    filter: drop-shadow(0 0 15px rgba(99, 102, 241, 0.3));
+    transform: translateY(0);
+    opacity: 1.0;
+  }
+  73% {
+    opacity: 1.0;
+  }
+  100% {
+    filter: drop-shadow(0 0 40px rgba(168, 85, 247, 0.6));
+    transform: translateY(-5px); /* Smooth GPU-promoted layer lift */
+    opacity: 0.0;
+  }
 }
 
 .splash-copy { text-align: center; }
