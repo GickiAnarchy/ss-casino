@@ -222,15 +222,18 @@
       </div>
 
       <section class="lobby-slot-room" aria-labelledby="slot-room-title">
-        <div class="lobby-slot-room-heading">
-          <div>
-            <p class="lobby-room-kicker">SLOT TABLES</p>
-            <h3 id="slot-room-title">Slot Room</h3>
-            <p>Choose a three-reel or five-reel machine and its stake level.</p>
-          </div>
-          <span class="lobby-room-emblem" aria-hidden="true">🎰 💎</span>
-        </div>
-        <div class="slot-room-grid">
+        <details>
+          <summary>
+            <div class="lobby-slot-room-heading">
+              <div>
+                <p class="lobby-room-kicker">SLOT TABLES</p>
+                <h3 id="slot-room-title">Slot Room</h3>
+                <p>Choose a three-reel or five-reel machine and its stake level.</p>
+              </div>
+              <span class="lobby-room-emblem" aria-hidden="true">🎰 💎</span>
+            </div>
+          </summary>
+          <div class="slot-room-grid">
           <!-- The two original high-stakes tables stay hand-authored; themed catalog tables are added to this same grid by slot-templates.js. -->
           <article class="game-card">
             <div class="card-icon" aria-hidden="true">🎰</div>
@@ -245,6 +248,7 @@
             <button class="play-btn" type="button" data-game="5reel-slots">PLAY NOW</button>
           </article>
         </div>
+        </details>
       </section>
 
       <!-- These cards intentionally exclude all slot games; their launch buttons share one data-game navigation contract. -->

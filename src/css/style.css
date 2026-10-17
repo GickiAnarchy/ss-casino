@@ -393,7 +393,7 @@ body {
 
 .toggle-btn.is-muted { background: #8a1313; border-color: #ff4d4d; color: #ffcccc; }
 
-.theme-selector-grid { display: flex; gap: 10px; }
+.theme-selector-grid { display: flex; justify-content: space-around;}
 
 .theme-btn {
   flex: 1;
@@ -408,6 +408,7 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
+  width: 20%;
   gap: 6px;
 }
 
@@ -496,6 +497,10 @@ body {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   gap: 20px;
+}
+
+summary::marker {
+  content: "🎰▶️";
 }
 
 /* Room containers make groups easy to scan and let each family of games grow without mixing unrelated cards. */
