@@ -1368,6 +1368,15 @@ document.addEventListener('DOMContentLoaded', async () => {
       }
     }
   }
+  
+  class ThreeCoinToss {
+    constructor(hubController) {
+      this.hub = hubController;
+    }
+    //TODO
+    //Need to finish this game.
+    
+  }
 
   // ==========================================
   // 10. CLASSIC 3-REEL SLOT ENGINE

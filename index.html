@@ -422,7 +422,7 @@
       </div>
     </section>
 
-    <!-- COIN TOSS VIEW -->
+    <!-- COIN TOSS ROOM -->
     <section id="view-coin-toss" class="view-screen hidden-view">
       <button class="back-lobby-btn">⬅ BACK TO LOBBY</button>
       
@@ -461,6 +461,55 @@
         </div>
       </div>
     </section>
+    
+    <section id="view-coin-toss" class="view-screen hidden-view">
+      <button class="back-lobby-btn">⬅ BACK TO LOBBY</button>
+      
+      <div class="slot-machine three-coin-toss-machine">
+        <div class="header">
+          <h1>3x Coin Toss</h1>
+          <div id="status-coin" class="status-banner">PICK HEADS OR TAILS</div>
+        </div>
+
+        <div class="three-coin-stage">
+          <div id="coin-a-element" class="coin">
+            <div class="coin-face coin-heads">🪙<br><span>HEADS</span></div>
+            <div class="coin-face coin-tails">👑<br><span>TAILS</span></div>
+          </div>
+          <div id="coin-b-element" class="coin">
+            <div class="coin-face coin-heads">🪙<br><span>HEADS</span></div>
+            <div class="coin-face coin-tails">👑<br><span>TAILS</span></div>
+          </div>
+          <div id="coin-c-element" class="coin">
+            <div class="coin-face coin-heads">🪙<br><span>HEADS</span></div>
+            <div class="coin-face coin-tails">👑<br><span>TAILS</span></div>
+          </div>
+        </div>
+
+        <div class="choice-selector">
+          <button id="btn-pick-heads" class="choice-btn active-choice">HEADS</button>
+          <button id="btn-pick-tails" class="choice-btn">TAILS</button>
+        </div>
+
+        <div class="dashboard">
+          <div class="card">
+            <span class="label">Current Bet</span>
+            <div class="bet-controls">
+              <button id="btn-coin-minus" class="btn-small">-</button>
+              <span id="bet-coin-display" class="value">$10</span>
+              <button id="btn-coin-plus" class="btn-small">+</button>
+              <button id="clear-bet-btn" class="btn-small">Clear Bet</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="actions">
+          <button id="btn-coin-max" class="max-btn">MAX</button>
+          <button id="btn-coin-flip" class="spin-btn">FLIP COINS</button>
+        </div>
+      </div>
+    </section>
+
 
     <!-- 5-REEL SLOTS VIEW -->
     <section id="view-5reel-slots" class="view-screen hidden-view">

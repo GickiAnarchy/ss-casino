@@ -592,7 +592,7 @@ summary::marker {
   gap: 20px;
 }
 
-.slot-machine.slot-5reel, .slot-machine.coin-toss-machine, .slot-machine.blackjack-table { max-width: 580px; }
+.slot-machine.slot-5reel, .slot-machine.coin-toss-machine, .slot-machine.three-coin-toss-machine, .slot-machine.blackjack-table { max-width: 580px; }
 
 /* Felt Blackjack Table Styling */
 .felt-table {
@@ -735,6 +735,15 @@ summary::marker {
   height: 160px;
   display: flex;
   justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+.three-coin-stage {
+  perspective: 1000px;
+  height: 160px;
+  display: flex;
+  justify-content: space-evenly;
   align-items: center;
   width: 100%;
 }
