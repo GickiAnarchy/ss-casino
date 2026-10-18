@@ -6,6 +6,7 @@
 (function installLocalProfileManager() {
   const DATABASE_KEY = 'ss_casino_profiles_v1';
   const DATABASE_VERSION = 1;
+  const RECOVERY_KEY = 'ss_casino_recovery_snapshot_v1';
   const FORMAT = 'ss-casino-encrypted-profile';
   // Expensive password derivation slows offline guessing; keep this setting stable so existing profiles still unlock.
   const PBKDF2_ITERATIONS = 310000;
@@ -22,7 +23,11 @@
     jackpot: 10000,
     raceBet: null,
     raceResultNotice: null,
-    raceExperience: null
+    raceExperience: null,
+    slotBonuses: {},
+    accomplishments: {},
+    revision: 0,
+    updatedAt: null
   });
 
   /** Owns profile creation, unlock, AES-GCM encryption, legacy migration, and ordered localStorage writes. */
@@ -53,7 +58,7 @@
         const legacySave = this.readLegacySave();
         legacySave.legacyProfiles = this.readLegacyProfiles();
         await this.showFirstProfileSetup(legacySave);
-        this.removeLegacyKeys();
+        if (this.database.profiles.length) this.removeLegacyKeys();
       } else {
         await this.showUnlockScreen();
       }
@@ -96,7 +101,7 @@
         return Number.isFinite(parsed) && parsed >= minimum ? parsed : fallback;
       };
       let settings = readJson('casino_hub_settings');
-      const themes = ['vegas', 'midnight', 'gold'];
+      const themes = ['vegas', 'midnight', 'gold', 'money'];
       settings = {
         volume: Math.max(0, Math.min(100, Math.round(readNumber(settings.volume, 80)))),
         isMuted: settings.isMuted === true,
@@ -152,6 +157,39 @@
       return profiles.sort((a, b) => b.updatedAtMs - a.updatedAtMs).slice(0, 100);
     }
 
+    normalizeSlotBonuses(value) {
+      if (!value || typeof value !== 'object' || Array.isArray(value)) return {};
+      const output = {};
+      for (const [id, raw] of Object.entries(value).slice(0, 64)) {
+        if (!/^[A-Za-z0-9_-]{1,64}$/.test(id) || !raw || typeof raw !== 'object' || Array.isArray(raw)) continue;
+        const safe = {};
+        const count = (v, fallback = 0) => Number.isSafeInteger(v) && v >= 0 && v <= 1000000 ? v : fallback;
+        safe.freeSpinsRemaining = count(raw.freeSpinsRemaining);
+        safe.lockedStake = Number.isFinite(raw.lockedStake) && raw.lockedStake >= 0 && raw.lockedStake <= 1000000 ? Math.round(raw.lockedStake * 100) / 100 : 0;
+        safe.bonusTotalWin = Number.isFinite(raw.bonusTotalWin) && raw.bonusTotalWin >= 0 && raw.bonusTotalWin <= 100000000 ? Math.round(raw.bonusTotalWin * 100) / 100 : 0;
+        if (raw.summary && typeof raw.summary === 'object' && !Array.isArray(raw.summary)) {
+          safe.summary = {};
+          for (const [key, value] of Object.entries(raw.summary).slice(0, 16)) {
+            if (/^[A-Za-z0-9_-]{1,64}$/.test(key) && Number.isFinite(value) && value >= 0 && value <= 100000000) safe.summary[key] = value;
+          }
+        }
+        safe.stickyWildsGrid = Array.isArray(raw.stickyWildsGrid) && raw.stickyWildsGrid.length === 5 && raw.stickyWildsGrid.every(row => Array.isArray(row) && row.length === 3 && row.every(BooleanValue => typeof BooleanValue === 'boolean')) ? raw.stickyWildsGrid.map(row => row.slice()) : Array.from({ length: 5 }, () => [false, false, false]);
+        const result = raw.lastResult;
+        if (result && (result.status === 'pending' || result.status === 'settled') && Number.isFinite(result.stake) && result.stake >= 0 && Array.isArray(result.lines)) {
+          safe.lastResult = { status: result.status, stake: Math.round(result.stake * 100) / 100, payout: Number.isFinite(result.payout) && result.payout >= 0 ? Math.round(result.payout * 100) / 100 : 0, lines: result.lines.slice(0, 32) };
+        } else safe.lastResult = null;
+        output[id] = safe;
+      }
+      return output;
+    }
+    normalizeAccomplishments(value) {
+      const source = value && typeof value === 'object' && !Array.isArray(value) ? value : {};
+      const safeIds = Array.isArray(source.unlockedIds) ? [...new Set(source.unlockedIds.filter(id => typeof id === 'string' && id.length <= 96).slice(0, 128))] : [];
+      const history = Array.isArray(source.history) ? source.history.filter(item => item && typeof item === 'object' && typeof item.id === 'string').slice(-50).map(item => ({ ...item, id: item.id.slice(0, 96) })) : [];
+      const stats = source.stats && typeof source.stats === 'object' ? source.stats : {};
+      const count = v => Number.isSafeInteger(v) && v >= 0 && v <= 100000000 ? v : 0;
+      return { version: 1, unlockedIds: safeIds, selectedCosmetic: typeof source.selectedCosmetic === 'string' && source.selectedCosmetic.length <= 96 ? source.selectedCosmetic : 'classic-cabinet', history, stats: { games: count(stats.games), wins: count(stats.wins), races: count(stats.races), raceWins: count(stats.raceWins) } };
+    }
     // Trust boundary for stored or imported values: whitelist fields, clamp preferences, and reject impossible race data.
     normalizeSave(value = {}) {
       const input = value && typeof value === 'object' ? value : {};
@@ -162,7 +200,7 @@
         const number = Number(item);
         return Number.isFinite(number) && number >= minimum ? number : fallback;
       };
-      const themes = ['vegas', 'midnight', 'gold'];
+      const themes = ['vegas', 'midnight', 'gold', 'money'];
       const raceBet = input.raceBet && typeof input.raceBet === 'object' ? input.raceBet : null;
       const raceResultNotice = input.raceResultNotice && typeof input.raceResultNotice === 'object' ? input.raceResultNotice : null;
       const validRunnerId = value => typeof value === 'string' && /^(horse-(?:[1-6]|[a-z0-9-]+)|car-[a-z0-9-]+)$/.test(value);
@@ -242,6 +280,10 @@
         raceBet: safeRaceBet,
         raceResultNotice: safeRaceResultNotice,
         raceExperience: safeRaceExperience,
+        slotBonuses: this.normalizeSlotBonuses(input.slotBonuses),
+        accomplishments: this.normalizeAccomplishments(input.accomplishments),
+        revision: Number.isSafeInteger(input.revision) && input.revision >= 0 ? input.revision : 0,
+        updatedAt: typeof input.updatedAt === 'string' ? input.updatedAt : null,
         legacyProfiles: Array.isArray(input.legacyProfiles) ? input.legacyProfiles.slice(0, 100).map(profile => {
           const archived = profile && typeof profile === 'object' ? profile : {};
           const archivedSave = this.normalizeSave({ player: archived.player, settings: archived.settings });
@@ -293,7 +335,9 @@
     fromBase64(text) { return Uint8Array.from(atob(text), character => character.charCodeAt(0)); }
 
     writeDatabase() {
-      localStorage.setItem(DATABASE_KEY, JSON.stringify(this.database));
+      const text = JSON.stringify(this.database);
+      try { localStorage.setItem(DATABASE_KEY, text); return true; }
+      catch (error) { window.LocalSave?.setStatus('Profile storage failed; no successful save was reported.', 'warning'); return false; }
     }
 
     setContent(title, description, includeCancel = false) {
@@ -384,7 +428,7 @@
         create.disabled = true;
         try {
           await this.createProfile(name.value, password.value, legacySave);
-          this.removeLegacyKeys();
+          if (this.database.profiles.length) this.removeLegacyKeys();
           this.updateProfileButton();
         } catch (error) {
           feedback.textContent = error.message || 'Could not create the profile. Check browser storage and try again.';
@@ -499,7 +543,7 @@
       profile.iv = sealed.iv;
       profile.ciphertext = sealed.ciphertext;
       this.database.profiles.push(profile);
-      this.writeDatabase();
+      if (!this.writeDatabase()) { this.database.profiles = this.database.profiles.filter(item => item !== profile); throw new Error('Profile could not be durably saved. No legacy data was removed.'); }
       await this.activateProfile(profile, key, initialSave);
       if (this.finishInitialSetup) this.finishInitialSetup();
       return profile;
@@ -510,6 +554,8 @@
       this.activeProfile = profile;
       this.activeKey = key;
       this.currentSave = this.normalizeSave(save);
+      this.lastDurableSave = this.currentSave;
+      this.durableProfileId = profile.id;
     }
 
     openSwitcher() {
@@ -541,29 +587,38 @@
     // Snapshot normalized data and queue encryption so rapid updates stay ordered and profile switches cannot cross-write.
     saveCurrent(partial = {}) {
       if (!this.activeProfile || !this.activeKey) return Promise.resolve(false);
-      this.currentSave = this.normalizeSave({ ...this.currentSave, ...partial });
-      const snapshot = this.getCurrentSave();
+      const previous = this.currentSave;
+      if (this.durableProfileId !== this.activeProfile.id || !this.lastDurableSave) { this.lastDurableSave = previous; this.durableProfileId = this.activeProfile.id; }
+      const snapshot = this.normalizeSave({ ...previous, ...partial, revision: Math.max(Number(previous?.revision) || 0, Number(partial.revision) || 0) + 1, updatedAt: new Date().toISOString() });
+      const changes = Object.fromEntries(Object.keys(partial).map(key => [key, snapshot[key]]));
+      this.currentSave = snapshot;
       const profileId = this.activeProfile.id;
       const task = this.saveQueue.catch(() => false).then(async () => {
         const profile = this.database.profiles.find(item => item.id === profileId);
         if (!profile || !this.activeKey || this.activeProfile?.id !== profileId) return false;
-        const sealed = await this.encryptSave(profile, this.activeKey, snapshot);
-        profile.iv = sealed.iv;
-        profile.ciphertext = sealed.ciphertext;
-        profile.updatedAt = new Date().toISOString();
-        this.writeDatabase();
-        return true;
-      }).catch(error => {
-        console.error('Encrypted local profile save failed.', error);
-        window.LocalSave?.setStatus('Profile encryption could not be saved to this browser. Export a backup and check available storage.', 'warning');
-        return false;
+        // Rebase only this call's fields on the last successful write, not a failed optimistic predecessor.
+        const durableSnapshot = this.normalizeSave({ ...this.lastDurableSave, ...changes, revision: snapshot.revision, updatedAt: snapshot.updatedAt });
+        const oldRecord = { iv: profile.iv, ciphertext: profile.ciphertext, updatedAt: profile.updatedAt };
+        try {
+          const sealed = await this.encryptSave(profile, this.activeKey, durableSnapshot);
+          profile.iv = sealed.iv; profile.ciphertext = sealed.ciphertext; profile.updatedAt = new Date().toISOString();
+          if (!this.writeDatabase()) throw new Error('Profile storage failed');
+          this.lastDurableSave = durableSnapshot;
+          if (this.currentSave === snapshot) this.currentSave = durableSnapshot;
+          return true;
+        } catch (error) {
+          profile.iv = oldRecord.iv; profile.ciphertext = oldRecord.ciphertext; profile.updatedAt = oldRecord.updatedAt;
+          if (this.currentSave === snapshot) this.currentSave = this.lastDurableSave;
+          console.error('Encrypted local profile save failed.', error);
+          window.LocalSave?.setStatus('Profile encryption could not be saved to this browser. Export a backup and check available storage.', 'warning');
+          return false;
+        }
       });
       this.saveQueue = task;
       return task;
     }
-
     // Wait for the previous profile write before changing the active encryption key.
-    async flushSave() { await this.saveQueue.catch(() => false); }
+    async flushSave() { return await this.saveQueue.catch(() => false); }
 
     updateProfileButton() {
       if (this.profileName) this.profileName.textContent = this.activeProfile ? this.activeProfile.name : 'Choose profile';

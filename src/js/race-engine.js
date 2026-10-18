@@ -145,6 +145,7 @@
       this.minusBtn = document.getElementById('btn-race-minus');
       this.plusBtn = document.getElementById('btn-race-plus');
       this.maxBtn = document.getElementById('btn-race-max');
+      this.clearBtn = document.getElementById('btn-race-clear');
       this.placeBtn = document.getElementById('btn-race-bet');
       this.resultNoticeEl = document.getElementById('race-result-notice');
       this.resultNoticeTextEl = document.getElementById('race-result-notice-text');
@@ -169,7 +170,13 @@
       this.maxBtn?.addEventListener('click', () => {
         if (!this.canBetNow()) return;
         this.fx?.playClick();
-        this.bet = this.maxStake();
+        const maximum = this.maxStake();
+        this.bet = maximum;
+        this.updateBetControls();
+      });
+      this.clearBtn?.addEventListener('click', () => {
+        if (!this.canBetNow()) return;
+        this.bet = 0;
         this.updateBetControls();
       });
       this.placeBtn?.addEventListener('click', () => this.placeBet());
@@ -786,7 +793,11 @@
       const betOpen = this.isBettingOpen && !this.ticket;
       if (this.minusBtn) this.minusBtn.disabled = !betOpen || this.bet <= BET_STEP;
       if (this.plusBtn) this.plusBtn.disabled = !betOpen || this.bet + BET_STEP > maximum;
-      if (this.maxBtn) this.maxBtn.disabled = !betOpen || maximum <= 0 || this.bet >= maximum;
+      if (this.maxBtn) {
+        this.maxBtn.disabled = !betOpen || maximum <= 0 || this.bet === maximum;
+        this.maxBtn.textContent = 'MAX BET';
+      }
+      if (this.clearBtn) this.clearBtn.disabled = !betOpen || this.bet === 0;
       if (this.placeBtn) {
         this.placeBtn.disabled = !betOpen || !selectedRunner || this.bet <= 0 || this.bet > maximum;
         this.placeBtn.textContent = !this.isRacePreviewOpen
@@ -821,12 +832,13 @@
 
     // Record the event, runner, stake, odds, and duration before settlement; deduct the stake only once.
     placeBet() {
+      if (this.hub.isSettling) return;
       const now = Date.now();
       const raceId = this.getNextRaceStart(now);
       const bettingRace = this.createRace(raceId);
       const selectedRunner = bettingRace.entrants.find(runner => runner.id === this.selectedHorseId);
       const maximum = this.maxStake();
-      if (!this.canBetNow(now) || !selectedRunner || this.bet <= 0 || this.bet > maximum) return;
+      if (!this.canBetNow(now) || !selectedRunner || !Number.isFinite(this.bet) || this.bet <= 0 || this.bet > maximum) return;
 
       this.fx?.playClick();
       this.ticket = {
@@ -853,6 +865,7 @@
 
     // Reconstruct the recorded seeded result and settle the saved ticket even if the player returns later.
     settleTicket() {
+      if (this.hub.isSettling) return; // The regular update loop retries once the atomic wallet write completes.
       const ticket = this.ticket;
       if (!ticket) return;
       const legacy = !['horse', 'car'].includes(ticket.raceType);
@@ -878,6 +891,7 @@
         raceBet: null,
         raceResultNotice: notice
       });
+      window.Accomplishments?.recordRace?.(notice);
       this.hub.updateGlobalUI();
       window.LocalSave?.queueFileSave();
       this.lastResultText = this.formatRaceResult(notice);

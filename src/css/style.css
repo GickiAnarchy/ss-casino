@@ -592,7 +592,7 @@ summary::marker {
   gap: 20px;
 }
 
-.slot-machine.slot-5reel, .slot-machine.coin-toss-machine, .slot-machine.blackjack-table { max-width: 580px; }
+.slot-machine.slot-5reel, .slot-machine.coin-toss-machine, .slot-machine.three-coin-toss-machine, .slot-machine.blackjack-table { max-width: 580px; }
 
 /* Felt Blackjack Table Styling */
 .felt-table {
@@ -735,6 +735,15 @@ summary::marker {
   height: 160px;
   display: flex;
   justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+.three-coin-stage {
+  perspective: 1000px;
+  height: 160px;
+  display: flex;
+  justify-content: space-evenly;
   align-items: center;
   width: 100%;
 }
@@ -1676,3 +1685,44 @@ summary::marker {
 .slot-theme-stakes { margin: 4px 0 0; color: var(--slot-accent, #ccc); text-align: center; font-size: 0.85rem; }
 .slot-stakes-note { margin: 0; color: var(--gold-primary); font-size: 0.9rem; font-weight: 700; }
 .slot-symbol-image { width: 76%; height: 76%; object-fit: contain; }
+
+/* Local game additions: presentation only, never wager modifiers. */
+.bet-controls { flex-wrap: wrap; }
+.three-coin-stage { display: flex; justify-content: space-evenly; gap: 20px; padding: 42px 12px; perspective: 1000px; width: 100%; }
+.three-coin-stage .coin { width: 120px; height: 120px; flex: 0 0 120px; }
+.three-coin-stage .coin-face { font-size: 32px; }
+.three-coin-choices { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin: 20px 0; width: 100%; }
+.three-coin-choices fieldset { border: 1px solid #807337; border-radius: 12px; padding: 10px; min-width: 0; text-align: center; }
+.three-coin-choices legend { padding: 0 6px; }
+.three-coin-choices .choice-btn { width: 100%; margin: 4px 0; padding: 12px 4px; }
+.game-rules-note, .slot-paytable, .slot-result-breakdown { line-height: 1.5; font-size: .95rem; }
+.slot-paytable, .slot-result-breakdown { padding: 14px; margin: 16px 0; border: 1px solid #75652e; border-radius: 12px; width: 100%; }
+.slot-paytable table { width: 100%; border-collapse: collapse; }
+.slot-paytable th, .slot-paytable td { padding: 6px; text-align: left; }
+button:focus-visible, summary:focus-visible, select:focus-visible { outline: 3px solid #80dcff; outline-offset: 3px; }
+@media (max-width: 520px) {
+  .three-coin-stage { gap: 6px; padding: 26px 0; }
+  .three-coin-stage .coin { width: 78px; height: 78px; flex-basis: 78px; }
+  .three-coin-stage .coin-face { font-size: 23px; }
+  .three-coin-stage .coin-face span { font-size: 12px; }
+  .three-coin-choices { gap: 5px; }
+  .three-coin-choices fieldset { padding: 5px; }
+}
+
+.accomplishments-panel { margin-top: 24px; padding: 20px; border: 1px solid #75652e; border-radius: 16px; background: var(--panel-bg); line-height: 1.6; }
+.accomplishments-panel h3 { color: var(--gold-primary); }
+.accomplishments-list, .accomplishments-history { margin: 14px 0; }
+.accomplishments-history p { font-size: .85rem; color: #d2ced8; }
+.accomplishments-select { margin-left: 8px; padding: 9px; max-width: 100%; border-radius: 8px; color: white; background: #252530; }
+.cabinet-cosmetic-gold .slot-machine { box-shadow: 0 0 24px #b8860b88; }
+.cabinet-cosmetic-neon .slot-machine { box-shadow: 0 0 24px #00d2d388, 0 0 42px #e056fd55; }
+.cabinet-cosmetic-royal .slot-machine { outline: 3px solid #9c75d0; outline-offset: 4px; }
+.cabinet-cosmetic-ruby .slot-machine { box-shadow: 0 0 28px #ed445f88; }
+.cabinet-cosmetic-racing .slot-machine { box-shadow: 0 0 25px #44d96f77; }
+.cabinet-cosmetic-checkered .slot-machine { outline: 4px dashed #eee; outline-offset: 4px; }
+.cabinet-cosmetic-midnight .slot-machine { box-shadow: 0 0 28px #5578f788; }
+
+.bet-controls { flex-wrap: wrap; }
+.slot-paytable, .slot-result-breakdown { overflow-wrap: anywhere; }
+
+[data-slot-clear], #btn-bj-clear, #btn-coin-clear, #btn-three-coin-clear, #btn-race-clear { width: auto; min-width: 82px; height: auto; min-height: 30px; padding: 6px 10px; white-space: nowrap; font-size: .85rem; }

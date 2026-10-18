@@ -63,7 +63,7 @@ class Player {
     this.xp = safe.xp;
     this.debt = safe.debt;
     this.creditLimit = safe.creditLimit;
-    this.maxBet = safe.maxBet;
+    this.maxBet = safe.toProfile().maxBet;
     return this;
   }
 

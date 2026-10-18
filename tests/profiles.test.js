@@ -67,3 +67,14 @@ test('profile validation removes impossible race records', () => {
   assert.equal(save.raceExperience.horse.runners['horse-copper-comet'], undefined);
   assert.equal(save.raceExperience.car.runners['horse-copper-comet'], undefined);
 });
+test('Money Green and bonus state survive repeated normalization', () => {
+  const bonus={freeSpinsRemaining:4,lockedStake:10,bonusTotalWin:22.5,stickyWildsGrid:Array.from({length:5},()=>[false,true,false]),lastResult:{status:'settled',stake:0,payout:12.5,lines:[]},summary:{totalWin:22.5}};
+  const save=manager.normalizeSave(manager.normalizeSave({settings:{theme:'money'},slotBonuses:{'view-5reel-slots':bonus}}));
+  assert.equal(save.settings.theme,'money');assert.equal(save.slotBonuses['view-5reel-slots'].freeSpinsRemaining,4);
+  assert.equal(save.slotBonuses['view-5reel-slots'].stickyWildsGrid[2][1],true);assert.equal(save.slotBonuses['view-5reel-slots'].summary.totalWin,22.5);
+});
+test('invalid bonus counters and sticky grids are sanitized', () => {
+  const save=manager.normalizeSave({slotBonuses:{table:{freeSpinsRemaining:-3,lockedStake:Infinity,stickyWildsGrid:[[true]]}}});
+  assert.equal(save.slotBonuses.table.freeSpinsRemaining,0);assert.equal(save.slotBonuses.table.lockedStake,0);
+  assert.equal(save.slotBonuses.table.stickyWildsGrid.length,5);assert.equal(save.slotBonuses.table.stickyWildsGrid[0].length,3);
+});

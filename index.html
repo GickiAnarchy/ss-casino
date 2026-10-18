@@ -5,14 +5,17 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>S&S Casino Hub — Simulated Racing</title>
-  <link rel="stylesheet" href="src/css/style.css?v=slot-room-reorg-20261016">
-  <script src="src/js/models.js?v=shared-jackpot-20261012" defer></script>
-  <script src="src/js/local-save.js?v=racing-circuits-20261015" defer></script>
-  <script src="src/js/profiles.js?v=racing-circuits-20261015" defer></script>
-  <script src="src/js/race-engine.js?v=race-preview-20261015" defer></script>
-  <script src="src/js/slot-bet-rules.js?v=cent-bets-20261016" defer></script>
+  <link rel="stylesheet" href="src/css/style.css?v=local-games-20261018">
+  <script src="src/js/models.js?v=local-games-20261018" defer></script>
+  <script src="src/js/local-save.js?v=local-games-20261018" defer></script>
+  <script src="src/js/profiles.js?v=local-games-20261018" defer></script>
+  <script src="src/js/race-engine.js?v=local-games-20261018" defer></script>
+  <script src="src/js/slot-bet-rules.js?v=local-games-20261018" defer></script>
   <script src="src/js/slot-templates.js?v=slot-themes-20261016" defer></script>
-  <script src="src/js/app.js?v=slot-room-reorg-20261016" defer></script>
+  <script src="src/js/slot-outcomes.js?v=local-games-20261018" defer></script>
+  <script src="src/js/game-rules.js?v=local-games-20261018" defer></script>
+  <script src="src/js/accomplishments.js?v=local-games-20261018" defer></script>
+  <script src="src/js/app.js?v=local-games-20261018" defer></script>
 </head>
 <body>
 
@@ -260,6 +263,7 @@
           <p>Double or nothing! Flip the gold coin for instant 2x payouts.</p>
           <button class="play-btn" data-game="coin-toss">PLAY NOW</button>
         </div>
+        <div class="game-card"><div class="game-icon">3×</div><h2>Three Coin Toss</h2><p>Predict all three coins. Match 2 for 1.5× or all 3 for 3× total return.</p><button class="play-btn" data-game="three-coin-toss">PLAY NOW</button></div>
 
         <!-- Blackjack 21 Card -->
         <div class="game-card">
@@ -359,6 +363,7 @@
         </div>
 
         <div class="actions race-actions">
+          <button id="btn-race-clear" class="btn-small" type="button">Clear bet</button>
           <button id="btn-race-max" class="max-btn" type="button">MAX BET</button>
           <button id="btn-race-bet" class="spin-btn" type="button" disabled>SELECT A HORSE</button>
         </div>
@@ -409,6 +414,8 @@
               <button id="btn-bj-minus" class="btn-small">-</button>
               <span id="bet-bj-display" class="value">$10</span>
               <button id="btn-bj-plus" class="btn-small">+</button>
+              <button id="btn-bj-max" class="max-btn" type="button">MAX</button>
+              <button id="btn-bj-clear" class="btn-small" type="button">Clear bet</button>
             </div>
           </div>
         </div>
@@ -422,7 +429,7 @@
       </div>
     </section>
 
-    <!-- COIN TOSS VIEW -->
+    <!-- COIN TOSS ROOM -->
     <section id="view-coin-toss" class="view-screen hidden-view">
       <button class="back-lobby-btn">⬅ BACK TO LOBBY</button>
       
@@ -440,8 +447,8 @@
         </div>
 
         <div class="choice-selector">
-          <button id="btn-pick-heads" class="choice-btn active-choice">HEADS (2x)</button>
-          <button id="btn-pick-tails" class="choice-btn">TAILS (2x)</button>
+          <button id="btn-pick-heads" data-coin-index="0" data-coin-choice="HEADS" class="choice-btn active-choice">HEADS (2x)</button>
+          <button id="btn-pick-tails" data-coin-index="0" data-coin-choice="TAILS" class="choice-btn">TAILS (2x)</button>
         </div>
 
         <div class="dashboard">
@@ -451,6 +458,7 @@
               <button id="btn-coin-minus" class="btn-small">-</button>
               <span id="bet-coin-display" class="value">$10</span>
               <button id="btn-coin-plus" class="btn-small">+</button>
+              <button id="btn-coin-clear" class="btn-small" type="button">Clear bet</button>
             </div>
           </div>
         </div>
@@ -461,6 +469,56 @@
         </div>
       </div>
     </section>
+    
+    <section id="view-three-coin-toss" class="view-screen hidden-view">
+      <button class="back-lobby-btn">⬅ BACK TO LOBBY</button>
+      
+      <div class="slot-machine three-coin-toss-machine">
+        <div class="header">
+          <h1>3x Coin Toss</h1>
+          <div id="status-three-coin" class="status-banner">PREDICT ALL THREE COINS</div>
+        </div>
+
+        <div class="three-coin-stage">
+          <div id="coin-a-element" class="coin">
+            <div class="coin-face coin-heads">🪙<br><span>HEADS</span></div>
+            <div class="coin-face coin-tails">👑<br><span>TAILS</span></div>
+          </div>
+          <div id="coin-b-element" class="coin">
+            <div class="coin-face coin-heads">🪙<br><span>HEADS</span></div>
+            <div class="coin-face coin-tails">👑<br><span>TAILS</span></div>
+          </div>
+          <div id="coin-c-element" class="coin">
+            <div class="coin-face coin-heads">🪙<br><span>HEADS</span></div>
+            <div class="coin-face coin-tails">👑<br><span>TAILS</span></div>
+          </div>
+        </div>
+
+        <p class="game-rules-note">Predict each coin, then flip all three. 0–1 correct: no return. 2 correct: 1.5× total return. 3 correct: 3× total return. Returns include your stake; the payout doubles from 2 to 3 correct.</p>
+        <div class="three-coin-choices">
+          <fieldset><legend>Coin 1</legend><button type="button" class="choice-btn" data-coin-index="0" data-coin-choice="HEADS" aria-pressed="false">Heads</button><button type="button" class="choice-btn" data-coin-index="0" data-coin-choice="TAILS" aria-pressed="false">Tails</button></fieldset>
+          <fieldset><legend>Coin 2</legend><button type="button" class="choice-btn" data-coin-index="1" data-coin-choice="HEADS" aria-pressed="false">Heads</button><button type="button" class="choice-btn" data-coin-index="1" data-coin-choice="TAILS" aria-pressed="false">Tails</button></fieldset>
+          <fieldset><legend>Coin 3</legend><button type="button" class="choice-btn" data-coin-index="2" data-coin-choice="HEADS" aria-pressed="false">Heads</button><button type="button" class="choice-btn" data-coin-index="2" data-coin-choice="TAILS" aria-pressed="false">Tails</button></fieldset>
+        </div>
+        <div class="dashboard">
+          <div class="card">
+            <span class="label">Current Bet</span>
+            <div class="bet-controls">
+              <button id="btn-three-coin-minus" class="btn-small">-</button>
+              <span id="bet-three-coin-display" class="value">$10</span>
+              <button id="btn-three-coin-plus" class="btn-small">+</button>
+              <button id="btn-three-coin-clear" class="btn-small">Clear Bet</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="actions">
+          <button id="btn-three-coin-max" class="max-btn">MAX</button>
+          <button id="btn-three-coin-flip" class="spin-btn">FLIP COINS</button>
+        </div>
+      </div>
+    </section>
+
 
     <!-- 5-REEL SLOTS VIEW -->
     <section id="view-5reel-slots" class="view-screen hidden-view">
@@ -488,7 +546,7 @@
 
         <div class="dashboard">
           <div class="card">
-            <span class="label">Current Bet (10 Lines)</span>
+            <span class="label">Total stake · 10 paylines</span>
             <div class="bet-controls">
               <button id="btn5-minus" class="btn-small" data-slot-minus type="button" aria-label="Decrease bet">-</button>
               <span id="bet5-display" class="value" data-slot-bet>$10.00</span>
@@ -559,7 +617,7 @@
         </div>
         <div class="dashboard">
           <div class="card">
-            <span class="label">Current Bet · 5 Paylines</span>
+            <span class="label">Total stake · 5 paylines</span>
             <div class="bet-controls">
               <button class="btn-small" data-slot-minus type="button" aria-label="Decrease bet">−</button>
               <span class="value" data-slot-bet></span>
@@ -597,7 +655,7 @@
         </div>
         <div class="dashboard">
           <div class="card">
-            <span class="label">Current Bet · 10 Lines</span>
+            <span class="label">Total stake · 10 paylines</span>
             <div class="bet-controls">
               <button class="btn-small" data-slot-minus type="button" aria-label="Decrease bet">−</button>
               <span class="value" data-slot-bet></span>
