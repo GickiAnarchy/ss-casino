@@ -145,16 +145,24 @@
             <span class="theme-swatch swatch-gold"></span>
             High Roller Gold
           </button>
+          <button class="theme-btn" data-theme="money">
+            <span class="theme-swatch swatch-money"></span>
+            Money Green
+          </button>
         </div>
       </div>
 
       <div class="settings-section settings-reset-section">
-        <h3>🛠️ CASINO DATA</h3>
-        <p class="settings-reset-note">Local save file import or export. Bind a file to save data to.</p>
-        <button id="btn-open-local-save" class="settings-reset-btn reset-data-btn" aria-label="Manage local saves">💾 SAVE</button>
+        <h3>🛠️ CASINO DATA</h3> 
+        <div class="data-row">
+          <p class="settings-reset-note">Local save file import or export. Bind a file to save data to.</p>
+          <button id="btn-open-local-save" class="settings-reset-btn reset-data-btn" aria-label="Manage local saves">💾 SAVE</button>
+        </div>
         <hr class="settings-hr">
-        <p class="settings-reset-note">Reset your balance, credit, debt, level, XP, and the shared jackpot. Your profile, settings, race progress, and daily-wheel cooldown will stay intact.</p>
-        <button id="btn-reset-data" class="reset-data-btn settings-reset-btn" type="button" title="Reset casino data">🔄 Reset casino data</button>
+        <div class="data-row">
+          <p class="settings-reset-note">Reset your balance, credit, debt, level, XP, and the shared jackpot. Your profile, settings, race progress, and daily-wheel cooldown will stay intact.</p>
+          <button id="btn-reset-data" class="reset-data-btn settings-reset-btn" type="button" title="Reset casino data">🔄 Reset casino data</button>
+        </div>
       </div>
     </div>
   </div>
@@ -214,15 +222,18 @@
       </div>
 
       <section class="lobby-slot-room" aria-labelledby="slot-room-title">
-        <div class="lobby-slot-room-heading">
-          <div>
-            <p class="lobby-room-kicker">SLOT TABLES</p>
-            <h3 id="slot-room-title">Slot Room</h3>
-            <p>Choose a three-reel or five-reel machine and its stake level.</p>
-          </div>
-          <span class="lobby-room-emblem" aria-hidden="true">🎰 💎</span>
-        </div>
-        <div class="slot-room-grid">
+        <details>
+          <summary>
+            <div class="lobby-slot-room-heading">
+              <div>
+                <p class="lobby-room-kicker">SLOT TABLES</p>
+                <h3 id="slot-room-title">Slot Room</h3>
+                <p>Choose a three-reel or five-reel machine and its stake level.</p>
+              </div>
+              <span class="lobby-room-emblem" aria-hidden="true">🎰 💎</span>
+            </div>
+          </summary>
+          <div class="slot-room-grid">
           <!-- The two original high-stakes tables stay hand-authored; themed catalog tables are added to this same grid by slot-templates.js. -->
           <article class="game-card">
             <div class="card-icon" aria-hidden="true">🎰</div>
@@ -237,6 +248,7 @@
             <button class="play-btn" type="button" data-game="5reel-slots">PLAY NOW</button>
           </article>
         </div>
+        </details>
       </section>
 
       <!-- These cards intentionally exclude all slot games; their launch buttons share one data-game navigation contract. -->
@@ -604,10 +616,10 @@
   <div class="splash-modal hidden-view" id="splash-modal" role="dialog" aria-modal="true" aria-labelledby="splash-title">
     <img src="assets/splash.png" alt="" class="splash-logo" id="splash-logo" />
     <div class="splash-copy">
-      <p class="splash-kicker">WELCOME TO</p>
-      <h1 id="splash-title">Sluts &amp; Slots Casino Hub</h1>
-      <p class="splash-tagline">Slots · table games · simulated racing</p>
-      <p class="splash-disclaimer">Just-for-fun play with virtual credits</p>
+      <p class="splash-kicker">Welcome To</p>
+      <h1 id="splash-title">Sluts &amp; Slots Casino</h1>
+      <p class="splash-tagline">Slots · table games · racing</p>
+      <p class="splash-disclaimer">Just-for-fun play</p>
     </div>
     <button class="splash-skip" id="btn-skip-splash" type="button">Skip intro</button>
   </div>

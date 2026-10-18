@@ -28,6 +28,14 @@ body[data-theme="gold"] {
   --header-bg: #120a05;
 }
 
+body[data-theme="money"] {
+  --gold-primary: #4eec5c;
+  --gold-dark: #039634;
+  --bg-primary: radial-gradient(circle, #5b7e4f 0%, #1f3d21 100%);
+  --panel-bg: #08250d;
+  --header-bg: #495b4b;
+}
+
 /* A predictable border-box reset makes card dimensions and responsive grids easier to calculate. */
 * {
   box-sizing: border-box;
@@ -352,6 +360,7 @@ body {
   border-radius: 12px;
   padding: 16px;
   margin-bottom: 16px;
+  justify-content: center;
 }
 
 .settings-hr { margin: 15px; }
@@ -384,7 +393,7 @@ body {
 
 .toggle-btn.is-muted { background: #8a1313; border-color: #ff4d4d; color: #ffcccc; }
 
-.theme-selector-grid { display: flex; gap: 10px; }
+.theme-selector-grid { display: flex; justify-content: space-around;}
 
 .theme-btn {
   flex: 1;
@@ -399,6 +408,7 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
+  width: 20%;
   gap: 6px;
 }
 
@@ -408,6 +418,7 @@ body {
 .swatch-vegas { background: linear-gradient(135deg, #4a0d66, #ffd700); }
 .swatch-midnight { background: linear-gradient(135deg, #1a202c, #00d2d3); }
 .swatch-gold { background: linear-gradient(135deg, #3d2b1f, #ffe066); }
+.swatch-money { background: linear-gradient(135deg, #1f3d21, #4eec5c); }
 
 /* Bank Grid Styling */
 .bank-stats-grid {
@@ -486,6 +497,10 @@ body {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   gap: 20px;
+}
+
+summary::marker {
+  content: "🎰▶️";
 }
 
 /* Room containers make groups easy to scan and let each family of games grow without mixing unrelated cards. */
@@ -1372,14 +1387,32 @@ body {
   background:
     radial-gradient(ellipse at 50% 34%, rgba(105, 25, 125, 0.38), transparent 55%),
     linear-gradient(180deg, #100817 0%, #080510 100%);
-  animation: splash-intro 8.6s ease-in-out both;
+  //animation: splash-intro 8.6s ease-in-out both;
+  object-fit: cover;
+  /* Traces alpha transparency of the asset */
+  filter: drop-shadow(0 0 0px rgba(99, 102, 241, 0));
+  animation: ambientGlow 7.5s ease-in-out alternate;
 }
 
 .splash-logo {
   width: min(62vw, 46vh, 520px);
   max-height: 46vh;
-  object-fit: contain;
-  filter: drop-shadow(0 14px 30px rgba(0, 0, 0, 0.6));
+  }
+
+@keyframes ambientGlow {
+  0% {
+    filter: drop-shadow(0 0 15px rgba(99, 102, 241, 0.3));
+    transform: translateY(0);
+    opacity: 1.0;
+  }
+  73% {
+    opacity: 1.0;
+  }
+  100% {
+    filter: drop-shadow(0 0 40px rgba(168, 85, 247, 0.6));
+    transform: translateY(-5px); /* Smooth GPU-promoted layer lift */
+    opacity: 0.0;
+  }
 }
 
 .splash-copy { text-align: center; }
@@ -1585,6 +1618,14 @@ body {
   max-height: calc(100dvh - 40px);
   overflow-y: auto;
   overscroll-behavior: contain;
+}
+
+.data-row {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  justify-content: center;
+  align-items: center;
 }
 
 /* Mobile overrides stack dense controls and shrink room padding without changing desktop structure. */
