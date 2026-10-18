@@ -2,7 +2,13 @@
 
 S&S Casino Hub is a static, vanilla HTML/CSS/JavaScript casino-style game. It uses **virtual chips only**: there are no deposits, cashouts, payment services, real-money wagers, or online game server.
 
-The lobby includes five slot tables grouped in a dedicated **Slot Room**, plus Coin Toss, Blackjack, simulated horse/car racing, a daily bonus wheel, player levels, virtual-chip banking, and a browser-local demo jackpot.
+The lobby includes five slot tables grouped in a dedicated **Slot Room**, plus Coin Toss, Three Coin Toss, Blackjack, simulated horse/car racing, a daily bonus wheel, player levels, virtual-chip banking, and a browser-local demo jackpot.
+
+## Local gameplay and saves
+
+Wager controls now include separate Clear Bet and balance-aware Max buttons. Slots show paytables and line-by-line returns, preserve free spins and sticky wilds across refreshes, and summarize completed bonuses. Achievements unlock cosmetics only; race history and milestones stay local. Linked JSON files are checked for profile/revision conflicts before loading or writing, with encrypted recovery before an approved replacement.
+
+See [gameplay and payout rules](docs/game-rules.md) and [local save recovery](docs/local-saves.md).
 
 ## Start here
 

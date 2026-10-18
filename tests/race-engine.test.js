@@ -266,3 +266,11 @@ test('legacy horse race results remain reproducible for existing saved tickets',
   assert.equal(first.winnerId, second.winnerId);
   assert.deepEqual(first.entrants.map(runner => runner.id), second.entrants.map(runner => runner.id));
 });
+test('race Max uses remaining cents; Clear Bet changes neither balance nor a placed ticket', () => {
+  const race=Object.create(context.window.RaceEngine.prototype);const listeners={};
+  const button=name=>({addEventListener:(_event,fn)=>{listeners[name]=fn;}});
+  Object.assign(race,{hub:{balance:43.27,player:{maxBet:100}},bet:10,maxBtn:button('max'),clearBtn:button('clear'),modeButtons:[],canBetNow:()=>!race.ticket,updateBetControls(){}});
+  race.bindEvents();listeners.max();assert.equal(race.bet,43.27);assert.equal(race.hub.balance,43.27);
+  listeners.clear();assert.equal(race.bet,0);assert.equal(race.hub.balance,43.27);
+  race.ticket={stake:10};race.bet=10;listeners.clear();listeners.max();assert.equal(race.bet,10);assert.equal(race.ticket.stake,10);
+});

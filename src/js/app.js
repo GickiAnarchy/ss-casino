@@ -262,6 +262,8 @@ document.addEventListener('DOMContentLoaded', async () => {
       this.doubleBtn = document.getElementById('btn-bj-double');
       this.minusBtn = document.getElementById('btn-bj-minus');
       this.plusBtn = document.getElementById('btn-bj-plus');
+      this.maxBtn = document.getElementById('btn-bj-max');
+      this.clearBtn = document.getElementById('btn-bj-clear');
 
       this.dealerCardsEl = document.getElementById('bj-dealer-cards');
       this.playerCardsEl = document.getElementById('bj-player-cards');
@@ -277,14 +279,16 @@ document.addEventListener('DOMContentLoaded', async () => {
       this.standBtn.addEventListener('click', () => this.playerStand());
       this.doubleBtn.addEventListener('click', () => this.playerDoubleDown());
 
-      this.minusBtn.addEventListener('click', () => { FX.playClick(); if (this.bet > 5) { this.bet -= 5; this.updateUI(); } });
-      this.plusBtn.addEventListener('click', () => {
+      const changeBet = action => {
+        if (this.gameState !== 'BETTING') return;
         FX.playClick();
-        if (this.bet + 5 <= Math.min(this.hub.balance, this.hub.player.maxBet)) {
-          this.bet += 5;
-          this.updateUI();
-        }
-      });
+        this.bet = action();
+        this.updateUI();
+      };
+      this.clearBtn.addEventListener('click', () => changeBet(() => 0));
+      this.maxBtn.addEventListener('click', () => changeBet(() => window.GameRules.maximum(this.hub.balance, this.hub.player.maxBet)));
+      this.minusBtn.addEventListener('click', () => changeBet(() => window.GameRules.decrease(this.bet)));
+      this.plusBtn.addEventListener('click', () => changeBet(() => window.GameRules.increase(this.bet, this.hub.balance, this.hub.player.maxBet)));
     }
 
     createDeck() {
@@ -339,7 +343,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     startHand() {
-      if (this.gameState !== 'BETTING' || this.hub.balance < this.bet) return;
+      if (this.hub.isSettling || this.gameState !== 'BETTING' || !window.GameRules.legal(this.bet, this.hub.balance, this.hub.player.maxBet)) return;
 
       FX.playClick();
       this.hub.modifyBalance(-this.bet);
@@ -440,7 +444,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     endHand(message, statusClass, payoutAmount) {
+      if (this.gameState === 'ENDED' || this.gameState === 'BETTING') return;
       this.gameState = 'ENDED';
+      window.Accomplishments?.recordGame('blackjack', { stake: this.bet, payout: payoutAmount });
 
       if (payoutAmount > 0) {
         this.hub.modifyBalance(payoutAmount);
@@ -498,10 +504,12 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     updateUI() {
-      this.betEl.textContent = `$${this.bet}`;
+      this.betEl.textContent = window.SlotBetRules.format(this.bet);
 
       const isBetting = this.gameState === 'BETTING' || this.gameState === 'ENDED';
       const isPlayerTurn = this.gameState === 'PLAYER_TURN';
+      this.maxBtn.disabled = !isBetting || window.GameRules.maximum(this.hub.balance, this.hub.player.maxBet) === 0 || this.bet === window.GameRules.maximum(this.hub.balance, this.hub.player.maxBet);
+      this.clearBtn.disabled = !isBetting || this.bet === 0;
 
       if (isBetting) {
         this.dealBtn.classList.replace('hidden-view', 'active-view');
@@ -509,9 +517,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         this.standBtn.classList.replace('active-view', 'hidden-view');
         this.doubleBtn.classList.replace('active-view', 'hidden-view');
 
-        this.dealBtn.disabled = this.hub.balance < this.bet;
-        this.minusBtn.disabled = false;
-        this.plusBtn.disabled = false;
+        this.dealBtn.disabled = !window.GameRules.legal(this.bet, this.hub.balance, this.hub.player.maxBet);
+        this.minusBtn.disabled = this.bet <= 5;
+        this.plusBtn.disabled = this.bet >= window.GameRules.maximum(this.hub.balance, this.hub.player.maxBet);
 
         if (this.gameState === 'ENDED') {
           this.dealBtn.textContent = 'DEAL AGAIN';
@@ -638,7 +646,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     startSpin() {
-      if (this.isSpinning || this.getRemainingCooldown() > 0) return;
+      if (this.hub.isSettling || this.isSpinning || this.getRemainingCooldown() > 0) return;
 
       FX.playClick();
       this.isSpinning = true;
@@ -813,14 +821,14 @@ document.addEventListener('DOMContentLoaded', async () => {
       return {
         volume: Number.isFinite(volume) ? Math.max(0, Math.min(100, volume)) : 80,
         isMuted: this.isMuted === true,
-        theme: ['vegas', 'midnight', 'gold'].includes(this.currentTheme) ? this.currentTheme : 'vegas'
+        theme: ['vegas', 'midnight', 'gold', 'money'].includes(this.currentTheme) ? this.currentTheme : 'vegas'
       };
     }
 
     applySettings(settings = {}) {
       const value = Number(settings.volume);
       const volume = Number.isFinite(value) ? Math.max(0, Math.min(100, Math.round(value))) : 80;
-      const theme = ['vegas', 'midnight', 'gold'].includes(settings.theme) ? settings.theme : 'vegas';
+      const theme = ['vegas', 'midnight', 'gold', 'money'].includes(settings.theme) ? settings.theme : 'vegas';
       this.isMuted = settings.isMuted === true;
       if (this.volumeSlider) this.volumeSlider.value = String(volume);
       if (this.volumeDisplay) this.volumeDisplay.textContent = `${volume}%`;
@@ -882,18 +890,13 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     handleLevelUp() {
-      if ((this.hub.player.level % 5) !== 0) {
-        const levelBonus = this.hub.player.level * 50;
-        this.hub.player.creditLimit += 250;
-        this.hub.player.maxBet += 500;
-        this.hub.modifyBalance(levelBonus);
-      }
-
+      const { level, bonus: levelBonus } = window.GameRules.levelReward(this.hub.player);
+      const tier = this.getVIPTier();
+      this.hub.modifyBalance(levelBonus);
       FX.playJackpotSound();
       FX.spawnConfetti(120);
-
       setTimeout(() => {
-        alert(`🎉 LEVEL UP! You reached Level ${this.hub.player.level} (${this.getVIPTier()})!\nAwarded +$${levelBonus} Cash Bonus! Credit Limit +$250!`);
+        alert(`LEVEL UP! You reached Level ${level} (${tier})!\nAwarded +$${levelBonus} virtual-chip bonus! Credit Limit +$250!`);
       }, 200);
     }
 
@@ -1061,6 +1064,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     takeLoan(amount) {
+      if (this.hub.isSettling) return;
       if (this.hub.player.debt + amount > this.hub.player.creditLimit) {
         alert(`Loan request exceeds maximum credit limit of $${this.hub.player.creditLimit.toLocaleString()}!`);
         return;
@@ -1076,6 +1080,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     repayLoan(amount) {
+      if (this.hub.isSettling) return;
       if (this.hub.player.debt <= 0) {
         alert('You currently have no outstanding debt!');
         return;
@@ -1128,6 +1133,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       this.slot5ReelView = document.getElementById('view-5reel-slots');
       this.extraSlotViews = Array.from(document.querySelectorAll('[data-extra-slot-view]'));
       this.coinTossView = document.getElementById('view-coin-toss');
+      this.threeCoinTossView = document.getElementById('view-three-coin-toss');
       this.blackjackView = document.getElementById('view-blackjack');
       this.raceView = document.getElementById('view-horse-racing');
 
@@ -1170,7 +1176,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
       document.getElementById('btn-reset-data')?.addEventListener('click', () => {
         if (confirm('Reset your casino balance to $100.00, credit, debt, level, XP, and shared jackpot? Your daily-wheel cooldown and race progress will be kept.')) {
-          if (RaceGame?.hasPendingTicket()) {
+          if (RaceGame?.hasPendingTicket() || !LocalProfiles.canSwitchProfile()) {
             alert('Wait for your simulated race to finish before resetting casino data.');
             return;
           }
@@ -1194,6 +1200,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       this.slot5ReelView.classList.replace('active-view', 'hidden-view');
       this.extraSlotViews.forEach(view => view.classList.replace('active-view', 'hidden-view'));
       this.coinTossView.classList.replace('active-view', 'hidden-view');
+      this.threeCoinTossView.classList.replace('active-view', 'hidden-view');
       this.blackjackView.classList.replace('active-view', 'hidden-view');
       this.raceView?.classList.replace('active-view', 'hidden-view');
 
@@ -1209,6 +1216,8 @@ document.addEventListener('DOMContentLoaded', async () => {
       }
       if (viewName === 'coin-toss') {
         this.coinTossView.classList.replace('hidden-view', 'active-view');
+      } else if (viewName === 'three-coin-toss') {
+        this.threeCoinTossView.classList.replace('hidden-view', 'active-view');
       } else if (viewName === 'blackjack') {
         this.blackjackView.classList.replace('hidden-view', 'active-view');
       } else if (viewName === 'horse-racing') {
@@ -1256,126 +1265,113 @@ document.addEventListener('DOMContentLoaded', async () => {
   // ==========================================
   /** Handles a virtual double-or-nothing round and uses a busy flag to block duplicate flips. */
   class CoinTossEngine {
-    constructor(hubController) {
+    constructor(hubController, triple = false) {
       this.hub = hubController;
+      this.triple = triple;
       this.bet = 10;
-      this.selectedChoice = 'HEADS';
+      this.choices = triple ? [null, null, null] : ['HEADS'];
       this.isFlipping = false;
-
-      this.bindElements();
-      if (this.flipBtn) this.init();
-    }
-
-    bindElements() {
-      this.betEl = document.getElementById('bet-coin-display');
-      this.statusEl = document.getElementById('status-coin');
-      this.flipBtn = document.getElementById('btn-coin-flip');
-      this.maxBtn = document.getElementById('btn-coin-max');
-      this.minusBtn = document.getElementById('btn-coin-minus');
-      this.plusBtn = document.getElementById('btn-coin-plus');
-      this.coinEl = document.getElementById('coin-element');
-      this.headsBtn = document.getElementById('btn-pick-heads');
-      this.tailsBtn = document.getElementById('btn-pick-tails');
-    }
-
-    init() {
-      this.updateUI();
-
-      this.headsBtn.addEventListener('click', () => {
+      const prefix = triple ? 'three-coin' : 'coin';
+      this.rootEl = document.getElementById(`view-${triple ? 'three-coin-toss' : 'coin-toss'}`);
+      this.betEl = document.getElementById(`bet-${prefix}-display`);
+      this.statusEl = document.getElementById(`status-${prefix}`);
+      this.flipBtn = document.getElementById(`btn-${prefix}-flip`);
+      this.maxBtn = document.getElementById(`btn-${prefix}-max`);
+      this.minusBtn = document.getElementById(`btn-${prefix}-minus`);
+      this.plusBtn = document.getElementById(`btn-${prefix}-plus`);
+      this.clearBtn = document.getElementById(`btn-${prefix}-clear`);
+      this.coins = Array.from(this.rootEl.querySelectorAll('.coin'));
+      this.choiceButtons = Array.from(this.rootEl.querySelectorAll('[data-coin-choice]'));
+      this.choiceButtons.forEach(button => button.addEventListener('click', () => {
+        if (this.isFlipping) return;
+        this.choices[Number(button.dataset.coinIndex)] = button.dataset.coinChoice;
+        FX.playClick();
+        this.updateUI();
+      }));
+      const changeBet = action => {
         if (this.isFlipping) return;
         FX.playClick();
-        this.selectedChoice = 'HEADS';
-        this.headsBtn.classList.add('active-choice');
-        this.tailsBtn.classList.remove('active-choice');
-      });
-
-      this.tailsBtn.addEventListener('click', () => {
-        if (this.isFlipping) return;
-        FX.playClick();
-        this.selectedChoice = 'TAILS';
-        this.tailsBtn.classList.add('active-choice');
-        this.headsBtn.classList.remove('active-choice');
-      });
-
+        this.bet = action();
+        this.updateUI();
+      };
+      this.clearBtn.addEventListener('click', () => changeBet(() => 0));
+      this.maxBtn.addEventListener('click', () => changeBet(() => window.GameRules.maximum(this.hub.balance, this.hub.player.maxBet)));
+      this.minusBtn.addEventListener('click', () => changeBet(() => window.GameRules.decrease(this.bet)));
+      this.plusBtn.addEventListener('click', () => changeBet(() => window.GameRules.increase(this.bet, this.hub.balance, this.hub.player.maxBet)));
       this.flipBtn.addEventListener('click', () => this.startFlip());
-      this.maxBtn.addEventListener('click', () => { FX.playClick(); this.bet = this.hub.player.maxBet; this.updateUI(); });
-      this.minusBtn.addEventListener('click', () => { FX.playClick(); if (this.bet > 5) { this.bet -= 5; this.updateUI(); } });
-      this.plusBtn.addEventListener('click', () => {
-        FX.playClick();
-        if (this.bet + 5 <= Math.min(this.hub.balance, this.hub.player.maxBet)) {
-          this.bet += 5;
-          this.updateUI();
-        }
-      });
+      this.updateUI();
     }
-
     updateUI() {
-      this.betEl.textContent = `$${this.bet}`;
-      this.flipBtn.disabled = this.isFlipping || this.hub.balance < this.bet;
-      this.maxBtn.disabled = this.isFlipping;
-      this.minusBtn.disabled = this.isFlipping;
-      this.plusBtn.disabled = this.isFlipping;
+      const max = window.GameRules.maximum(this.hub.balance, this.hub.player.maxBet);
+      this.betEl.textContent = window.SlotBetRules.format(this.bet);
+      this.flipBtn.disabled = this.isFlipping || this.choices.some(choice => !choice) || !window.GameRules.legal(this.bet, this.hub.balance, this.hub.player.maxBet);
+      this.maxBtn.disabled = this.isFlipping || max === 0 || this.bet === max;
+      this.clearBtn.disabled = this.isFlipping || this.bet === 0;
+      this.minusBtn.disabled = this.isFlipping || this.bet <= 5;
+      this.plusBtn.disabled = this.isFlipping || this.bet >= max;
+      this.choiceButtons.forEach(button => {
+        const chosen = this.choices[Number(button.dataset.coinIndex)] === button.dataset.coinChoice;
+        button.classList.toggle('active-choice', chosen);
+        button.setAttribute('aria-pressed', String(chosen));
+        button.disabled = this.isFlipping;
+      });
       this.hub.updateGlobalUI();
     }
-
     setStatus(text, statusClass) {
       this.statusEl.textContent = text;
-      this.statusEl.className = 'status-banner';
-      if (statusClass) this.statusEl.classList.add(statusClass);
+      this.statusEl.className = `status-banner ${statusClass || ''}`;
     }
-
-    startFlip() {
-      if (this.isFlipping || this.hub.balance < this.bet) return;
-
+    async startFlip() {
+      if (this.hub.isSettling || this.isFlipping || this.choices.some(choice => !choice) || !window.GameRules.legal(this.bet, this.hub.balance, this.hub.player.maxBet)) return;
+      this.isFlipping = true;
+      const stake = this.bet;
+      const choices = [...this.choices];
+      const outcomes = this.coins.map(() => Math.random() >= 0.5 ? 'HEADS' : 'TAILS');
+      const result = this.triple ? window.GameRules.threeCoinResult(choices, outcomes, stake) : {
+        correct: Number(choices[0] === outcomes[0]), stake,
+        payout: choices[0] === outcomes[0] ? Math.round(stake * 200) / 100 : 0
+      };
+      // Settle before presentation: refresh cannot leave a wager deducted with an unpaid resolved flip.
+      this.hub.modifyBalance(result.payout - stake);
+      JackpotManager.contribute(stake * 0.015);
+      window.XP.addWagerXP(stake);
+      window.Accomplishments?.recordGame(this.triple ? 'three-coin' : 'coin', result);
       FX.playClick();
       FX.playCoinFlipSound();
-      this.isFlipping = true;
-
-      this.hub.modifyBalance(-this.bet);
-      JackpotManager.contribute(this.bet * 0.015);
-      window.XP.addWagerXP(this.bet);
-
-      this.setStatus('FLIPPING COIN...', 'status-spinning');
+      this.setStatus(this.triple ? 'FLIPPING ALL THREE COINS…' : 'FLIPPING COIN…', 'status-spinning');
       this.updateUI();
-
-      const isHeads = Math.random() >= 0.5;
-      const outcome = isHeads ? 'HEADS' : 'TAILS';
-
-      this.coinEl.classList.remove('animate-heads', 'animate-tails');
-      this.coinEl.offsetHeight;
-
-      this.coinEl.classList.add(isHeads ? 'animate-heads' : 'animate-tails');
-
-      this.coinEl.addEventListener('animationend', () => {
-        this.coinEl.style.transform = isHeads ? 'rotateY(0deg)' : 'rotateY(180deg)';
-        this.coinEl.classList.remove('animate-heads', 'animate-tails');
-
-        this.evaluateFlip(outcome);
-        this.isFlipping = false;
-        this.updateUI();
-      }, { once: true });
+      await Promise.all(this.coins.map((coin, index) => new Promise(resolve => {
+        let finished = false;
+        const done = () => {
+          if (finished) return;
+          finished = true;
+          coin.removeEventListener('animationend', done);
+          coin.classList.remove('animate-heads', 'animate-tails');
+          coin.style.transform = outcomes[index] === 'HEADS' ? 'rotateY(0deg)' : 'rotateY(180deg)';
+          resolve();
+        };
+        coin.classList.remove('animate-heads', 'animate-tails');
+        void coin.offsetHeight;
+        coin.addEventListener('animationend', done);
+        coin.classList.add(outcomes[index] === 'HEADS' ? 'animate-heads' : 'animate-tails');
+        setTimeout(done, 2400); // Reduced motion / missing animation event must never lock the table.
+      })));
+      const net = Math.round((result.payout - stake) * 100) / 100;
+      const matched = this.triple ? `${result.correct}/3 correct. ` : '';
+      this.setStatus(`${outcomes.join(' / ')} — ${matched}Return ${window.SlotBetRules.format(result.payout)}; stake ${window.SlotBetRules.format(stake)}; net ${net >= 0 ? '+' : '-'}${window.SlotBetRules.format(Math.abs(net))}.`, result.payout > stake ? 'status-win' : 'status-loss');
+      if (result.payout > stake) { FX.playWinSound(); FX.spawnConfetti(40); }
+      this.isFlipping = false;
+      this.updateUI();
     }
-
-    evaluateFlip(outcome) {
-      if (this.selectedChoice === outcome) {
-        const winAmount = this.bet * 2;
-        this.hub.modifyBalance(winAmount);
-        FX.playWinSound();
-        FX.spawnConfetti(40);
-        this.setStatus(`LANDED ON ${outcome}! WIN +$${winAmount}`, 'status-win');
-      } else {
-        this.setStatus(`LANDED ON ${outcome}. TRY AGAIN!`, 'status-loss');
-      }
+    resetForActiveProfile() {
+      this.bet = 10;
+      this.choices = this.triple ? [null, null, null] : ['HEADS'];
+      this.setStatus(this.triple ? 'PREDICT ALL THREE COINS' : 'PICK HEADS OR TAILS');
+      this.updateUI();
     }
   }
-  
-  class ThreeCoinToss {
-    constructor(hubController) {
-      this.hub = hubController;
-    }
-    //TODO
-    //Need to finish this game.
-    
+  class ThreeCoinToss extends CoinTossEngine {
+    constructor(hubController) { super(hubController, true); }
   }
 
   // ==========================================
@@ -1434,38 +1430,12 @@ document.addEventListener('DOMContentLoaded', async () => {
       this.reelStrips = Array.from(this.rootEl?.querySelectorAll('.reel .strip') || []);
     }
 
-    init() {
-      this.updateUI();
 
-      for (let r = 0; r < this.REEL_COUNT; r++) {
-        const initial = [this.getRandomSymbol(), this.getRandomSymbol(), this.getRandomSymbol()];
-        this.renderStrip(this.reelStrips[r], initial);
-      }
 
-      this.spinBtn.addEventListener('click', () => this.startSpin());
-      this.maxBtn.addEventListener('click', () => {
-        FX.playClick();
-        const maximum = this.betRules.getMaximum(this.hub.balance, this.hub.player.maxBet);
-        if (maximum > 0) this.bet = maximum;
-        this.updateUI();
-      });
-      this.minusBtn.addEventListener('click', () => { FX.playClick(); this.bet = this.betRules.decrease(this.bet); this.updateUI(); });
-      this.plusBtn.addEventListener('click', () => {
-        FX.playClick();
-        this.bet = this.betRules.increase(this.bet, this.hub.balance, this.hub.player.maxBet);
-        this.updateUI();
-      });
-    }
 
-    updateUI() {
-      this.betEl.textContent = window.SlotBetRules.format(this.bet);
-      this.spinBtn.disabled = this.isSpinning || this.hub.balance < this.bet;
-      const maximum = this.betRules.getMaximum(this.hub.balance, this.hub.player.maxBet);
-      this.maxBtn.disabled = this.isSpinning || maximum === 0 || maximum <= this.bet;
-      this.minusBtn.disabled = this.isSpinning || this.bet <= this.betRules.minimumCents / 100;
-      this.plusBtn.disabled = this.isSpinning || maximum === 0 || this.bet + this.betRules.stepCents / 100 > maximum;
-      this.hub.updateGlobalUI();
-    }
+
+
+
 
     setStatus(text, statusClass) {
       this.statusEl.textContent = text;
@@ -1502,36 +1472,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       });
     }
 
-    async startSpin() {
-      if (this.isSpinning || this.hub.balance < this.bet) return;
 
-      FX.playClick();
-      this.clearHighlights();
-      this.isSpinning = true;
-      this.hub.modifyBalance(-this.bet);
-      JackpotManager.contribute(this.bet * 0.015);
-      window.XP.addWagerXP(this.bet);
-
-      this.setStatus('SPINNING...', 'status-spinning');
-      this.updateUI();
-
-      const finalGrid = [
-        [this.getRandomSymbol(), this.getRandomSymbol(), this.getRandomSymbol()],
-        [this.getRandomSymbol(), this.getRandomSymbol(), this.getRandomSymbol()],
-        [this.getRandomSymbol(), this.getRandomSymbol(), this.getRandomSymbol()]
-      ];
-
-      const spinPromises = this.reelStrips.map((strip, idx) => {
-        return this.animateReel(strip, idx, finalGrid[idx]);
-      });
-
-      await Promise.all(spinPromises);
-
-      this.currentGrid = finalGrid;
-      this.evaluateResults();
-      this.isSpinning = false;
-      this.updateUI();
-    }
 
     animateReel(stripEl, reelIndex, finalSymbols) {
       return new Promise(resolve => {
@@ -1567,41 +1508,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       this.rootEl.querySelectorAll('.symbol.highlight').forEach(el => el.classList.remove('highlight'));
     }
 
-    evaluateResults() {
-      let totalWin = 0;
 
-      this.PAYLINES.forEach(line => {
-        const [p1, p2, p3] = line;
-        const sym1 = this.currentGrid[p1[0]][p1[1]];
-        const sym2 = this.currentGrid[p2[0]][p2[1]];
-        const sym3 = this.currentGrid[p3[0]][p3[1]];
-
-        const nonWilds = [sym1, sym2, sym3].filter(s => s.id !== 'wild');
-        const matchedSymbol = nonWilds.length === 0
-          ? this.SYMBOLS.find(s => s.id === 'wild')
-          : ([sym1, sym2, sym3].every(s => s.id === nonWilds[0].id || s.id === 'wild') ? nonWilds[0] : null);
-
-        if (matchedSymbol) {
-          totalWin += this.bet * matchedSymbol.multiplier;
-
-          line.forEach(([reelIdx, rowIdx]) => {
-            const reelEl = this.reelStrips[reelIdx];
-            const visibleSymbols = Array.from(reelEl.children).slice(-this.VISIBLE_ROWS);
-            if (visibleSymbols[rowIdx]) visibleSymbols[rowIdx].classList.add('highlight');
-          });
-        }
-      });
-
-      totalWin = window.SlotBetRules.roundMoney(totalWin);
-      if (totalWin > 0) {
-        this.hub.modifyBalance(totalWin);
-        FX.playWinSound(this.theme.sounds?.win);
-        FX.spawnConfetti(50);
-        this.setStatus(`WINNER! +${window.SlotBetRules.format(totalWin)}`, 'status-win');
-      } else {
-        this.setStatus(this.hub.balance < this.bet ? 'NO FUNDS AVAILABLE' : 'TRY AGAIN!', 'status-loss');
-      }
-    }
   }
 
   // ==========================================
@@ -1676,55 +1583,14 @@ document.addEventListener('DOMContentLoaded', async () => {
       this.reelStrips = Array.from(this.rootEl?.querySelectorAll('.reel-5reel .strip') || []);
     }
 
-    init() {
-      this.updateUI();
 
-      for (let r = 0; r < this.REEL_COUNT; r++) {
-        const initial = [this.getRandomSymbol(), this.getRandomSymbol(), this.getRandomSymbol()];
-        this.renderStrip(this.reelStrips[r], initial);
-      }
 
-      this.spinBtn.addEventListener('click', () => this.startSpin());
-      this.maxBtn.addEventListener('click', () => {
-        FX.playClick();
-        if (this.freeSpinsRemaining === 0) {
-          const maximum = this.betRules.getMaximum(this.hub.balance, this.hub.player.maxBet);
-          if (maximum > 0) this.bet = maximum;
-          this.updateUI();
-        }
-      });
-      this.minusBtn.addEventListener('click', () => {
-        FX.playClick();
-        if (this.freeSpinsRemaining === 0) this.bet = this.betRules.decrease(this.bet);
-        this.updateUI();
-      });
-      this.plusBtn.addEventListener('click', () => {
-        FX.playClick();
-        if (this.freeSpinsRemaining === 0) this.bet = this.betRules.increase(this.bet, this.hub.balance, this.hub.player.maxBet);
-        this.updateUI();
-      });
-    }
 
-    updateUI() {
-      this.betEl.textContent = window.SlotBetRules.format(this.bet);
 
-      const inFreeSpins = this.freeSpinsRemaining > 0;
-      const maximum = this.betRules.getMaximum(this.hub.balance, this.hub.player.maxBet);
-      this.spinBtn.disabled = this.isSpinning || (!inFreeSpins && this.hub.balance < this.bet);
-      this.maxBtn.disabled = this.isSpinning || inFreeSpins || maximum === 0 || maximum <= this.bet;
-      this.minusBtn.disabled = this.isSpinning || inFreeSpins || this.bet <= this.betRules.minimumCents / 100;
-      this.plusBtn.disabled = this.isSpinning || inFreeSpins || maximum === 0 || this.bet + this.betRules.stepCents / 100 > maximum;
 
-      if (inFreeSpins) {
-        this.bonusHudEl.classList.replace('hidden-view', 'active-view');
-        this.fsCountEl.textContent = this.freeSpinsRemaining;
-        this.fsWinEl.textContent = window.SlotBetRules.format(this.bonusTotalWin);
-      } else {
-        this.bonusHudEl.classList.replace('active-view', 'hidden-view');
-      }
 
-      this.hub.updateGlobalUI();
-    }
+
+
 
     setStatus(text, statusClass) {
       this.statusEl.textContent = text;
@@ -1761,71 +1627,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       });
     }
 
-    async startSpin() {
-      if (this.isSpinning) return;
 
-      const isFreeSpin = this.freeSpinsRemaining > 0;
-      if (!isFreeSpin && this.hub.balance < this.bet) return;
-
-      FX.playClick();
-      this.clearHighlights();
-      this.isSpinning = true;
-
-      if (isFreeSpin) {
-        this.freeSpinsRemaining--;
-        this.setStatus(`FREE SPIN (${this.freeSpinsRemaining} LEFT)`, 'status-bonus');
-      } else {
-        this.hub.modifyBalance(-this.bet);
-        JackpotManager.contribute(this.bet * 0.015);
-        window.XP.addWagerXP(this.bet);
-        this.setStatus('SPINNING REELS...', 'status-spinning');
-      }
-
-      this.updateUI();
-
-      const finalGrid = [];
-      const wildSym = this.SYMBOLS.find(s => s.isWild);
-
-      for (let r = 0; r < this.REEL_COUNT; r++) {
-        const reelSymbols = [];
-        for (let row = 0; row < this.VISIBLE_ROWS; row++) {
-          if (isFreeSpin && this.stickyWildsGrid[r][row]) {
-            reelSymbols.push(wildSym);
-          } else {
-            reelSymbols.push(this.getRandomSymbol());
-          }
-        }
-        finalGrid.push(reelSymbols);
-      }
-
-      const spinPromises = this.reelStrips.map((strip, idx) => {
-        return this.animateReel(strip, idx, finalGrid[idx]);
-      });
-
-      await Promise.all(spinPromises);
-
-      this.currentGrid = finalGrid;
-
-      if (isFreeSpin) {
-        for (let r = 0; r < this.REEL_COUNT; r++) {
-          for (let row = 0; row < this.VISIBLE_ROWS; row++) {
-            if (this.currentGrid[r][row].isWild) {
-              this.stickyWildsGrid[r][row] = true;
-            }
-          }
-        }
-      }
-
-      this.applyStickyWildClasses();
-      this.evaluateResults();
-
-      this.isSpinning = false;
-      this.updateUI();
-
-      if (this.freeSpinsRemaining > 0) {
-        setTimeout(() => this.startSpin(), 800);
-      }
-    }
 
     animateReel(stripEl, reelIndex, finalSymbols) {
       return new Promise(resolve => {
@@ -1873,89 +1675,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       }
     }
 
-    evaluateResults() {
-      let spinWin = 0;
-      let jackpotHit = false;
 
-      // 1. Line Evaluation
-      this.PAYLINES.forEach(line => {
-        const lineSymbols = line.map(([reel, row]) => this.currentGrid[reel][row]);
-        const firstNonWild = lineSymbols.find(s => !s.isWild && !s.isScatter);
-        const targetSymbol = firstNonWild || this.SYMBOLS.find(s => s.isWild);
-
-        if (targetSymbol.isScatter) return;
-
-        let matchCount = 0;
-        for (let i = 0; i < lineSymbols.length; i++) {
-          const sym = lineSymbols[i];
-          if (sym.id === targetSymbol.id || sym.isWild) {
-            matchCount++;
-          } else {
-            break;
-          }
-        }
-
-        if (matchCount === 5 && targetSymbol.id === 'crown') {
-          jackpotHit = true;
-        }
-
-        if (matchCount >= 3 && targetSymbol.mult[matchCount]) {
-          const payout = this.bet * targetSymbol.mult[matchCount];
-          spinWin += payout;
-
-          for (let i = 0; i < matchCount; i++) {
-            const [reelIdx, rowIdx] = line[i];
-            const reelEl = this.reelStrips[reelIdx];
-            const visibleSymbols = Array.from(reelEl.children).slice(-this.VISIBLE_ROWS);
-            if (visibleSymbols[rowIdx]) visibleSymbols[rowIdx].classList.add('highlight');
-          }
-        }
-      });
-
-      // 2. Scatter & Bonus Trigger Evaluation
-      let scatterCount = 0;
-      this.currentGrid.forEach(reel => {
-        reel.forEach(sym => {
-          if (sym.isScatter) scatterCount++;
-        });
-      });
-
-      if (scatterCount >= 3) {
-        const scatterSym = this.SYMBOLS.find(s => s.isScatter);
-        spinWin += this.bet * scatterSym.mult[Math.min(scatterCount, 5)];
-
-        if (this.freeSpinsRemaining === 0) {
-          this.freeSpinsRemaining = 10;
-          this.bonusTotalWin = 0;
-          this.stickyWildsGrid = Array(5).fill(null).map(() => Array(3).fill(false));
-          this.setStatus('🎉 10 FREE SPINS TRIGGERED!', 'status-bonus');
-          FX.playWinSound(this.theme.sounds?.win);
-          FX.spawnConfetti(60);
-        }
-      }
-
-      // 3. Process Jackpot / Standard Payouts
-      spinWin = window.SlotBetRules.roundMoney(spinWin);
-      if (jackpotHit) {
-        const jackpotPayout = JackpotManager.claimJackpot();
-        this.hub.modifyBalance(jackpotPayout);
-        FX.playJackpotSound();
-        FX.spawnConfetti(200);
-        this.setStatus(`🚨 MEGA JACKPOT WIN! +$${jackpotPayout.toLocaleString()}`, 'status-jackpot');
-      } else if (spinWin > 0) {
-        this.hub.modifyBalance(spinWin);
-        FX.playWinSound(this.theme.sounds?.win);
-        FX.spawnConfetti(40);
-
-        if (this.freeSpinsRemaining > 0 || this.bonusTotalWin > 0) {
-          this.bonusTotalWin = window.SlotBetRules.roundMoney(this.bonusTotalWin + spinWin);
-        }
-
-        this.setStatus(`WIN! +${window.SlotBetRules.format(spinWin)}`, 'status-win');
-      } else if (this.freeSpinsRemaining === 0 && this.bonusTotalWin === 0) {
-        this.setStatus(this.hub.balance < this.bet ? 'OUT OF FUNDS' : 'TRY AGAIN!', 'status-loss');
-      }
-    }
   }
 
 
@@ -1966,6 +1686,169 @@ document.addEventListener('DOMContentLoaded', async () => {
     //TODO
   }
 
+
+  // Slot settlement is committed once, before presentation. No animation callback pays chips.
+  const blankSlotState = () => ({ freeSpinsRemaining: 0, lockedStake: 0, bonusTotalWin: 0,
+    stickyWildsGrid: Array.from({ length: 5 }, () => Array(3).fill(false)), lastResult: null, summary: null });
+  const slotMethods = {
+    init() {
+      const controls = this.plusBtn.parentElement;
+      this.clearBtn = document.createElement('button');
+      this.clearBtn.type = 'button'; this.clearBtn.className = 'btn-small';
+      this.clearBtn.dataset.slotClear = ''; this.clearBtn.textContent = 'Clear bet'; controls.append(this.clearBtn);
+      for (const [key, title] of [['paytable', 'Paytable'], ['breakdown', 'Last spin']]) {
+        const panel = document.createElement(key === 'paytable' ? 'details' : 'section');
+        panel.className = key === 'paytable' ? 'slot-paytable' : 'slot-result-breakdown';
+        panel.setAttribute(`data-slot-${key}`, '');
+        if (key === 'paytable') { const summary = document.createElement('summary'); summary.textContent = title; panel.append(summary); }
+        const body = document.createElement('div'); panel.append(body);
+        this.rootEl.querySelector('.slot-machine').append(panel);
+        this[`${key}El`] = body;
+      }
+      this.renderPaytable();
+      this.hydrateBonusState();
+      for (let reel = 0; reel < this.REEL_COUNT; reel++) this.renderStrip(this.reelStrips[reel], Array.from({ length: 3 }, (_, row) => this.freeSpinsRemaining > 0 && this.stickyWildsGrid[reel][row] ? this.SYMBOLS.find(symbol => symbol.isWild) : this.getRandomSymbol()));
+      if (this.REEL_COUNT === 5) this.applyStickyWildClasses();
+      const change = action => {
+        if (this.isSpinning || this.freeSpinsRemaining > 0) return;
+        FX.playClick(); this.bet = action(); this.updateUI();
+      };
+      this.clearBtn.addEventListener('click', () => change(() => 0));
+      this.maxBtn.addEventListener('click', () => change(() => this.betRules.getMaximum(this.hub.balance, this.hub.player.maxBet)));
+      this.minusBtn.addEventListener('click', () => change(() => this.betRules.decrease(this.bet)));
+      this.plusBtn.addEventListener('click', () => change(() => this.bet <= 0 ? this.betRules.minimumCents / 100 : this.betRules.increase(this.bet, this.hub.balance, this.hub.player.maxBet)));
+      this.spinBtn.addEventListener('click', () => this.startSpin());
+      this.updateUI();
+    },
+    hydrateBonusState() {
+      this.roundToken = (this.roundToken || 0) + 1;
+      const saved = window.LocalProfiles.getCurrentSave().slotBonuses[this.rootEl.id];
+      this.slotState = saved ? JSON.parse(JSON.stringify(saved)) : blankSlotState();
+      this.freeSpinsRemaining = this.slotState.freeSpinsRemaining || 0;
+      this.lockedStake = this.slotState.lockedStake || 0;
+      this.bonusTotalWin = this.slotState.bonusTotalWin || 0;
+      this.stickyWildsGrid = this.slotState.stickyWildsGrid || blankSlotState().stickyWildsGrid;
+      if (this.freeSpinsRemaining > 0 && this.lockedStake > 0) {
+        this.bet = this.lockedStake;
+        this.setStatus('BONUS RESTORED — PRESS SPIN TO RESUME', 'status-bonus');
+      }
+      if (this.spinBtn && this.reelStrips.some(strip => strip.children.length)) {
+        this.reelStrips.forEach((strip, reel) => this.renderStrip(strip, Array.from({ length: 3 }, (_, row) => this.freeSpinsRemaining > 0 && this.stickyWildsGrid[reel][row] ? this.SYMBOLS.find(symbol => symbol.isWild) : this.getRandomSymbol())));
+        if (this.REEL_COUNT === 5) this.applyStickyWildClasses();
+      }
+      if (this.slotState.lastResult) this.showBreakdown(this.slotState.lastResult);
+      if (this.slotState.summary?.totalWin !== undefined && !this.freeSpinsRemaining) {
+        this.setStatus(`BONUS COMPLETE — total return ${window.SlotBetRules.format(this.slotState.summary.totalWin)}`, 'status-bonus');
+      }
+    },
+    updateUI() {
+      const bonus = this.freeSpinsRemaining > 0;
+      const maximum = this.betRules.getMaximum(this.hub.balance, this.hub.player.maxBet);
+      const locked = this.isSpinning || bonus;
+      this.betEl.textContent = window.SlotBetRules.format(this.bet);
+      this.spinBtn.disabled = this.isSpinning || (!bonus && (this.bet <= 0 || this.bet > maximum));
+      this.spinBtn.textContent = bonus ? `FREE SPIN (${this.freeSpinsRemaining} LEFT)` : 'SPIN';
+      this.maxBtn.disabled = locked || maximum === 0 || this.bet === maximum;
+      this.clearBtn.disabled = locked || this.bet === 0;
+      this.minusBtn.disabled = locked || this.bet <= this.betRules.minimumCents / 100;
+      this.plusBtn.disabled = locked || maximum === 0 || (this.bet > 0 && this.bet + this.betRules.stepCents / 100 > maximum);
+      if (this.bonusHudEl) {
+        this.bonusHudEl.classList.toggle('hidden-view', !bonus);
+        this.bonusHudEl.classList.toggle('active-view', bonus);
+        this.fsCountEl.textContent = this.freeSpinsRemaining;
+        this.fsWinEl.textContent = window.SlotBetRules.format(this.bonusTotalWin);
+      }
+      this.hub.updateGlobalUI();
+    },
+    renderPaytable() {
+      const note = document.createElement('p');
+      note.textContent = `One displayed stake is debited for the whole spin. Each of the ${this.PAYLINES.length} winning lines pays displayed stake × its multiplier; line returns are added, not divided by the number of lines. This preserves existing payouts. Wilds substitute. Five-reel matches run left to right from reel 1.`;
+      this.paytableEl.append(note);
+      this.SYMBOLS.forEach(symbol => {
+        const row = document.createElement('p');
+        row.textContent = `${symbol.icon} ${symbol.id}: ${symbol.mult ? Object.entries(symbol.mult).map(([count, multiplier]) => `${count} matches = ${multiplier}×`).join('; ') : `3 matches = ${symbol.multiplier}×`}${symbol.isScatter ? ' anywhere; 3+ trigger 10 free spins when no spins remain' : ''}`;
+        this.paytableEl.append(row);
+      });
+      if (this.REEL_COUNT === 5) {
+        const jackpot = document.createElement('p'); jackpot.textContent = 'Five crowns on a line return the browser-local demo jackpot instead of the ordinary line/scatter total. Free spins retain the triggering stake; no new stake is charged. Wilds that land during free spins stay sticky until that bonus ends.'; this.paytableEl.append(jackpot);
+      }
+      const paths = document.createElement('p');
+      paths.textContent = this.PAYLINES.map((line, i) => `Line ${i + 1}: ${line.map(([, row]) => ['top', 'middle', 'bottom'][row]).join(' → ')}`).join(' · ');
+      this.paytableEl.append(paths);
+    },
+    showBreakdown(result) {
+      if (!this.breakdownEl) return;
+      this.breakdownEl.replaceChildren();
+      const summary = document.createElement('p');
+      summary.textContent = `Total stake ${window.SlotBetRules.format(result.stake)} · Total return ${window.SlotBetRules.format(result.payout)} · Net ${window.SlotBetRules.format(result.payout - result.stake)}${result.stake === 0 ? ' (free spin; locked bonus stake used for multipliers)' : ''}`;
+      this.breakdownEl.append(summary);
+      (result.lines || []).forEach(line => {
+        const row = document.createElement('p'); row.textContent = `${line.line ? `Line ${line.line}` : 'Special return'}: ${line.symbol} · ${line.count} matched · ${window.SlotBetRules.format(line.payout)}`; this.breakdownEl.append(row);
+      });
+      if (!result.lines?.length) { const empty = document.createElement('p'); empty.textContent = 'No winning lines.'; this.breakdownEl.append(empty); }
+    },
+    async startSpin() {
+      const free = this.freeSpinsRemaining > 0;
+      if (window.DailyWheel?.isSpinning || (window.CasinoGames?.blackjack && !['BETTING', 'ENDED'].includes(window.CasinoGames.blackjack.gameState))) return;
+      const maximum = this.betRules.getMaximum(this.hub.balance, this.hub.player.maxBet);
+      if (this.isSpinning || this.hub.isSettling || (!free && (this.bet <= 0 || this.bet > maximum))) return;
+      this.isSpinning = true; this.hub.isSettling = true; this.updateUI();
+      const token = this.roundToken;
+      const profileId = window.LocalProfiles.activeProfile.id;
+      const beforeSave = window.LocalProfiles.getCurrentSave();
+      const beforePlayer = this.hub.player.toProfile();
+      const previous = JSON.parse(JSON.stringify(this.slotState));
+      if (free) this.bet = this.lockedStake;
+      const five = this.REEL_COUNT === 5;
+      const grid = Array.from({ length: this.REEL_COUNT }, (_, reel) => Array.from({ length: 3 }, (_, row) => free && this.stickyWildsGrid[reel][row] ? this.SYMBOLS.find(symbol => symbol.isWild) : this.getRandomSymbol()));
+      const calculated = window.SlotOutcomes.calculate(this, grid, five);
+      const jackpotAmount = calculated.jackpotHit ? window.SlotBetRules.roundMoney((JackpotManager.readSharedAmount() ?? JackpotManager.currentJackpot) + (free ? 0 : this.bet * 0.015)) : 0;
+      calculated.payout = calculated.jackpotHit ? jackpotAmount : calculated.lineTotal;
+      if (calculated.jackpotHit) calculated.lines = [{ line: 0, symbol: 'demo jackpot (replaces ordinary return)', count: 5, payout: jackpotAmount }];
+      else if (calculated.scatterCount >= 3) calculated.lines.push({ line: 0, symbol: 'scatter anywhere', count: calculated.scatterCount, payout: calculated.scatterPayout });
+      if (free) previous.stickyWildsGrid = grid.map(column => column.map(symbol => symbol.isWild === true));
+      const next = five ? window.SlotOutcomes.transition(previous, calculated, this.bet, free).state : { ...blankSlotState(), lastResult: { status: 'settled', stake: this.bet, payout: calculated.payout, lines: calculated.lines.map(({coordinates, ...line}) => line) } };
+      const player = { ...beforePlayer, balance: window.SlotBetRules.roundMoney(beforePlayer.balance - (free ? 0 : this.bet) + calculated.payout) };
+      let durable = false;
+      try {
+        durable = await window.LocalProfiles.saveCurrent({ player, slotBonuses: { ...beforeSave.slotBonuses, [this.rootEl.id]: next } });
+      } catch (error) { console.error('Slot settlement could not be saved.', error); }
+      if (!durable) {
+        window.LocalProfiles.currentSave = beforeSave;
+        this.hub.isSettling = false; this.isSpinning = false;
+        this.setStatus('SAVE FAILED — spin not charged; bonus preserved. Check browser storage, then retry.', 'status-loss');
+        this.updateUI(); return;
+      }
+      this.hub.player.loadProfile(player);
+      this.slotState = next;
+      this.freeSpinsRemaining = next.freeSpinsRemaining;
+      this.lockedStake = next.lockedStake;
+      this.bonusTotalWin = next.bonusTotalWin;
+      this.stickyWildsGrid = next.stickyWildsGrid;
+      this.hub.isSettling = false;
+      if (calculated.jackpotHit) JackpotManager.setJackpot(5000);
+      if (!free) { if (!calculated.jackpotHit) JackpotManager.contribute(this.bet * 0.015); window.XP.addWagerXP(this.bet); }
+      window.Accomplishments?.recordGame(this.rootEl.id, { stake: free ? 0 : this.bet, payout: calculated.payout });
+      window.LocalSave?.queueFileSave();
+      FX.playClick(); this.clearHighlights();
+      this.setStatus(free ? 'FREE SPIN…' : 'SPINNING…', 'status-spinning');
+      try { await Promise.all(this.reelStrips.map((strip, index) => this.animateReel(strip, index, grid[index]))); }
+      finally { this.isSpinning = false; }
+      if (this.roundToken !== token || window.LocalProfiles.activeProfile.id !== profileId) return;
+      this.currentGrid = grid;
+      if (five) this.applyStickyWildClasses();
+      calculated.lines.forEach(line => (line.coordinates || []).forEach(([reel, row]) => Array.from(this.reelStrips[reel].children).slice(-3)[row]?.classList.add('highlight')));
+      this.showBreakdown(next.lastResult);
+      if (next.summary?.totalWin !== undefined && !next.freeSpinsRemaining) this.setStatus(`BONUS COMPLETE — total return ${window.SlotBetRules.format(next.summary.totalWin)}`, 'status-bonus');
+      else if (next.freeSpinsRemaining) this.setStatus(`${next.freeSpinsRemaining} FREE SPINS LEFT · bonus return ${window.SlotBetRules.format(next.bonusTotalWin)}`, 'status-bonus');
+      else this.setStatus(calculated.payout > 0 ? `RETURN ${window.SlotBetRules.format(calculated.payout)}` : 'TRY AGAIN!', calculated.payout > 0 ? 'status-win' : 'status-loss');
+      if (calculated.payout > 0) { FX.playWinSound(this.theme.sounds?.win); FX.spawnConfetti(50); }
+      this.updateUI();
+      // Explicit spins make recovery predictable; reload never auto-spends or replays a settled spin.
+    }
+  };
+  Object.assign(ClassicSlotEngine.prototype, slotMethods);
+  Object.assign(HighVolatilitySlotEngine.prototype, slotMethods);
 
   // Instantiate the two hand-authored high-stakes tables, then build catalog tables with their matching shared engine.
   // Slot rooms share reusable mechanics and are configured by the theme/template catalog.
@@ -1979,7 +1862,10 @@ document.addEventListener('DOMContentLoaded', async () => {
   });
   const SlotGames = [ClassicSlots, FiveReelGame, ...ThemedSlotGames];
   const CoinTossGame = new CoinTossEngine(CasinoHub);
+  const ThreeCoinGame = new ThreeCoinToss(CasinoHub);
   const BlackjackGame = new BlackjackEngine(CasinoHub);
+  window.CasinoGames = { hub: CasinoHub, slots: SlotGames, coin: CoinTossGame, threeCoin: ThreeCoinGame, blackjack: BlackjackGame };
+  window.Accomplishments = new window.AccomplishmentManager(CasinoHub);
 
   // Initialize save controls before racing so startup overlays and linked-file state are settled predictably.
   window.LocalSave = new window.LocalSaveManager({
@@ -1990,14 +1876,23 @@ document.addEventListener('DOMContentLoaded', async () => {
     dailyWheel: window.DailyWheel,
     settings: window.CasinoSettings
   });
+  window.canReplaceCasinoSave = () => !CasinoHub.isSettling && SlotGames.every(game => !game.isSpinning && !(game.freeSpinsRemaining > 0)) && !CoinTossGame.isFlipping && !ThreeCoinGame.isFlipping && !window.DailyWheel.isSpinning && ['BETTING', 'ENDED'].includes(BlackjackGame.gameState) && !RaceGame?.hasPendingTicket();
+  window.refreshCasinoSaveState = () => {
+    SlotGames.forEach(game => { game.hydrateBonusState?.(); game.updateUI(); });
+    CoinTossGame.resetForActiveProfile();
+    ThreeCoinGame.resetForActiveProfile();
+    BlackjackGame.updateUI();
+    window.Accomplishments?.resetForActiveProfile();
+  };
   await window.LocalSave.initialize();
+  window.refreshCasinoSaveState();
   RaceGame = new window.RaceEngine(CasinoHub, { fx: FX, jackpot: JackpotManager, xp: window.XP });
   window.RaceGame = RaceGame;
 
   // Switching replaces ephemeral round memory, so permit it only when every game is safely between rounds.
   LocalProfiles.canSwitchProfile = () => (
-    CasinoHub.currentView === 'lobby' &&
-    SlotGames.every(game => !game.isSpinning && !(game.freeSpinsRemaining > 0)) && !CoinTossGame.isFlipping &&
+    !CasinoHub.isSettling && CasinoHub.currentView === 'lobby' &&
+    SlotGames.every(game => !game.isSpinning && !(game.freeSpinsRemaining > 0)) && !CoinTossGame.isFlipping && !ThreeCoinGame.isFlipping &&
     !window.DailyWheel.isSpinning &&
     !RaceGame.hasPendingTicket() &&
     ['BETTING', 'ENDED'].includes(BlackjackGame.gameState)
@@ -2015,18 +1910,12 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     SlotGames.forEach(game => {
       game.bet = game.betRules.startingBet;
-      if ('freeSpinsRemaining' in game) {
-        game.freeSpinsRemaining = 0;
-        game.bonusTotalWin = 0;
-        game.stickyWildsGrid = Array(5).fill(null).map(() => Array(3).fill(false));
-      }
-      game.setStatus('PRESS SPIN TO PLAY');
+      game.hydrateBonusState?.();
+      game.setStatus(game.freeSpinsRemaining > 0 ? 'BONUS RESTORED — PRESS SPIN TO RESUME' : 'PRESS SPIN TO PLAY');
       game.updateUI();
     });
-    CoinTossGame.bet = 10;
-    CoinTossGame.selectedChoice = 'HEADS';
-    CoinTossGame.setStatus('PICK HEADS OR TAILS');
-    CoinTossGame.updateUI();
+    CoinTossGame.resetForActiveProfile();
+    ThreeCoinGame.resetForActiveProfile();
     BlackjackGame.bet = 10;
     BlackjackGame.deck = [];
     BlackjackGame.playerHand = [];
@@ -2040,6 +1929,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     BlackjackGame.setStatus('PLACE YOUR BET TO DEAL');
     BlackjackGame.updateUI();
     RaceGame.resetForActiveProfile();
+    window.Accomplishments?.resetForActiveProfile();
     CasinoHub.saveState();
   };
 

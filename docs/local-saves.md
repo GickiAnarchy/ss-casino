@@ -16,10 +16,10 @@ The game has **no online save service**. It stores progress in the current brows
 
 Open **LOCAL SAVE** in the game:
 
-- **Choose / link a save file** — supported desktop browsers can link a JSON file. If the selected file already contains a valid save, the game asks whether to load it. Later changes are written back to the linked file. Browser permission may need to be granted again.
+- **Choose / link a save file** — supported desktop browsers can link a JSON file. Linked files carry the active profile ID, revision, and timestamp. A stale, legacy, or different-profile file is never silently loaded or overwritten; divergent files require an explicit replacement confirmation. Before replacement, the previous active profile state is encrypted with that profile key and written to a durable per-profile recovery snapshot. Later changes are written back only after a successful atomic file write. Browser permission may need to be granted again.
 - **Download save backup** — downloads the active profile's portable game state and the current shared jackpot as JSON.
 - **Import save file** — validates and loads a supported JSON backup after asking before replacing the active profile's current game state.
-- **Recover older local profile** — where compatible older local caches exist, offers the newest cached save for recovery after confirmation.
+- **Recover older local profile** — where compatible older local caches exist, offers the encrypted previous profile snapshot for recovery after confirmation (and still supports compatible older local caches). Legacy caches are retained until the new encrypted profile has been durably written.
 
 **A JSON backup is not encrypted.** It does not include the profile password or encryption key. Treat the file like an unprotected copy of the game progress. The regular browser profile save remains encrypted.
 
@@ -42,3 +42,8 @@ node --test tests/*.test.js
 ```
 
 The casino uses virtual credits only and does not support deposits, cashouts, or real-money gambling.
+
+
+## Revisions, recovery, and failures
+
+Every normalized profile save carries a monotonic `revision` and `updatedAt` timestamp. Optional `slotBonuses` and `accomplishments` maps are validated and carried through encrypted saves, JSON backups, imports, and recovery snapshots. A replacement first stores `ss_casino_recovery_snapshot_v1:<profile-id>` as an encrypted, profile-tagged record in browser storage; if recovery or encrypted browser storage fails, the live state is not replaced and the UI reports the failure. The LOCAL SAVE dialog exposes **Restore previous save** for the active profile. A linked-file write failure pauses that link while the browser profile stays active. JSON backups remain unencrypted and should be treated as sensitive.
