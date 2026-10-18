@@ -503,8 +503,21 @@ summary::marker {
   content: "🎰▶️";
 }
 
+/* Keep the Coin Flip disclosure distinct from the slot-machine marker. */
+.lobby-coin-room summary {
+  cursor: pointer;
+  border-radius: 8px;
+}
+
+.lobby-coin-room summary::marker { content: "▶ "; color: var(--gold-primary); }
+.lobby-coin-room details[open] > summary::marker { content: "▼ "; }
+.lobby-coin-room summary:focus-visible { outline: 2px solid var(--gold-primary); outline-offset: 6px; }
+.lobby-coin-room .lobby-coin-room-heading { margin-bottom: 0; }
+.lobby-coin-room details[open] > summary { margin-bottom: 16px; }
+.lobby-coin-room .game-grid { grid-template-columns: repeat(auto-fit, minmax(min(250px, 100%), 1fr)); }
+
 /* Room containers make groups easy to scan and let each family of games grow without mixing unrelated cards. */
-.lobby-slot-room {
+.lobby-slot-room, .lobby-coin-room {
   margin-bottom: 24px;
   padding: 22px;
   border: 1px solid rgba(255, 215, 0, 0.42);
@@ -1639,7 +1652,7 @@ summary::marker {
 
 /* Mobile overrides stack dense controls and shrink room padding without changing desktop structure. */
 @media (max-width: 640px) {
-  .lobby-slot-room { padding: 16px; }
+  .lobby-slot-room, .lobby-coin-room { padding: 16px; }
   .lobby-slot-room-heading, .lobby-coin-room-heading { gap: 10px; }
   .lobby-slot-room-heading h3, .lobby-coin-room-heading h3 { font-size: 1.15rem; }
   .lobby-services-room { padding: 16px; }
