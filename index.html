@@ -255,15 +255,31 @@
       </section>
 
       <!-- These cards intentionally exclude all slot games; their launch buttons share one data-game navigation contract. -->
-      <div class="game-grid">
-        <!-- Coin Toss Card -->
-        <div class="game-card">
-          <div class="card-icon">🪙</div>
-          <h3>High Roller Coin Toss</h3>
-          <p>Double or nothing! Flip the gold coin for instant 2x payouts.</p>
-          <button class="play-btn" data-game="coin-toss">PLAY NOW</button>
-        </div>
-        <div class="game-card"><div class="game-icon">3×</div><h2>Three Coin Toss</h2><p>Predict all three coins. Match 2 for 1.5× or all 3 for 3× total return.</p><button class="play-btn" data-game="three-coin-toss">PLAY NOW</button></div>
+      <details>
+        <summary>
+          <div class="lobby-coin-room-heading">
+            <div>
+              <p class="lobby-room-kicker">COIN FLIPPING</p>
+              <h3 id="slot-room-title">Coin Flip Room</h3>
+              <p>Choose a three-coin or single-coin game.</p>
+            </div>
+          </div>
+        </summary>
+          <div class="game-grid">
+            <!-- Coin Toss Card -->
+            <div class="game-card">
+              <div class="card-icon">🪙</div>
+              <h3>High Roller Coin Toss</h3>
+              <p>Double or nothing! Flip the gold coin for instant 2x payouts.</p>
+              <button class="play-btn" data-game="coin-toss">PLAY NOW</button>
+            </div>
+            <div class="game-card">
+              <div class="game-icon">3×</div>
+              <h3>Three Coin Toss</h3>
+              <p>Predict all three coins. Match 2 for 1.5× or all 3 for 3× total return.</p>
+              <button class="play-btn" data-game="three-coin-toss">PLAY NOW</button>
+            </div>
+      </details>
 
         <!-- Blackjack 21 Card -->
         <div class="game-card">
