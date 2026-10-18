@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>S&S Casino Hub — Simulated Racing</title>
-  <link rel="stylesheet" href="src/css/style.css?v=local-games-20261018">
+  <link rel="stylesheet" href="src/css/style.css?v=coin-room-20261018">
   <script src="src/js/models.js?v=local-games-20261018" defer></script>
   <script src="src/js/local-save.js?v=local-games-20261018" defer></script>
   <script src="src/js/profiles.js?v=local-games-20261018" defer></script>
@@ -255,16 +255,37 @@
       </section>
 
       <!-- These cards intentionally exclude all slot games; their launch buttons share one data-game navigation contract. -->
-      <div class="game-grid">
-        <!-- Coin Toss Card -->
-        <div class="game-card">
-          <div class="card-icon">🪙</div>
-          <h3>High Roller Coin Toss</h3>
-          <p>Double or nothing! Flip the gold coin for instant 2x payouts.</p>
-          <button class="play-btn" data-game="coin-toss">PLAY NOW</button>
-        </div>
-        <div class="game-card"><div class="game-icon">3×</div><h2>Three Coin Toss</h2><p>Predict all three coins. Match 2 for 1.5× or all 3 for 3× total return.</p><button class="play-btn" data-game="three-coin-toss">PLAY NOW</button></div>
+      <section class="lobby-coin-room" aria-labelledby="coin-room-title">
+        <details>
+          <summary>
+            <div class="lobby-coin-room-heading">
+              <div>
+                <p class="lobby-room-kicker">COIN FLIPPING</p>
+                <h3 id="coin-room-title">Coin Flip Room</h3>
+                <p>Choose a three-coin or single-coin game.</p>
+              </div>
+              <span class="lobby-room-emblem" aria-hidden="true">🪙</span>
+            </div>
+          </summary>
+          <div class="game-grid">
+            <!-- Coin Toss Card -->
+            <div class="game-card">
+              <div class="card-icon">🪙</div>
+              <h3>High Roller Coin Toss</h3>
+              <p>Double or nothing! Flip the gold coin for instant 2x payouts.</p>
+              <button class="play-btn" data-game="coin-toss">PLAY NOW</button>
+            </div>
+            <div class="game-card">
+              <div class="card-icon" aria-hidden="true">3×</div>
+              <h3>Three Coin Toss</h3>
+              <p>Predict all three coins. Match 2 for 1.5× or all 3 for 3× total return.</p>
+              <button class="play-btn" data-game="three-coin-toss">PLAY NOW</button>
+            </div>
+          </div>
+        </details>
+      </section>
 
+      <div class="game-grid">
         <!-- Blackjack 21 Card -->
         <div class="game-card">
           <div class="card-icon">🃏</div>
