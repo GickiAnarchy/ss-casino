@@ -1654,7 +1654,8 @@ summary::marker {
   position: fixed;
   bottom: 0;
   right: 0;
-  font-size: 0.65rem;
+  z-index: 5000;
+  font-size: 0.75rem;
   background-color: rgba(71, 66, 90, 0.70);
   color: var(--gold-primary);
 }
