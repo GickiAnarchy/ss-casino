@@ -1650,6 +1650,19 @@ summary::marker {
   align-items: center;
 }
 
+.version-corner {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  z-index: 5000;
+  opacity: 0.50;
+  padding: 6px 10px;
+  border-top-left-radius: 8px;
+  background: rgba(24, 18, 32, 0.68);
+  color: var(--gold-primary);
+  font-size: 0.65rem;
+}
+
 /* Mobile overrides stack dense controls and shrink room padding without changing desktop structure. */
 @media (max-width: 640px) {
   .lobby-slot-room, .lobby-coin-room { padding: 16px; }
