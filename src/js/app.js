@@ -1435,13 +1435,6 @@ document.addEventListener('DOMContentLoaded', async () => {
       this.reelStrips = Array.from(this.rootEl?.querySelectorAll('.reel .strip') || []);
     }
 
-
-
-
-
-
-
-
     setStatus(text, statusClass) {
       this.statusEl.textContent = text;
       this.statusEl.className = 'status-banner';
@@ -1477,8 +1470,6 @@ document.addEventListener('DOMContentLoaded', async () => {
       });
     }
 
-
-
     animateReel(stripEl, reelIndex, finalSymbols) {
       return new Promise(resolve => {
         const randomPaddingCount = 20 + (reelIndex * 8);
@@ -1512,7 +1503,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     clearHighlights() {
       this.rootEl.querySelectorAll('.symbol.highlight').forEach(el => el.classList.remove('highlight'));
     }
-
 
   }
 
