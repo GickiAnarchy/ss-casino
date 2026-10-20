@@ -1409,7 +1409,7 @@ summary::marker {
   background:
     radial-gradient(ellipse at 50% 34%, rgba(105, 25, 125, 0.38), transparent 55%),
     linear-gradient(180deg, #100817 0%, #080510 100%);
-  //animation: splash-intro 8.6s ease-in-out both;
+  /*animation: splash-intro 8.6s ease-in-out both;*/
   object-fit: cover;
   /* Traces alpha transparency of the asset */
   filter: drop-shadow(0 0 0px rgba(99, 102, 241, 0));
@@ -1648,6 +1648,15 @@ summary::marker {
   text-align: center;
   justify-content: center;
   align-items: center;
+}
+
+.version-badge-text {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  font-size: 0.65rem;
+  background-color: rgba(71, 66, 90, 0.70);
+  color: var(--gold-primary);
 }
 
 /* Mobile overrides stack dense controls and shrink room padding without changing desktop structure. */
