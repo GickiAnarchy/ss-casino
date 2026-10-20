@@ -561,10 +561,10 @@ document.addEventListener('DOMContentLoaded', async () => {
       this.slices = [
         { label: '$50',   amount: 50,   color: '#e74c3c' },
         { label: '$100',  amount: 100,  color: '#3498db' },
-        { label: '$250',  amount: 250,  color: '#2ecc71' },
+        { label: 'Good Luck',  amount: 0,  color: '#2ecc71' },
         { label: '$500',  amount: 500,  color: '#9b59b6' },
         { label: '$150',  amount: 150,  color: '#e67e22' },
-        { label: '$1,000',amount: 1000, color: '#f1c40f' },
+        { label: 'Good Luck', amount: 0, color: '#f1c40f' },
         { label: '$75',   amount: 75,   color: '#1abc9c' },
         { label: '$300',  amount: 300,  color: '#34495e' }
       ];
@@ -676,11 +676,16 @@ document.addEventListener('DOMContentLoaded', async () => {
 
           const wonSlice = this.slices[targetSliceIndex];
           this.hub.modifyBalance(wonSlice.amount);
+          
+          if (wonSlice.amount !== 0) {
+            FX.playJackpotSound();
+            FX.spawnConfetti(100);
+            alert(`🎉 DAILY BONUS CLAIMED!\nYou won +$${wonSlice.amount.toLocaleString()} Free Chips!`);
+          } else {
+            alert(`Today wasn't your day. Good luck though!`);
+          }
 
-          FX.playJackpotSound();
-          FX.spawnConfetti(100);
-
-          alert(`🎉 DAILY BONUS CLAIMED!\nYou won +$${wonSlice.amount.toLocaleString()} Free Chips!`);
+            
           this.updateUI();
         }
       };
