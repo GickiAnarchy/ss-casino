@@ -1,0 +1,12 @@
+flowchart LR
+  UI[index.html + style.css] --> APP[app.js composition root]
+  APP --> MODEL[models.js]
+  APP --> RULES[game-rules.js + slot-bet-rules.js]
+  APP --> GAMES[slot outcomes/templates + race engine]
+  APP --> SAVE[local-save.js + profiles.js]
+  GAMES --> ACH[accomplishments.js]
+  SAVE --> DATA[local browser data and exports]
+  TESTS[Node test suites] -. verify .-> MODEL
+  TESTS -. verify .-> RULES
+  TESTS -. verify .-> GAMES
+  TESTS -. verify .-> SAVE

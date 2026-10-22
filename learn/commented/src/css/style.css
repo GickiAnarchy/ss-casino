@@ -1,0 +1,1741 @@
+/* Original L1: Comment: Theme tokens centralize repeated colors and reel sizes so palette changes do not rewrite every component.. *//* Theme tokens centralize repeated colors and reel sizes so palette changes do not rewrite every component. */
+/* Original L2: Selects :root; the declarations inside control its matching elements. */:root {
+/* Original L3: Sets --gold-primary: #ffd700 (sets --gold-primary). */  --gold-primary: #ffd700;
+/* Original L4: Sets --gold-dark: #b8860b (sets --gold-dark). */  --gold-dark: #b8860b;
+/* Original L5: Sets --bg-primary: radial-gradient(circle, #4a0d66 0%, #0f081d 100%) (sets --bg-primary). */  --bg-primary: radial-gradient(circle, #4a0d66 0%, #0f081d 100%);
+/* Original L6: Sets --panel-bg: #1e1e24 (sets --panel-bg). */  --panel-bg: #1e1e24;
+/* Original L7: Sets --header-bg: #0a0514 (sets --header-bg). */  --header-bg: #0a0514;
+/* Original L8: Sets --symbol-size-3reel: 90px (sets --symbol-size-3reel). */  --symbol-size-3reel: 90px;
+/* Original L9: Sets --symbol-size-5reel: 70px (sets --symbol-size-5reel). */  --symbol-size-5reel: 70px;
+/* Original L10: Sets --spin-duration: 1200ms (sets --spin-duration). */  --spin-duration: 1200ms;
+/* Original L11: Sets --spin-target-y: 0px (sets --spin-target-y). */  --spin-target-y: 0px;
+/* Original L12: Closes the current CSS rule or responsive/animation block. */}
+/* Original L13: Blank line separates stylesheet rules. */
+/* Original L14: Comment: Theme overrides replace shared tokens only; components inherit the selected palette automatically.. *//* Theme overrides replace shared tokens only; components inherit the selected palette automatically. */
+/* Original L15: Selects body[data-theme="midnight"]; the declarations inside control its matching elements. */body[data-theme="midnight"] {
+/* Original L16: Sets --gold-primary: #00d2d3 (sets --gold-primary). */  --gold-primary: #00d2d3;
+/* Original L17: Sets --gold-dark: #00838f (sets --gold-dark). */  --gold-dark: #00838f;
+/* Original L18: Sets --bg-primary: radial-gradient(circle, #1a202c 0%, #0d1117 100%) (sets --bg-primary). */  --bg-primary: radial-gradient(circle, #1a202c 0%, #0d1117 100%);
+/* Original L19: Sets --panel-bg: #161b22 (sets --panel-bg). */  --panel-bg: #161b22;
+/* Original L20: Sets --header-bg: #090d12 (sets --header-bg). */  --header-bg: #090d12;
+/* Original L21: Closes the current CSS rule or responsive/animation block. */}
+/* Original L22: Blank line separates stylesheet rules. */
+/* Original L23: Selects body[data-theme="gold"]; the declarations inside control its matching elements. */body[data-theme="gold"] {
+/* Original L24: Sets --gold-primary: #ffe066 (sets --gold-primary). */  --gold-primary: #ffe066;
+/* Original L25: Sets --gold-dark: #cc9900 (sets --gold-dark). */  --gold-dark: #cc9900;
+/* Original L26: Sets --bg-primary: radial-gradient(circle, #3d2b1f 0%, #170d07 100%) (sets --bg-primary). */  --bg-primary: radial-gradient(circle, #3d2b1f 0%, #170d07 100%);
+/* Original L27: Sets --panel-bg: #291c14 (sets --panel-bg). */  --panel-bg: #291c14;
+/* Original L28: Sets --header-bg: #120a05 (sets --header-bg). */  --header-bg: #120a05;
+/* Original L29: Closes the current CSS rule or responsive/animation block. */}
+/* Original L30: Blank line separates stylesheet rules. */
+/* Original L31: Selects body[data-theme="money"]; the declarations inside control its matching elements. */body[data-theme="money"] {
+/* Original L32: Sets --gold-primary: #4eec5c (sets --gold-primary). */  --gold-primary: #4eec5c;
+/* Original L33: Sets --gold-dark: #039634 (sets --gold-dark). */  --gold-dark: #039634;
+/* Original L34: Sets --bg-primary: radial-gradient(circle, #5b7e4f 0%, #1f3d21 100%) (sets --bg-primary). */  --bg-primary: radial-gradient(circle, #5b7e4f 0%, #1f3d21 100%);
+/* Original L35: Sets --panel-bg: #08250d (sets --panel-bg). */  --panel-bg: #08250d;
+/* Original L36: Sets --header-bg: #495b4b (sets --header-bg). */  --header-bg: #495b4b;
+/* Original L37: Closes the current CSS rule or responsive/animation block. */}
+/* Original L38: Blank line separates stylesheet rules. */
+/* Original L39: Comment: A predictable border-box reset makes card dimensions and responsive grids easier to calculate.. *//* A predictable border-box reset makes card dimensions and responsive grids easier to calculate. */
+/* Original L40: Selects *; the declarations inside control its matching elements. */* {
+/* Original L41: Sets box-sizing: border-box (sets box-sizing). */  box-sizing: border-box;
+/* Original L42: Sets margin: 0 (sets outer spacing). */  margin: 0;
+/* Original L43: Sets padding: 0 (adds inner spacing). */  padding: 0;
+/* Original L44: Sets font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif (sets font stack). */  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+/* Original L45: Closes the current CSS rule or responsive/animation block. */}
+/* Original L46: Blank line separates stylesheet rules. */
+/* Original L47: Selects body; the declarations inside control its matching elements. */body {
+/* Original L48: Sets background: var(--bg-primary) (paints the background). */  background: var(--bg-primary);
+/* Original L49: Sets color: #fff (sets text color). */  color: #fff;
+/* Original L50: Sets min-height: 100vh (sets minimum height). */  min-height: 100vh;
+/* Original L51: Sets display: flex (controls layout mode/visibility). */  display: flex;
+/* Original L52: Sets flex-direction: column (sets flex main-axis direction). */  flex-direction: column;
+/* Original L53: Sets overflow-x: hidden (controls horizontal overflow). */  overflow-x: hidden;
+/* Original L54: Sets transition: background 0.3s ease (animates changes to listed properties). */  transition: background 0.3s ease;
+/* Original L55: Closes the current CSS rule or responsive/animation block. */}
+/* Original L56: Blank line separates stylesheet rules. */
+/* Original L57: Selects #fx-canvas; the declarations inside control its matching elements. */#fx-canvas {
+/* Original L58: Sets position: fixed (sets positioning scheme). */  position: fixed;
+/* Original L59: Sets top: 0 (sets top offset). */  top: 0;
+/* Original L60: Sets left: 0 (sets left offset). */  left: 0;
+/* Original L61: Sets width: 100vw (sets used width). */  width: 100vw;
+/* Original L62: Sets height: 100vh (sets used height). */  height: 100vh;
+/* Original L63: Sets pointer-events: none (controls hit testing). */  pointer-events: none;
+/* Original L64: Sets z-index: 999 (sets stacking order). */  z-index: 999;
+/* Original L65: Closes the current CSS rule or responsive/animation block. */}
+/* Original L66: Blank line separates stylesheet rules. */
+/* Original L67: Comment: The flex header wraps instead of pushing the balance and settings controls off narrow screens.. *//* The flex header wraps instead of pushing the balance and settings controls off narrow screens. */
+/* Original L68: Selects .global-bar; the declarations inside control its matching elements. */.global-bar {
+/* Original L69: Sets background: var(--header-bg) (paints the background). */  background: var(--header-bg);
+/* Original L70: Sets border-bottom: 2px solid var(--gold-dark) (sets bottom border). */  border-bottom: 2px solid var(--gold-dark);
+/* Original L71: Sets padding: 8px 16px (adds inner spacing). */  padding: 8px 16px;
+/* Original L72: Sets display: flex (controls layout mode/visibility). */  display: flex;
+/* Original L73: Sets justify-content: space-between (distributes children on main axis). */  justify-content: space-between;
+/* Original L74: Sets align-items: center (aligns children on cross axis). */  align-items: center;
+/* Original L75: Sets box-shadow: 0 4px 15px rgba(0,0,0,0.5) (adds outer/inset shadow). */  box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+/* Original L76: Sets z-index: 100 (sets stacking order). */  z-index: 100;
+/* Original L77: Sets gap: 16px (sets spacing between flex/grid children). */  gap: 16px;
+/* Original L78: Sets flex-wrap: wrap (allows children to wrap). */  flex-wrap: wrap;
+/* Original L79: Closes the current CSS rule or responsive/animation block. */}
+/* Original L80: Blank line separates stylesheet rules. */
+/* Original L81: Selects .logo-area; the declarations inside control its matching elements. */.logo-area {
+/* Original L82: Sets display: flex (controls layout mode/visibility). */  display: flex;
+/* Original L83: Sets align-items: center (aligns children on cross axis). */  align-items: center;
+/* Original L84: Sets gap: 12px (sets spacing between flex/grid children). */  gap: 12px;
+/* Original L85: Closes the current CSS rule or responsive/animation block. */}
+/* Original L86: Blank line separates stylesheet rules. */
+/* Original L87: Selects .logo-title; the declarations inside control its matching elements. */.logo-title {
+/* Original L88: Sets font-size: 1.2rem (sets text size). */  font-size: 1.2rem;
+/* Original L89: Sets font-weight: 900 (sets text weight). */  font-weight: 900;
+/* Original L90: Sets color: var(--gold-primary) (sets text color). */  color: var(--gold-primary);
+/* Original L91: Sets letter-spacing: 1px (sets spacing between characters). */  letter-spacing: 1px;
+/* Original L92: Closes the current CSS rule or responsive/animation block. */}
+/* Original L93: Blank line separates stylesheet rules. */
+/* Original L94: Selects .wheel-header-btn; the declarations inside control its matching elements. */.wheel-header-btn {
+/* Original L95: Sets background: linear-gradient(180deg, #ff4757 0%, #ff6b81 100%) (paints the background). */  background: linear-gradient(180deg, #ff4757 0%, #ff6b81 100%);
+/* Original L96: Sets color: #fff (sets text color). */  color: #fff;
+/* Original L97: Sets border: 1px solid #ff7f50 (sets border width/style/color). */  border: 1px solid #ff7f50;
+/* Original L98: Sets border-radius: 8px (rounds corners). */  border-radius: 8px;
+/* Original L99: Sets padding: 6px 10px (adds inner spacing). */  padding: 6px 10px;
+/* Original L100: Sets font-weight: bold (sets text weight). */  font-weight: bold;
+/* Original L101: Sets cursor: pointer (sets pointer cursor). */  cursor: pointer;
+/* Original L102: Sets box-shadow: 0 0 10px rgba(255, 71, 87, 0.5) (adds outer/inset shadow). */  box-shadow: 0 0 10px rgba(255, 71, 87, 0.5);
+/* Original L103: Sets animation: pulse-bonus 1.8s infinite alternate (runs a named CSS animation). */  animation: pulse-bonus 1.8s infinite alternate;
+/* Original L104: Closes the current CSS rule or responsive/animation block. */}
+/* Original L105: Blank line separates stylesheet rules. */
+/* Original L106: Defines animation timeline pulse-bonus for changing properties over time. */@keyframes pulse-bonus {
+/* Original L107: Selects 0% and applies transform: scale(1). */  0% { transform: scale(1); }
+/* Original L108: Selects 100% and applies transform: scale(1.04); box-shadow: 0 0 15px rgba(255, 71, 87, 0.8). */  100% { transform: scale(1.04); box-shadow: 0 0 15px rgba(255, 71, 87, 0.8); }
+/* Original L109: Closes the current CSS rule or responsive/animation block. */}
+/* Original L110: Blank line separates stylesheet rules. */
+/* Original L111: Selects .xp-header-widget; the declarations inside control its matching elements. */.xp-header-widget {
+/* Original L112: Sets display: flex (controls layout mode/visibility). */  display: flex;
+/* Original L113: Sets align-items: center (aligns children on cross axis). */  align-items: center;
+/* Original L114: Sets gap: 8px (sets spacing between flex/grid children). */  gap: 8px;
+/* Original L115: Sets background: #151022 (paints the background). */  background: #151022;
+/* Original L116: Sets border: 1px solid #3d345a (sets border width/style/color). */  border: 1px solid #3d345a;
+/* Original L117: Sets padding: 4px 10px (adds inner spacing). */  padding: 4px 10px;
+/* Original L118: Sets border-radius: 10px (rounds corners). */  border-radius: 10px;
+/* Original L119: Closes the current CSS rule or responsive/animation block. */}
+/* Original L120: Blank line separates stylesheet rules. */
+/* Original L121: Selects .level-badge; the declarations inside control its matching elements. */.level-badge {
+/* Original L122: Sets background: linear-gradient(135deg, #e056fd, #686de0) (paints the background). */  background: linear-gradient(135deg, #e056fd, #686de0);
+/* Original L123: Sets color: #fff (sets text color). */  color: #fff;
+/* Original L124: Sets font-weight: 900 (sets text weight). */  font-weight: 900;
+/* Original L125: Sets font-size: 0.7rem (sets text size). */  font-size: 0.7rem;
+/* Original L126: Sets padding: 3px 6px (adds inner spacing). */  padding: 3px 6px;
+/* Original L127: Sets border-radius: 5px (rounds corners). */  border-radius: 5px;
+/* Original L128: Sets box-shadow: 0 0 6px rgba(224, 86, 253, 0.5) (adds outer/inset shadow). */  box-shadow: 0 0 6px rgba(224, 86, 253, 0.5);
+/* Original L129: Closes the current CSS rule or responsive/animation block. */}
+/* Original L130: Blank line separates stylesheet rules. */
+/* Original L131: Selects .xp-bar-container; the declarations inside control its matching elements. */.xp-bar-container {
+/* Original L132: Sets width: 90px (sets used width). */  width: 90px;
+/* Original L133: Sets height: 12px (sets used height). */  height: 12px;
+/* Original L134: Sets background: #090610 (paints the background). */  background: #090610;
+/* Original L135: Sets border: 1px solid #444 (sets border width/style/color). */  border: 1px solid #444;
+/* Original L136: Sets border-radius: 6px (rounds corners). */  border-radius: 6px;
+/* Original L137: Sets position: relative (sets positioning scheme). */  position: relative;
+/* Original L138: Sets overflow: hidden (controls clipping/scrolling). */  overflow: hidden;
+/* Original L139: Closes the current CSS rule or responsive/animation block. */}
+/* Original L140: Blank line separates stylesheet rules. */
+/* Original L141: Selects .xp-bar-fill; the declarations inside control its matching elements. */.xp-bar-fill {
+/* Original L142: Sets height: 100% (sets used height). */  height: 100%;
+/* Original L143: Sets background: linear-gradient(90deg, #4eef90, #20bf6b) (paints the background). */  background: linear-gradient(90deg, #4eef90, #20bf6b);
+/* Original L144: Sets width: 0% (sets used width). */  width: 0%;
+/* Original L145: Sets transition: width 0.3s ease (animates changes to listed properties). */  transition: width 0.3s ease;
+/* Original L146: Closes the current CSS rule or responsive/animation block. */}
+/* Original L147: Blank line separates stylesheet rules. */
+/* Original L148: Selects .xp-bar-text; the declarations inside control its matching elements. */.xp-bar-text {
+/* Original L149: Sets position: absolute (sets positioning scheme). */  position: absolute;
+/* Original L150: Sets top: 50% (sets top offset). */  top: 50%;
+/* Original L151: Sets left: 50% (sets left offset). */  left: 50%;
+/* Original L152: Sets transform: translate(-50%, -50%) (applies geometric transform). */  transform: translate(-50%, -50%);
+/* Original L153: Sets font-size: 0.52rem (sets text size). */  font-size: 0.52rem;
+/* Original L154: Sets font-weight: bold (sets text weight). */  font-weight: bold;
+/* Original L155: Sets color: #fff (sets text color). */  color: #fff;
+/* Original L156: Sets text-shadow: 0 0 3px #000 (adds shadow behind text). */  text-shadow: 0 0 3px #000;
+/* Original L157: Sets white-space: nowrap (controls wrapping). */  white-space: nowrap;
+/* Original L158: Closes the current CSS rule or responsive/animation block. */}
+/* Original L159: Blank line separates stylesheet rules. */
+/* Original L160: Selects .vip-tier-tag; the declarations inside control its matching elements. */.vip-tier-tag {
+/* Original L161: Sets font-size: 0.6rem (sets text size). */  font-size: 0.6rem;
+/* Original L162: Sets font-weight: 900 (sets text weight). */  font-weight: 900;
+/* Original L163: Sets color: var(--gold-primary) (sets text color). */  color: var(--gold-primary);
+/* Original L164: Sets letter-spacing: 0.5px (sets spacing between characters). */  letter-spacing: 0.5px;
+/* Original L165: Closes the current CSS rule or responsive/animation block. */}
+/* Original L166: Blank line separates stylesheet rules. */
+/* Original L167: Selects .jackpot-ticker-container; the declarations inside control its matching elements. */.jackpot-ticker-container {
+/* Original L168: Sets background: radial-gradient(circle, #8a1313 0%, #300000 100%) (paints the background). */  background: radial-gradient(circle, #8a1313 0%, #300000 100%);
+/* Original L169: Sets border: 1px solid var(--gold-primary) (sets border width/style/color). */  border: 1px solid var(--gold-primary);
+/* Original L170: Sets border-radius: 8px (rounds corners). */  border-radius: 8px;
+/* Original L171: Sets padding: 2px 10px (adds inner spacing). */  padding: 2px 10px;
+/* Original L172: Sets display: flex (controls layout mode/visibility). */  display: flex;
+/* Original L173: Sets flex-direction: column (sets flex main-axis direction). */  flex-direction: column;
+/* Original L174: Sets align-items: center (aligns children on cross axis). */  align-items: center;
+/* Original L175: Sets box-shadow: 0 0 8px rgba(255, 215, 0, 0.4) (adds outer/inset shadow). */  box-shadow: 0 0 8px rgba(255, 215, 0, 0.4);
+/* Original L176: Sets animation: pulse-jackpot 2s infinite alternate (runs a named CSS animation). */  animation: pulse-jackpot 2s infinite alternate;
+/* Original L177: Closes the current CSS rule or responsive/animation block. */}
+/* Original L178: Blank line separates stylesheet rules. */
+/* Original L179: Defines animation timeline pulse-jackpot for changing properties over time. */@keyframes pulse-jackpot {
+/* Original L180: Selects 0% and applies transform: scale(1); box-shadow: 0 0 8px rgba(255, 215, 0, 0.3). */  0% { transform: scale(1); box-shadow: 0 0 8px rgba(255, 215, 0, 0.3); }
+/* Original L181: Selects 100% and applies transform: scale(1.02); box-shadow: 0 0 14px rgba(255, 215, 0, 0.7). */  100% { transform: scale(1.02); box-shadow: 0 0 14px rgba(255, 215, 0, 0.7); }
+/* Original L182: Closes the current CSS rule or responsive/animation block. */}
+/* Original L183: Blank line separates stylesheet rules. */
+/* Original L184: Selects .jackpot-label and applies font-size: 0.5rem; color: #ffcccc; letter-spacing: 1px; font-weight: bold. */.jackpot-label { font-size: 0.5rem; color: #ffcccc; letter-spacing: 1px; font-weight: bold; }
+/* Original L185: Selects .jackpot-amount and applies font-size: 0.95rem; font-weight: 900; color: var(--gold-primary). */.jackpot-amount { font-size: 0.95rem; font-weight: 900; color: var(--gold-primary); }
+/* Original L186: Blank line separates stylesheet rules. */
+/* Original L187: Selects .header-right; the declarations inside control its matching elements. */.header-right {
+/* Original L188: Sets display: flex (controls layout mode/visibility). */  display: flex;
+/* Original L189: Sets align-items: center (aligns children on cross axis). */  align-items: center;
+/* Original L190: Sets gap: 8px (sets spacing between flex/grid children). */  gap: 8px;
+/* Original L191: Closes the current CSS rule or responsive/animation block. */}
+/* Original L192: Blank line separates stylesheet rules. */
+/* Original L193: Selects .icon-btn; the declarations inside control its matching elements. */.icon-btn {
+/* Original L194: Sets background: #2a2a35 (paints the background). */  background: #2a2a35;
+/* Original L195: Sets border: 1px solid #555 (sets border width/style/color). */  border: 1px solid #555;
+/* Original L196: Sets color: #fff (sets text color). */  color: #fff;
+/* Original L197: Sets padding: 6px 8px (adds inner spacing). */  padding: 6px 8px;
+/* Original L198: Sets border-radius: 8px (rounds corners). */  border-radius: 8px;
+/* Original L199: Sets cursor: pointer (sets pointer cursor). */  cursor: pointer;
+/* Original L200: Sets font-size: 1rem (sets text size). */  font-size: 1rem;
+/* Original L201: Closes the current CSS rule or responsive/animation block. */}
+/* Original L202: Blank line separates stylesheet rules. */
+/* Original L203: Selects .icon-btn:hover and applies background: #444. */.icon-btn:hover { background: #444; }
+/* Original L204: Blank line separates stylesheet rules. */
+/* Original L205: Selects .bank-btn; the declarations inside control its matching elements. */.bank-btn {
+/* Original L206: Sets background: linear-gradient(180deg, #3a7bd5 0%, #3a6073 100%) (paints the background). */  background: linear-gradient(180deg, #3a7bd5 0%, #3a6073 100%);
+/* Original L207: Sets color: #fff (sets text color). */  color: #fff;
+/* Original L208: Sets border: 1px solid #4a90e2 (sets border width/style/color). */  border: 1px solid #4a90e2;
+/* Original L209: Sets border-radius: 8px (rounds corners). */  border-radius: 8px;
+/* Original L210: Sets padding: 6px 12px (adds inner spacing). */  padding: 6px 12px;
+/* Original L211: Sets font-weight: bold (sets text weight). */  font-weight: bold;
+/* Original L212: Sets cursor: pointer (sets pointer cursor). */  cursor: pointer;
+/* Original L213: Sets box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4) (adds outer/inset shadow). */  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+/* Original L214: Closes the current CSS rule or responsive/animation block. */}
+/* Original L215: Blank line separates stylesheet rules. */
+/* Original L216: Selects .bank-btn:hover and applies background: #4a90e2. */.bank-btn:hover { background: #4a90e2; }
+/* Original L217: Blank line separates stylesheet rules. */
+/* Original L218: Selects .wallet-display; the declarations inside control its matching elements. */.wallet-display {
+/* Original L219: Sets background: #171026 (paints the background). */  background: #171026;
+/* Original L220: Sets border: 1px solid var(--gold-primary) (sets border width/style/color). */  border: 1px solid var(--gold-primary);
+/* Original L221: Sets border-radius: 8px (rounds corners). */  border-radius: 8px;
+/* Original L222: Sets padding: 3px 10px (adds inner spacing). */  padding: 3px 10px;
+/* Original L223: Sets display: flex (controls layout mode/visibility). */  display: flex;
+/* Original L224: Sets flex-direction: column (sets flex main-axis direction). */  flex-direction: column;
+/* Original L225: Sets align-items: flex-end (aligns children on cross axis). */  align-items: flex-end;
+/* Original L226: Closes the current CSS rule or responsive/animation block. */}
+/* Original L227: Blank line separates stylesheet rules. */
+/* Original L228: Selects .wallet-label and applies font-size: 0.55rem; color: #aaa; letter-spacing: 0.5px. */.wallet-label { font-size: 0.55rem; color: #aaa; letter-spacing: 0.5px; }
+/* Original L229: Selects .wallet-amount and applies font-size: 1rem; font-weight: bold; color: #4eef90. */.wallet-amount { font-size: 1rem; font-weight: bold; color: #4eef90; }
+/* Original L230: Blank line separates stylesheet rules. */
+/* Original L231: Selects .reset-data-btn; the declarations inside control its matching elements. */.reset-data-btn {
+/* Original L232: Sets background: #2a2a35 (paints the background). */  background: #2a2a35;
+/* Original L233: Sets border: 1px solid #555 (sets border width/style/color). */  border: 1px solid #555;
+/* Original L234: Sets color: #fff (sets text color). */  color: #fff;
+/* Original L235: Sets padding: 6px 8px (adds inner spacing). */  padding: 6px 8px;
+/* Original L236: Sets border-radius: 8px (rounds corners). */  border-radius: 8px;
+/* Original L237: Sets cursor: pointer (sets pointer cursor). */  cursor: pointer;
+/* Original L238: Sets font-size: 1rem (sets text size). */  font-size: 1rem;
+/* Original L239: Closes the current CSS rule or responsive/animation block. */}
+/* Original L240: Blank line separates stylesheet rules. */
+/* Original L241: Selects .reset-data-btn:hover; the declarations inside control its matching elements. */.reset-data-btn:hover {
+/* Original L242: Sets background: #444 (paints the background). */  background: #444;
+/* Original L243: Sets border-color: #777 (sets border color). */  border-color: #777;
+/* Original L244: Closes the current CSS rule or responsive/animation block. */}
+/* Original L245: Blank line separates stylesheet rules. */
+/* Original L246: Comment: Modal Overlay Styling. *//* Modal Overlay Styling */
+/* Original L247: Comment: Shared fixed overlays keep settings, saves, wheel, and bank dialogs visually consistent.. *//* Shared fixed overlays keep settings, saves, wheel, and bank dialogs visually consistent. */
+/* Original L248: Selects .modal-overlay; the declarations inside control its matching elements. */.modal-overlay {
+/* Original L249: Sets position: fixed (sets positioning scheme). */  position: fixed;
+/* Original L250: Sets top: 0 (sets top offset). */  top: 0;
+/* Original L251: Sets left: 0 (sets left offset). */  left: 0;
+/* Original L252: Sets width: 100vw (sets used width). */  width: 100vw;
+/* Original L253: Sets height: 100vh (sets used height). */  height: 100vh;
+/* Original L254: Sets background: rgba(0, 0, 0, 0.8) (paints the background). */  background: rgba(0, 0, 0, 0.8);
+/* Original L255: Sets backdrop-filter: blur(5px) (sets backdrop-filter). */  backdrop-filter: blur(5px);
+/* Original L256: Sets z-index: 1000 (sets stacking order). */  z-index: 1000;
+/* Original L257: Sets display: flex (controls layout mode/visibility). */  display: flex;
+/* Original L258: Sets justify-content: center (distributes children on main axis). */  justify-content: center;
+/* Original L259: Sets align-items: center (aligns children on cross axis). */  align-items: center;
+/* Original L260: Sets padding: 20px (adds inner spacing). */  padding: 20px;
+/* Original L261: Closes the current CSS rule or responsive/animation block. */}
+/* Original L262: Blank line separates stylesheet rules. */
+/* Original L263: Selects .modal-card; the declarations inside control its matching elements. */.modal-card {
+/* Original L264: Sets background: #181820 (paints the background). */  background: #181820;
+/* Original L265: Sets border: 3px solid var(--gold-primary) (sets border width/style/color). */  border: 3px solid var(--gold-primary);
+/* Original L266: Sets border-radius: 20px (rounds corners). */  border-radius: 20px;
+/* Original L267: Sets width: 100% (sets used width). */  width: 100%;
+/* Original L268: Sets max-width: 550px (sets maximum width). */  max-width: 550px;
+/* Original L269: Sets padding: 28px (adds inner spacing). */  padding: 28px;
+/* Original L270: Sets position: relative (sets positioning scheme). */  position: relative;
+/* Original L271: Sets box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8) (adds outer/inset shadow). */  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
+/* Original L272: Closes the current CSS rule or responsive/animation block. */}
+/* Original L273: Blank line separates stylesheet rules. */
+/* Original L274: Selects .wheel-modal-card; the declarations inside control its matching elements. */.wheel-modal-card {
+/* Original L275: Sets max-width: 440px (sets maximum width). */  max-width: 440px;
+/* Original L276: Sets display: flex (controls layout mode/visibility). */  display: flex;
+/* Original L277: Sets flex-direction: column (sets flex main-axis direction). */  flex-direction: column;
+/* Original L278: Sets align-items: center (aligns children on cross axis). */  align-items: center;
+/* Original L279: Closes the current CSS rule or responsive/animation block. */}
+/* Original L280: Blank line separates stylesheet rules. */
+/* Original L281: Selects .modal-close-btn; the declarations inside control its matching elements. */.modal-close-btn {
+/* Original L282: Sets position: absolute (sets positioning scheme). */  position: absolute;
+/* Original L283: Sets top: 15px (sets top offset). */  top: 15px;
+/* Original L284: Sets right: 20px (sets right offset). */  right: 20px;
+/* Original L285: Sets background: none (paints the background). */  background: none;
+/* Original L286: Sets border: none (sets border width/style/color). */  border: none;
+/* Original L287: Sets color: #aaa (sets text color). */  color: #aaa;
+/* Original L288: Sets font-size: 2rem (sets text size). */  font-size: 2rem;
+/* Original L289: Sets cursor: pointer (sets pointer cursor). */  cursor: pointer;
+/* Original L290: Closes the current CSS rule or responsive/animation block. */}
+/* Original L291: Blank line separates stylesheet rules. */
+/* Original L292: Selects .modal-close-btn:hover and applies color: #fff. */.modal-close-btn:hover { color: #fff; }
+/* Original L293: Blank line separates stylesheet rules. */
+/* Original L294: Selects .modal-card h2 and applies color: var(--gold-primary); text-align: center; font-size: 1.5rem; margin-bottom: 4px. */.modal-card h2 { color: var(--gold-primary); text-align: center; font-size: 1.5rem; margin-bottom: 4px; }
+/* Original L295: Selects .modal-subtitle and applies text-align: center; color: #aaa; font-size: 0.85rem; margin-bottom: 20px. */.modal-subtitle { text-align: center; color: #aaa; font-size: 0.85rem; margin-bottom: 20px; }
+/* Original L296: Blank line separates stylesheet rules. */
+/* Original L297: Comment: Wheel Canvas Stage. *//* Wheel Canvas Stage */
+/* Original L298: Selects .wheel-stage-container; the declarations inside control its matching elements. */.wheel-stage-container {
+/* Original L299: Sets position: relative (sets positioning scheme). */  position: relative;
+/* Original L300: Sets width: 320px (sets used width). */  width: 320px;
+/* Original L301: Sets height: 320px (sets used height). */  height: 320px;
+/* Original L302: Sets margin-bottom: 20px (sets bottom outer spacing). */  margin-bottom: 20px;
+/* Original L303: Sets display: flex (controls layout mode/visibility). */  display: flex;
+/* Original L304: Sets justify-content: center (distributes children on main axis). */  justify-content: center;
+/* Original L305: Sets align-items: center (aligns children on cross axis). */  align-items: center;
+/* Original L306: Closes the current CSS rule or responsive/animation block. */}
+/* Original L307: Blank line separates stylesheet rules. */
+/* Original L308: Selects .wheel-pointer; the declarations inside control its matching elements. */.wheel-pointer {
+/* Original L309: Sets position: absolute (sets positioning scheme). */  position: absolute;
+/* Original L310: Sets top: -10px (sets top offset). */  top: -10px;
+/* Original L311: Sets left: 50% (sets left offset). */  left: 50%;
+/* Original L312: Sets transform: translateX(-50%) (applies geometric transform). */  transform: translateX(-50%);
+/* Original L313: Sets font-size: 2rem (sets text size). */  font-size: 2rem;
+/* Original L314: Sets color: var(--gold-primary) (sets text color). */  color: var(--gold-primary);
+/* Original L315: Sets z-index: 10 (sets stacking order). */  z-index: 10;
+/* Original L316: Sets text-shadow: 0 2px 5px rgba(0,0,0,0.8) (adds shadow behind text). */  text-shadow: 0 2px 5px rgba(0,0,0,0.8);
+/* Original L317: Closes the current CSS rule or responsive/animation block. */}
+/* Original L318: Blank line separates stylesheet rules. */
+/* Original L319: Selects #wheel-canvas; the declarations inside control its matching elements. */#wheel-canvas {
+/* Original L320: Sets border-radius: 50% (rounds corners). */  border-radius: 50%;
+/* Original L321: Sets border: 6px solid var(--gold-primary) (sets border width/style/color). */  border: 6px solid var(--gold-primary);
+/* Original L322: Sets box-shadow: 0 0 20px rgba(255, 215, 0, 0.4) (adds outer/inset shadow). */  box-shadow: 0 0 20px rgba(255, 215, 0, 0.4);
+/* Original L323: Closes the current CSS rule or responsive/animation block. */}
+/* Original L324: Blank line separates stylesheet rules. */
+/* Original L325: Selects .wheel-action-area; the declarations inside control its matching elements. */.wheel-action-area {
+/* Original L326: Sets width: 100% (sets used width). */  width: 100%;
+/* Original L327: Sets display: flex (controls layout mode/visibility). */  display: flex;
+/* Original L328: Sets flex-direction: column (sets flex main-axis direction). */  flex-direction: column;
+/* Original L329: Sets align-items: center (aligns children on cross axis). */  align-items: center;
+/* Original L330: Sets gap: 10px (sets spacing between flex/grid children). */  gap: 10px;
+/* Original L331: Closes the current CSS rule or responsive/animation block. */}
+/* Original L332: Blank line separates stylesheet rules. */
+/* Original L333: Selects .cooldown-badge; the declarations inside control its matching elements. */.cooldown-badge {
+/* Original L334: Sets background: #2a1c1c (paints the background). */  background: #2a1c1c;
+/* Original L335: Sets border: 1px solid #ff4d4d (sets border width/style/color). */  border: 1px solid #ff4d4d;
+/* Original L336: Sets color: #ff6b6b (sets text color). */  color: #ff6b6b;
+/* Original L337: Sets padding: 8px 16px (adds inner spacing). */  padding: 8px 16px;
+/* Original L338: Sets border-radius: 8px (rounds corners). */  border-radius: 8px;
+/* Original L339: Sets font-weight: bold (sets text weight). */  font-weight: bold;
+/* Original L340: Sets font-size: 0.9rem (sets text size). */  font-size: 0.9rem;
+/* Original L341: Closes the current CSS rule or responsive/animation block. */}
+/* Original L342: Blank line separates stylesheet rules. */
+/* Original L343: Selects .spin-wheel-btn; the declarations inside control its matching elements. */.spin-wheel-btn {
+/* Original L344: Sets width: 100% (sets used width). */  width: 100%;
+/* Original L345: Sets background: linear-gradient(180deg, #ffd700 0%, #b8860b 100%) (paints the background). */  background: linear-gradient(180deg, #ffd700 0%, #b8860b 100%);
+/* Original L346: Sets color: #000 (sets text color). */  color: #000;
+/* Original L347: Sets border: none (sets border width/style/color). */  border: none;
+/* Original L348: Sets padding: 14px (adds inner spacing). */  padding: 14px;
+/* Original L349: Sets font-size: 1.2rem (sets text size). */  font-size: 1.2rem;
+/* Original L350: Sets font-weight: 900 (sets text weight). */  font-weight: 900;
+/* Original L351: Sets border-radius: 12px (rounds corners). */  border-radius: 12px;
+/* Original L352: Sets cursor: pointer (sets pointer cursor). */  cursor: pointer;
+/* Original L353: Closes the current CSS rule or responsive/animation block. */}
+/* Original L354: Blank line separates stylesheet rules. */
+/* Original L355: Selects .spin-wheel-btn:disabled and applies opacity: 0.5; cursor: not-allowed. */.spin-wheel-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+/* Original L356: Blank line separates stylesheet rules. */
+/* Original L357: Selects .settings-section; the declarations inside control its matching elements. */.settings-section {
+/* Original L358: Sets background: #22222d (paints the background). */  background: #22222d;
+/* Original L359: Sets border: 1px solid #333 (sets border width/style/color). */  border: 1px solid #333;
+/* Original L360: Sets border-radius: 12px (rounds corners). */  border-radius: 12px;
+/* Original L361: Sets padding: 16px (adds inner spacing). */  padding: 16px;
+/* Original L362: Sets margin-bottom: 16px (sets bottom outer spacing). */  margin-bottom: 16px;
+/* Original L363: Sets justify-content: center (distributes children on main axis). */  justify-content: center;
+/* Original L364: Closes the current CSS rule or responsive/animation block. */}
+/* Original L365: Blank line separates stylesheet rules. */
+/* Original L366: Selects .settings-hr and applies margin: 15px. */.settings-hr { margin: 15px; }
+/* Original L367: Selects .settings-section h3 and applies font-size: 0.95rem; color: var(--gold-primary); margin-bottom: 12px. */.settings-section h3 { font-size: 0.95rem; color: var(--gold-primary); margin-bottom: 12px; }
+/* Original L368: Blank line separates stylesheet rules. */
+/* Original L369: Selects .setting-row; the declarations inside control its matching elements. */.setting-row {
+/* Original L370: Sets display: flex (controls layout mode/visibility). */  display: flex;
+/* Original L371: Sets justify-content: space-between (distributes children on main axis). */  justify-content: space-between;
+/* Original L372: Sets align-items: center (aligns children on cross axis). */  align-items: center;
+/* Original L373: Sets margin-bottom: 12px (sets bottom outer spacing). */  margin-bottom: 12px;
+/* Original L374: Closes the current CSS rule or responsive/animation block. */}
+/* Original L375: Blank line separates stylesheet rules. */
+/* Original L376: Selects .setting-row:last-child and applies margin-bottom: 0. */.setting-row:last-child { margin-bottom: 0; }
+/* Original L377: Selects .setting-row label and applies font-size: 0.9rem; color: #ccc. */.setting-row label { font-size: 0.9rem; color: #ccc; }
+/* Original L378: Blank line separates stylesheet rules. */
+/* Original L379: Selects .volume-control and applies display: flex; align-items: center; gap: 10px. */.volume-control { display: flex; align-items: center; gap: 10px; }
+/* Original L380: Selects .volume-control input[type="range"] and applies accent-color: var(--gold-primary); cursor: pointer. */.volume-control input[type="range"] { accent-color: var(--gold-primary); cursor: pointer; }
+/* Original L381: Selects .volume-control span and applies font-size: 0.85rem; color: #aaa; min-width: 40px; text-align: right. */.volume-control span { font-size: 0.85rem; color: #aaa; min-width: 40px; text-align: right; }
+/* Original L382: Blank line separates stylesheet rules. */
+/* Original L383: Selects .toggle-btn; the declarations inside control its matching elements. */.toggle-btn {
+/* Original L384: Sets background: #333 (paints the background). */  background: #333;
+/* Original L385: Sets color: #fff (sets text color). */  color: #fff;
+/* Original L386: Sets border: 1px solid #555 (sets border width/style/color). */  border: 1px solid #555;
+/* Original L387: Sets padding: 6px 12px (adds inner spacing). */  padding: 6px 12px;
+/* Original L388: Sets border-radius: 6px (rounds corners). */  border-radius: 6px;
+/* Original L389: Sets font-size: 0.85rem (sets text size). */  font-size: 0.85rem;
+/* Original L390: Sets cursor: pointer (sets pointer cursor). */  cursor: pointer;
+/* Original L391: Sets font-weight: bold (sets text weight). */  font-weight: bold;
+/* Original L392: Closes the current CSS rule or responsive/animation block. */}
+/* Original L393: Blank line separates stylesheet rules. */
+/* Original L394: Selects .toggle-btn.is-muted and applies background: #8a1313; border-color: #ff4d4d; color: #ffcccc. */.toggle-btn.is-muted { background: #8a1313; border-color: #ff4d4d; color: #ffcccc; }
+/* Original L395: Blank line separates stylesheet rules. */
+/* Original L396: Selects .theme-selector-grid and applies display: flex; justify-content: space-around. */.theme-selector-grid { display: flex; justify-content: space-around;}
+/* Original L397: Blank line separates stylesheet rules. */
+/* Original L398: Selects .theme-btn; the declarations inside control its matching elements. */.theme-btn {
+/* Original L399: Sets flex: 1 (sets flex growth/shrink/basis). */  flex: 1;
+/* Original L400: Sets background: #181820 (paints the background). */  background: #181820;
+/* Original L401: Sets border: 2px solid #444 (sets border width/style/color). */  border: 2px solid #444;
+/* Original L402: Sets color: #aaa (sets text color). */  color: #aaa;
+/* Original L403: Sets padding: 10px (adds inner spacing). */  padding: 10px;
+/* Original L404: Sets border-radius: 10px (rounds corners). */  border-radius: 10px;
+/* Original L405: Sets font-size: 0.8rem (sets text size). */  font-size: 0.8rem;
+/* Original L406: Sets font-weight: bold (sets text weight). */  font-weight: bold;
+/* Original L407: Sets cursor: pointer (sets pointer cursor). */  cursor: pointer;
+/* Original L408: Sets display: flex (controls layout mode/visibility). */  display: flex;
+/* Original L409: Sets flex-direction: column (sets flex main-axis direction). */  flex-direction: column;
+/* Original L410: Sets align-items: center (aligns children on cross axis). */  align-items: center;
+/* Original L411: Sets width: 20% (sets used width). */  width: 20%;
+/* Original L412: Sets gap: 6px (sets spacing between flex/grid children). */  gap: 6px;
+/* Original L413: Closes the current CSS rule or responsive/animation block. */}
+/* Original L414: Blank line separates stylesheet rules. */
+/* Original L415: Selects .theme-btn.active-theme and applies border-color: var(--gold-primary); color: #fff; background: #282835. */.theme-btn.active-theme { border-color: var(--gold-primary); color: #fff; background: #282835; }
+/* Original L416: Blank line separates stylesheet rules. */
+/* Original L417: Selects .theme-swatch and applies width: 24px; height: 24px; border-radius: 50%; border: 1px solid #fff. */.theme-swatch { width: 24px; height: 24px; border-radius: 50%; border: 1px solid #fff; }
+/* Original L418: Selects .swatch-vegas and applies background: linear-gradient(135deg, #4a0d66, #ffd700). */.swatch-vegas { background: linear-gradient(135deg, #4a0d66, #ffd700); }
+/* Original L419: Selects .swatch-midnight and applies background: linear-gradient(135deg, #1a202c, #00d2d3). */.swatch-midnight { background: linear-gradient(135deg, #1a202c, #00d2d3); }
+/* Original L420: Selects .swatch-gold and applies background: linear-gradient(135deg, #3d2b1f, #ffe066). */.swatch-gold { background: linear-gradient(135deg, #3d2b1f, #ffe066); }
+/* Original L421: Selects .swatch-money and applies background: linear-gradient(135deg, #1f3d21, #4eec5c). */.swatch-money { background: linear-gradient(135deg, #1f3d21, #4eec5c); }
+/* Original L422: Blank line separates stylesheet rules. */
+/* Original L423: Comment: Bank Grid Styling. *//* Bank Grid Styling */
+/* Original L424: Selects .bank-stats-grid; the declarations inside control its matching elements. */.bank-stats-grid {
+/* Original L425: Sets display: grid (controls layout mode/visibility). */  display: grid;
+/* Original L426: Sets grid-template-columns: repeat(3, 1fr) (defines grid columns). */  grid-template-columns: repeat(3, 1fr);
+/* Original L427: Sets gap: 10px (sets spacing between flex/grid children). */  gap: 10px;
+/* Original L428: Sets margin-bottom: 24px (sets bottom outer spacing). */  margin-bottom: 24px;
+/* Original L429: Closes the current CSS rule or responsive/animation block. */}
+/* Original L430: Blank line separates stylesheet rules. */
+/* Original L431: Selects .bank-stat-card; the declarations inside control its matching elements. */.bank-stat-card {
+/* Original L432: Sets background: #22222d (paints the background). */  background: #22222d;
+/* Original L433: Sets border: 1px solid #333 (sets border width/style/color). */  border: 1px solid #333;
+/* Original L434: Sets padding: 12px (adds inner spacing). */  padding: 12px;
+/* Original L435: Sets border-radius: 10px (rounds corners). */  border-radius: 10px;
+/* Original L436: Sets display: flex (controls layout mode/visibility). */  display: flex;
+/* Original L437: Sets flex-direction: column (sets flex main-axis direction). */  flex-direction: column;
+/* Original L438: Sets align-items: center (aligns children on cross axis). */  align-items: center;
+/* Original L439: Closes the current CSS rule or responsive/animation block. */}
+/* Original L440: Blank line separates stylesheet rules. */
+/* Original L441: Selects .stat-label and applies font-size: 0.65rem; color: #888; font-weight: bold; margin-bottom: 4px. */.stat-label { font-size: 0.65rem; color: #888; font-weight: bold; margin-bottom: 4px; }
+/* Original L442: Selects .stat-value and applies font-size: 1.1rem; font-weight: bold; color: #fff. */.stat-value { font-size: 1.1rem; font-weight: bold; color: #fff; }
+/* Original L443: Selects .stat-value.debt-color and applies color: #ff4d4d. */.stat-value.debt-color { color: #ff4d4d; }
+/* Original L444: Blank line separates stylesheet rules. */
+/* Original L445: Selects .bank-actions-container and applies display: flex; flex-direction: column; gap: 16px. */.bank-actions-container { display: flex; flex-direction: column; gap: 16px; }
+/* Original L446: Blank line separates stylesheet rules. */
+/* Original L447: Selects .bank-action-box; the declarations inside control its matching elements. */.bank-action-box {
+/* Original L448: Sets background: #1e1e28 (paints the background). */  background: #1e1e28;
+/* Original L449: Sets border: 1px solid #333 (sets border width/style/color). */  border: 1px solid #333;
+/* Original L450: Sets padding: 16px (adds inner spacing). */  padding: 16px;
+/* Original L451: Sets border-radius: 12px (rounds corners). */  border-radius: 12px;
+/* Original L452: Closes the current CSS rule or responsive/animation block. */}
+/* Original L453: Blank line separates stylesheet rules. */
+/* Original L454: Selects .bank-action-box h3 and applies font-size: 1rem; color: var(--gold-primary); margin-bottom: 4px. */.bank-action-box h3 { font-size: 1rem; color: var(--gold-primary); margin-bottom: 4px; }
+/* Original L455: Selects .bank-action-box p and applies font-size: 0.75rem; color: #aaa; margin-bottom: 12px. */.bank-action-box p { font-size: 0.75rem; color: #aaa; margin-bottom: 12px; }
+/* Original L456: Blank line separates stylesheet rules. */
+/* Original L457: Selects .action-inputs and applies display: flex; gap: 10px. */.action-inputs { display: flex; gap: 10px; }
+/* Original L458: Blank line separates stylesheet rules. */
+/* Original L459: Selects .btn-preset-loan, .btn-repay; the declarations inside control its matching elements. */.btn-preset-loan, .btn-repay {
+/* Original L460: Sets flex: 1 (sets flex growth/shrink/basis). */  flex: 1;
+/* Original L461: Sets background: #2b2b3a (paints the background). */  background: #2b2b3a;
+/* Original L462: Sets border: 1px solid var(--gold-dark) (sets border width/style/color). */  border: 1px solid var(--gold-dark);
+/* Original L463: Sets color: var(--gold-primary) (sets text color). */  color: var(--gold-primary);
+/* Original L464: Sets padding: 10px (adds inner spacing). */  padding: 10px;
+/* Original L465: Sets border-radius: 8px (rounds corners). */  border-radius: 8px;
+/* Original L466: Sets font-weight: bold (sets text weight). */  font-weight: bold;
+/* Original L467: Sets cursor: pointer (sets pointer cursor). */  cursor: pointer;
+/* Original L468: Sets transition: background 0.2s (animates changes to listed properties). */  transition: background 0.2s;
+/* Original L469: Closes the current CSS rule or responsive/animation block. */}
+/* Original L470: Blank line separates stylesheet rules. */
+/* Original L471: Selects .btn-preset-loan:hover and applies background: #3b3b4f. */.btn-preset-loan:hover { background: #3b3b4f; }
+/* Original L472: Selects .btn-repay and applies background: #223a2b; border-color: #4eef90; color: #4eef90. */.btn-repay { background: #223a2b; border-color: #4eef90; color: #4eef90; }
+/* Original L473: Selects .btn-repay:hover and applies background: #2c4d39. */.btn-repay:hover { background: #2c4d39; }
+/* Original L474: Selects .btn-repay-max and applies background: #3a2222; border-color: #ff4d4d; color: #ff6b6b. */.btn-repay-max { background: #3a2222; border-color: #ff4d4d; color: #ff6b6b; }
+/* Original L475: Selects .btn-repay-max:hover and applies background: #4d2c2c. */.btn-repay-max:hover { background: #4d2c2c; }
+/* Original L476: Blank line separates stylesheet rules. */
+/* Original L477: Selects #app-container; the declarations inside control its matching elements. */#app-container {
+/* Original L478: Sets flex: 1 (sets flex growth/shrink/basis). */  flex: 1;
+/* Original L479: Sets display: flex (controls layout mode/visibility). */  display: flex;
+/* Original L480: Sets justify-content: center (distributes children on main axis). */  justify-content: center;
+/* Original L481: Sets align-items: center (aligns children on cross axis). */  align-items: center;
+/* Original L482: Sets padding: 20px (adds inner spacing). */  padding: 20px;
+/* Original L483: Closes the current CSS rule or responsive/animation block. */}
+/* Original L484: Blank line separates stylesheet rules. */
+/* Original L485: Comment: Navigation toggles visibility classes on complete views rather than rebuilding game markup.. *//* Navigation toggles visibility classes on complete views rather than rebuilding game markup. */
+/* Original L486: Selects .view-screen and applies width: 100%; max-width: 900px. */.view-screen { width: 100%; max-width: 900px; }
+/* Original L487: Selects .active-view and applies display: block. */.active-view { display: block; }
+/* Original L488: Selects .modal-overlay.active-view and applies display: flex. */.modal-overlay.active-view { display: flex; }
+/* Original L489: Selects .hidden-view and applies display: none !important. */.hidden-view { display: none !important; }
+/* Original L490: Blank line separates stylesheet rules. */
+/* Original L491: Selects .lobby-header and applies text-align: center; margin-bottom: 30px. */.lobby-header { text-align: center; margin-bottom: 30px; }
+/* Original L492: Selects .lobby-header h2 and applies font-size: 2.2rem; color: var(--gold-primary). */.lobby-header h2 { font-size: 2.2rem; color: var(--gold-primary); }
+/* Original L493: Selects .lobby-header p and applies color: #ccc. */.lobby-header p { color: #ccc; }
+/* Original L494: Blank line separates stylesheet rules. */
+/* Original L495: Comment: The lobby's non-slot games use a fluid grid; slot cards have their own sibling grid so the Slot Room remains visually distinct.. *//* The lobby's non-slot games use a fluid grid; slot cards have their own sibling grid so the Slot Room remains visually distinct. */
+/* Original L496: Selects .game-grid; the declarations inside control its matching elements. */.game-grid {
+/* Original L497: Sets display: grid (controls layout mode/visibility). */  display: grid;
+/* Original L498: Sets grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)) (defines grid columns). */  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+/* Original L499: Sets gap: 20px (sets spacing between flex/grid children). */  gap: 20px;
+/* Original L500: Closes the current CSS rule or responsive/animation block. */}
+/* Original L501: Blank line separates stylesheet rules. */
+/* Original L502: Selects summary::marker; the declarations inside control its matching elements. */summary::marker {
+/* Original L503: Sets content: "🎰▶️" (generates pseudo-element content). */  content: "🎰▶️";
+/* Original L504: Closes the current CSS rule or responsive/animation block. */}
+/* Original L505: Blank line separates stylesheet rules. */
+/* Original L506: Comment: Keep the Coin Flip disclosure distinct from the slot-machine marker.. *//* Keep the Coin Flip disclosure distinct from the slot-machine marker. */
+/* Original L507: Selects .lobby-coin-room summary; the declarations inside control its matching elements. */.lobby-coin-room summary {
+/* Original L508: Sets cursor: pointer (sets pointer cursor). */  cursor: pointer;
+/* Original L509: Sets border-radius: 8px (rounds corners). */  border-radius: 8px;
+/* Original L510: Closes the current CSS rule or responsive/animation block. */}
+/* Original L511: Blank line separates stylesheet rules. */
+/* Original L512: Selects .lobby-coin-room summary::marker and applies content: "▶ "; color: var(--gold-primary). */.lobby-coin-room summary::marker { content: "▶ "; color: var(--gold-primary); }
+/* Original L513: Selects .lobby-coin-room details[open] > summary::marker and applies content: "▼ ". */.lobby-coin-room details[open] > summary::marker { content: "▼ "; }
+/* Original L514: Selects .lobby-coin-room summary:focus-visible and applies outline: 2px solid var(--gold-primary); outline-offset: 6px. */.lobby-coin-room summary:focus-visible { outline: 2px solid var(--gold-primary); outline-offset: 6px; }
+/* Original L515: Selects .lobby-coin-room .lobby-coin-room-heading and applies margin-bottom: 0. */.lobby-coin-room .lobby-coin-room-heading { margin-bottom: 0; }
+/* Original L516: Selects .lobby-coin-room details[open] > summary and applies margin-bottom: 16px. */.lobby-coin-room details[open] > summary { margin-bottom: 16px; }
+/* Original L517: Selects .lobby-coin-room .game-grid and applies grid-template-columns: repeat(auto-fit, minmax(min(250px, 100%), 1fr)). */.lobby-coin-room .game-grid { grid-template-columns: repeat(auto-fit, minmax(min(250px, 100%), 1fr)); }
+/* Original L518: Blank line separates stylesheet rules. */
+/* Original L519: Comment: Room containers make groups easy to scan and let each family of games grow without mixing unrelated cards.. *//* Room containers make groups easy to scan and let each family of games grow without mixing unrelated cards. */
+/* Original L520: Selects .lobby-slot-room, .lobby-coin-room; the declarations inside control its matching elements. */.lobby-slot-room, .lobby-coin-room {
+/* Original L521: Sets margin-bottom: 24px (sets bottom outer spacing). */  margin-bottom: 24px;
+/* Original L522: Sets padding: 22px (adds inner spacing). */  padding: 22px;
+/* Original L523: Sets border: 1px solid rgba(255, 215, 0, 0.42) (sets border width/style/color). */  border: 1px solid rgba(255, 215, 0, 0.42);
+/* Original L524: Sets border-radius: 18px (rounds corners). */  border-radius: 18px;
+/* Original L525: Sets background: linear-gradient(145deg, rgba(42, 29, 58, 0.96), rgba(19, 15, 29, 0.96)) (paints the background). */  background: linear-gradient(145deg, rgba(42, 29, 58, 0.96), rgba(19, 15, 29, 0.96));
+/* Original L526: Sets box-shadow: 0 12px 30px rgba(0, 0, 0, 0.24) (adds outer/inset shadow). */  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.24);
+/* Original L527: Closes the current CSS rule or responsive/animation block. */}
+/* Original L528: Blank line separates stylesheet rules. */
+/* Original L529: Selects .lobby-slot-room-heading, .lobby-coin-room-heading; the declarations inside control its matching elements. */.lobby-slot-room-heading, .lobby-coin-room-heading {
+/* Original L530: Sets display: flex (controls layout mode/visibility). */  display: flex;
+/* Original L531: Sets align-items: center (aligns children on cross axis). */  align-items: center;
+/* Original L532: Sets justify-content: space-between (distributes children on main axis). */  justify-content: space-between;
+/* Original L533: Sets gap: 18px (sets spacing between flex/grid children). */  gap: 18px;
+/* Original L534: Sets margin-bottom: 16px (sets bottom outer spacing). */  margin-bottom: 16px;
+/* Original L535: Closes the current CSS rule or responsive/animation block. */}
+/* Original L536: Blank line separates stylesheet rules. */
+/* Original L537: Selects .lobby-slot-room-heading h3, .lobby-coin-room-heading h3; the declarations inside control its matching elements. */.lobby-slot-room-heading h3, .lobby-coin-room-heading h3 {
+/* Original L538: Sets margin-bottom: 4px (sets bottom outer spacing). */  margin-bottom: 4px;
+/* Original L539: Sets color: var(--gold-primary) (sets text color). */  color: var(--gold-primary);
+/* Original L540: Sets font-size: 1.35rem (sets text size). */  font-size: 1.35rem;
+/* Original L541: Closes the current CSS rule or responsive/animation block. */}
+/* Original L542: Blank line separates stylesheet rules. */
+/* Original L543: Selects .lobby-slot-room-heading > div > p:last-child, .lobby-coin-room-heading > div > p:last-child; the declarations inside control its matching elements. */.lobby-slot-room-heading > div > p:last-child, .lobby-coin-room-heading > div > p:last-child {
+/* Original L544: Sets color: #c8c1d0 (sets text color). */  color: #c8c1d0;
+/* Original L545: Sets font-size: 0.82rem (sets text size). */  font-size: 0.82rem;
+/* Original L546: Closes the current CSS rule or responsive/animation block. */}
+/* Original L547: Blank line separates stylesheet rules. */
+/* Original L548: Comment: Auto-fit uses the same minimum comfortable card width as the main lobby grid, including when catalog cards are appended at runtime.. *//* Auto-fit uses the same minimum comfortable card width as the main lobby grid, including when catalog cards are appended at runtime. */
+/* Original L549: Selects .slot-room-grid; the declarations inside control its matching elements. */.slot-room-grid {
+/* Original L550: Sets display: grid (controls layout mode/visibility). */  display: grid;
+/* Original L551: Sets grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)) (defines grid columns). */  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+/* Original L552: Sets gap: 20px (sets spacing between flex/grid children). */  gap: 20px;
+/* Original L553: Closes the current CSS rule or responsive/animation block. */}
+/* Original L554: Blank line separates stylesheet rules. */
+/* Original L555: Selects .game-card; the declarations inside control its matching elements. */.game-card {
+/* Original L556: Sets background: var(--panel-bg) (paints the background). */  background: var(--panel-bg);
+/* Original L557: Sets border: 2px solid #333 (sets border width/style/color). */  border: 2px solid #333;
+/* Original L558: Sets border-radius: 16px (rounds corners). */  border-radius: 16px;
+/* Original L559: Sets padding: 24px (adds inner spacing). */  padding: 24px;
+/* Original L560: Sets text-align: center (aligns text). */  text-align: center;
+/* Original L561: Sets display: flex (controls layout mode/visibility). */  display: flex;
+/* Original L562: Sets flex-direction: column (sets flex main-axis direction). */  flex-direction: column;
+/* Original L563: Sets align-items: center (aligns children on cross axis). */  align-items: center;
+/* Original L564: Sets gap: 12px (sets spacing between flex/grid children). */  gap: 12px;
+/* Original L565: Sets transition: transform 0.2s, border-color 0.2s (animates changes to listed properties). */  transition: transform 0.2s, border-color 0.2s;
+/* Original L566: Closes the current CSS rule or responsive/animation block. */}
+/* Original L567: Blank line separates stylesheet rules. */
+/* Original L568: Selects .game-card:hover and applies transform: translateY(-5px); border-color: var(--gold-primary). */.game-card:hover { transform: translateY(-5px); border-color: var(--gold-primary); }
+/* Original L569: Selects .card-icon and applies font-size: 3.5rem. */.card-icon { font-size: 3.5rem; }
+/* Original L570: Blank line separates stylesheet rules. */
+/* Original L571: Selects .play-btn; the declarations inside control its matching elements. */.play-btn {
+/* Original L572: Sets background: linear-gradient(180deg, #ffd700 0%, #b8860b 100%) (paints the background). */  background: linear-gradient(180deg, #ffd700 0%, #b8860b 100%);
+/* Original L573: Sets color: #000 (sets text color). */  color: #000;
+/* Original L574: Sets border: none (sets border width/style/color). */  border: none;
+/* Original L575: Sets padding: 10px 20px (adds inner spacing). */  padding: 10px 20px;
+/* Original L576: Sets font-size: 1rem (sets text size). */  font-size: 1rem;
+/* Original L577: Sets font-weight: bold (sets text weight). */  font-weight: bold;
+/* Original L578: Sets border-radius: 8px (rounds corners). */  border-radius: 8px;
+/* Original L579: Sets cursor: pointer (sets pointer cursor). */  cursor: pointer;
+/* Original L580: Sets margin-top: auto (sets top outer spacing). */  margin-top: auto;
+/* Original L581: Sets width: 100% (sets used width). */  width: 100%;
+/* Original L582: Closes the current CSS rule or responsive/animation block. */}
+/* Original L583: Blank line separates stylesheet rules. */
+/* Original L584: Selects .back-lobby-btn; the declarations inside control its matching elements. */.back-lobby-btn {
+/* Original L585: Sets background: #333 (paints the background). */  background: #333;
+/* Original L586: Sets color: #fff (sets text color). */  color: #fff;
+/* Original L587: Sets border: 1px solid #555 (sets border width/style/color). */  border: 1px solid #555;
+/* Original L588: Sets padding: 8px 16px (adds inner spacing). */  padding: 8px 16px;
+/* Original L589: Sets border-radius: 6px (rounds corners). */  border-radius: 6px;
+/* Original L590: Sets cursor: pointer (sets pointer cursor). */  cursor: pointer;
+/* Original L591: Sets margin-bottom: 15px (sets bottom outer spacing). */  margin-bottom: 15px;
+/* Original L592: Closes the current CSS rule or responsive/animation block. */}
+/* Original L593: Blank line separates stylesheet rules. */
+/* Original L594: Comment: Shared cabinet surfaces visually connect game tables while each game keeps its own inner layout.. *//* Shared cabinet surfaces visually connect game tables while each game keeps its own inner layout. */
+/* Original L595: Selects .slot-machine; the declarations inside control its matching elements. */.slot-machine {
+/* Original L596: Sets background: linear-gradient(145deg, #2a2a35, #141419) (paints the background). */  background: linear-gradient(145deg, #2a2a35, #141419);
+/* Original L597: Sets border: 4px solid var(--gold-primary) (sets border width/style/color). */  border: 4px solid var(--gold-primary);
+/* Original L598: Sets border-radius: 24px (rounds corners). */  border-radius: 24px;
+/* Original L599: Sets padding: 24px (adds inner spacing). */  padding: 24px;
+/* Original L600: Sets width: 100% (sets used width). */  width: 100%;
+/* Original L601: Sets margin: 0 auto (sets outer spacing). */  margin: 0 auto;
+/* Original L602: Sets display: flex (controls layout mode/visibility). */  display: flex;
+/* Original L603: Sets flex-direction: column (sets flex main-axis direction). */  flex-direction: column;
+/* Original L604: Sets align-items: center (aligns children on cross axis). */  align-items: center;
+/* Original L605: Sets gap: 20px (sets spacing between flex/grid children). */  gap: 20px;
+/* Original L606: Closes the current CSS rule or responsive/animation block. */}
+/* Original L607: Blank line separates stylesheet rules. */
+/* Original L608: Selects .slot-machine.slot-5reel, .slot-machine.coin-toss-machine, .slot-machine.three-coin-toss-machine, .slot-machine.blackjack-table and applies max-width: 580px. */.slot-machine.slot-5reel, .slot-machine.coin-toss-machine, .slot-machine.three-coin-toss-machine, .slot-machine.blackjack-table { max-width: 580px; }
+/* Original L609: Blank line separates stylesheet rules. */
+/* Original L610: Comment: Felt Blackjack Table Styling. *//* Felt Blackjack Table Styling */
+/* Original L611: Selects .felt-table; the declarations inside control its matching elements. */.felt-table {
+/* Original L612: Sets background: radial-gradient(circle, #1a5e35 0%, #0c331c 100%) (paints the background). */  background: radial-gradient(circle, #1a5e35 0%, #0c331c 100%);
+/* Original L613: Sets border: 3px solid var(--gold-primary) (sets border width/style/color). */  border: 3px solid var(--gold-primary);
+/* Original L614: Sets border-radius: 16px (rounds corners). */  border-radius: 16px;
+/* Original L615: Sets width: 100% (sets used width). */  width: 100%;
+/* Original L616: Sets padding: 20px (adds inner spacing). */  padding: 20px;
+/* Original L617: Sets box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.6) (adds outer/inset shadow). */  box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.6);
+/* Original L618: Sets display: flex (controls layout mode/visibility). */  display: flex;
+/* Original L619: Sets flex-direction: column (sets flex main-axis direction). */  flex-direction: column;
+/* Original L620: Sets gap: 16px (sets spacing between flex/grid children). */  gap: 16px;
+/* Original L621: Closes the current CSS rule or responsive/animation block. */}
+/* Original L622: Blank line separates stylesheet rules. */
+/* Original L623: Selects .table-divider; the declarations inside control its matching elements. */.table-divider {
+/* Original L624: Sets border-top: 1px dashed rgba(255, 215, 0, 0.4) (sets top border). */  border-top: 1px dashed rgba(255, 215, 0, 0.4);
+/* Original L625: Sets border-bottom: 1px dashed rgba(255, 215, 0, 0.4) (sets bottom border). */  border-bottom: 1px dashed rgba(255, 215, 0, 0.4);
+/* Original L626: Sets padding: 4px (adds inner spacing). */  padding: 4px;
+/* Original L627: Sets text-align: center (aligns text). */  text-align: center;
+/* Original L628: Closes the current CSS rule or responsive/animation block. */}
+/* Original L629: Blank line separates stylesheet rules. */
+/* Original L630: Selects .table-divider span; the declarations inside control its matching elements. */.table-divider span {
+/* Original L631: Sets font-size: 0.65rem (sets text size). */  font-size: 0.65rem;
+/* Original L632: Sets font-weight: bold (sets text weight). */  font-weight: bold;
+/* Original L633: Sets color: var(--gold-primary) (sets text color). */  color: var(--gold-primary);
+/* Original L634: Sets letter-spacing: 1px (sets spacing between characters). */  letter-spacing: 1px;
+/* Original L635: Closes the current CSS rule or responsive/animation block. */}
+/* Original L636: Blank line separates stylesheet rules. */
+/* Original L637: Selects .hand-section; the declarations inside control its matching elements. */.hand-section {
+/* Original L638: Sets display: flex (controls layout mode/visibility). */  display: flex;
+/* Original L639: Sets flex-direction: column (sets flex main-axis direction). */  flex-direction: column;
+/* Original L640: Sets gap: 8px (sets spacing between flex/grid children). */  gap: 8px;
+/* Original L641: Closes the current CSS rule or responsive/animation block. */}
+/* Original L642: Blank line separates stylesheet rules. */
+/* Original L643: Selects .hand-header; the declarations inside control its matching elements. */.hand-header {
+/* Original L644: Sets display: flex (controls layout mode/visibility). */  display: flex;
+/* Original L645: Sets justify-content: space-between (distributes children on main axis). */  justify-content: space-between;
+/* Original L646: Sets align-items: center (aligns children on cross axis). */  align-items: center;
+/* Original L647: Sets font-size: 0.85rem (sets text size). */  font-size: 0.85rem;
+/* Original L648: Sets font-weight: bold (sets text weight). */  font-weight: bold;
+/* Original L649: Sets color: #ddd (sets text color). */  color: #ddd;
+/* Original L650: Closes the current CSS rule or responsive/animation block. */}
+/* Original L651: Blank line separates stylesheet rules. */
+/* Original L652: Selects .score-badge; the declarations inside control its matching elements. */.score-badge {
+/* Original L653: Sets background: #000 (paints the background). */  background: #000;
+/* Original L654: Sets border: 1px solid var(--gold-primary) (sets border width/style/color). */  border: 1px solid var(--gold-primary);
+/* Original L655: Sets color: var(--gold-primary) (sets text color). */  color: var(--gold-primary);
+/* Original L656: Sets padding: 2px 8px (adds inner spacing). */  padding: 2px 8px;
+/* Original L657: Sets border-radius: 6px (rounds corners). */  border-radius: 6px;
+/* Original L658: Sets font-size: 0.85rem (sets text size). */  font-size: 0.85rem;
+/* Original L659: Closes the current CSS rule or responsive/animation block. */}
+/* Original L660: Blank line separates stylesheet rules. */
+/* Original L661: Selects .cards-container; the declarations inside control its matching elements. */.cards-container {
+/* Original L662: Sets display: flex (controls layout mode/visibility). */  display: flex;
+/* Original L663: Sets gap: 8px (sets spacing between flex/grid children). */  gap: 8px;
+/* Original L664: Sets min-height: 80px (sets minimum height). */  min-height: 80px;
+/* Original L665: Sets align-items: center (aligns children on cross axis). */  align-items: center;
+/* Original L666: Sets flex-wrap: wrap (allows children to wrap). */  flex-wrap: wrap;
+/* Original L667: Closes the current CSS rule or responsive/animation block. */}
+/* Original L668: Blank line separates stylesheet rules. */
+/* Original L669: Selects .playing-card; the declarations inside control its matching elements. */.playing-card {
+/* Original L670: Sets width: 55px (sets used width). */  width: 55px;
+/* Original L671: Sets height: 80px (sets used height). */  height: 80px;
+/* Original L672: Sets background: #ffffff (paints the background). */  background: #ffffff;
+/* Original L673: Sets color: #111 (sets text color). */  color: #111;
+/* Original L674: Sets border-radius: 6px (rounds corners). */  border-radius: 6px;
+/* Original L675: Sets border: 1px solid #ccc (sets border width/style/color). */  border: 1px solid #ccc;
+/* Original L676: Sets display: flex (controls layout mode/visibility). */  display: flex;
+/* Original L677: Sets flex-direction: column (sets flex main-axis direction). */  flex-direction: column;
+/* Original L678: Sets justify-content: space-between (distributes children on main axis). */  justify-content: space-between;
+/* Original L679: Sets padding: 4px 6px (adds inner spacing). */  padding: 4px 6px;
+/* Original L680: Sets font-weight: bold (sets text weight). */  font-weight: bold;
+/* Original L681: Sets box-shadow: 2px 4px 8px rgba(0,0,0,0.4) (adds outer/inset shadow). */  box-shadow: 2px 4px 8px rgba(0,0,0,0.4);
+/* Original L682: Sets animation: dealCard 0.2s ease-out (runs a named CSS animation). */  animation: dealCard 0.2s ease-out;
+/* Original L683: Closes the current CSS rule or responsive/animation block. */}
+/* Original L684: Blank line separates stylesheet rules. */
+/* Original L685: Defines animation timeline dealCard for changing properties over time. */@keyframes dealCard {
+/* Original L686: Selects from and applies transform: translateY(-20px); opacity: 0. */  from { transform: translateY(-20px); opacity: 0; }
+/* Original L687: Selects to and applies transform: translateY(0); opacity: 1. */  to { transform: translateY(0); opacity: 1; }
+/* Original L688: Closes the current CSS rule or responsive/animation block. */}
+/* Original L689: Blank line separates stylesheet rules. */
+/* Original L690: Selects .playing-card.red-suit and applies color: #d63031. */.playing-card.red-suit { color: #d63031; }
+/* Original L691: Blank line separates stylesheet rules. */
+/* Original L692: Selects .playing-card.card-back; the declarations inside control its matching elements. */.playing-card.card-back {
+/* Original L693: Sets background: repeating-linear-gradient(45deg, #2c3e50, #2c3e50 10px, #34495e 10px, #34495e 20px) (paints the background). */  background: repeating-linear-gradient(45deg, #2c3e50, #2c3e50 10px, #34495e 10px, #34495e 20px);
+/* Original L694: Sets border: 2px solid #fff (sets border width/style/color). */  border: 2px solid #fff;
+/* Original L695: Closes the current CSS rule or responsive/animation block. */}
+/* Original L696: Blank line separates stylesheet rules. */
+/* Original L697: Selects .card-top and applies font-size: 0.9rem; line-height: 1. */.card-top { font-size: 0.9rem; line-height: 1; }
+/* Original L698: Selects .card-center and applies font-size: 1.4rem; align-self: center. */.card-center { font-size: 1.4rem; align-self: center; }
+/* Original L699: Selects .card-bottom and applies font-size: 0.9rem; line-height: 1; align-self: flex-end. */.card-bottom { font-size: 0.9rem; line-height: 1; align-self: flex-end; }
+/* Original L700: Blank line separates stylesheet rules. */
+/* Original L701: Comment: Action Buttons. *//* Action Buttons */
+/* Original L702: Selects .action-btn-green, .action-btn-red, .action-btn-gold; the declarations inside control its matching elements. */.action-btn-green, .action-btn-red, .action-btn-gold {
+/* Original L703: Sets flex: 1 (sets flex growth/shrink/basis). */  flex: 1;
+/* Original L704: Sets border: none (sets border width/style/color). */  border: none;
+/* Original L705: Sets padding: 12px (adds inner spacing). */  padding: 12px;
+/* Original L706: Sets font-size: 1rem (sets text size). */  font-size: 1rem;
+/* Original L707: Sets font-weight: bold (sets text weight). */  font-weight: bold;
+/* Original L708: Sets border-radius: 10px (rounds corners). */  border-radius: 10px;
+/* Original L709: Sets cursor: pointer (sets pointer cursor). */  cursor: pointer;
+/* Original L710: Sets color: #fff (sets text color). */  color: #fff;
+/* Original L711: Closes the current CSS rule or responsive/animation block. */}
+/* Original L712: Blank line separates stylesheet rules. */
+/* Original L713: Selects .action-btn-green and applies background: #27ae60. */.action-btn-green { background: #27ae60; }
+/* Original L714: Selects .action-btn-green:hover and applies background: #2ecc71. */.action-btn-green:hover { background: #2ecc71; }
+/* Original L715: Blank line separates stylesheet rules. */
+/* Original L716: Selects .action-btn-red and applies background: #c0392b. */.action-btn-red { background: #c0392b; }
+/* Original L717: Selects .action-btn-red:hover and applies background: #e74c3c. */.action-btn-red:hover { background: #e74c3c; }
+/* Original L718: Blank line separates stylesheet rules. */
+/* Original L719: Selects .action-btn-gold and applies background: #d35400. */.action-btn-gold { background: #d35400; }
+/* Original L720: Selects .action-btn-gold:hover and applies background: #e67e22. */.action-btn-gold:hover { background: #e67e22; }
+/* Original L721: Blank line separates stylesheet rules. */
+/* Original L722: Selects .header h1 and applies font-size: 1.8rem; color: var(--gold-primary); text-align: center. */.header h1 { font-size: 1.8rem; color: var(--gold-primary); text-align: center; }
+/* Original L723: Blank line separates stylesheet rules. */
+/* Original L724: Selects .status-banner; the declarations inside control its matching elements. */.status-banner {
+/* Original L725: Sets background: #0a0a0d (paints the background). */  background: #0a0a0d;
+/* Original L726: Sets border: 1px solid var(--gold-dark) (sets border width/style/color). */  border: 1px solid var(--gold-dark);
+/* Original L727: Sets border-radius: 8px (rounds corners). */  border-radius: 8px;
+/* Original L728: Sets padding: 10px (adds inner spacing). */  padding: 10px;
+/* Original L729: Sets font-weight: bold (sets text weight). */  font-weight: bold;
+/* Original L730: Sets font-size: 1.1rem (sets text size). */  font-size: 1.1rem;
+/* Original L731: Sets min-height: 45px (sets minimum height). */  min-height: 45px;
+/* Original L732: Sets display: flex (controls layout mode/visibility). */  display: flex;
+/* Original L733: Sets align-items: center (aligns children on cross axis). */  align-items: center;
+/* Original L734: Sets justify-content: center (distributes children on main axis). */  justify-content: center;
+/* Original L735: Sets color: #fff (sets text color). */  color: #fff;
+/* Original L736: Sets text-align: center (aligns text). */  text-align: center;
+/* Original L737: Closes the current CSS rule or responsive/animation block. */}
+/* Original L738: Blank line separates stylesheet rules. */
+/* Original L739: Selects .status-banner.status-spinning and applies color: #ffd700. */.status-banner.status-spinning { color: #ffd700; }
+/* Original L740: Selects .status-banner.status-win and applies color: #4eef90; border-color: #4eef90. */.status-banner.status-win { color: #4eef90; border-color: #4eef90; }
+/* Original L741: Selects .status-banner.status-loss and applies color: #ff4d4d; border-color: #ff4d4d. */.status-banner.status-loss { color: #ff4d4d; border-color: #ff4d4d; }
+/* Original L742: Selects .status-banner.status-bonus and applies color: #e056fd; border-color: #e056fd. */.status-banner.status-bonus { color: #e056fd; border-color: #e056fd; }
+/* Original L743: Selects .status-banner.status-jackpot and applies color: #ffd700; border-color: #ffd700; background: #5e0000. */.status-banner.status-jackpot { color: #ffd700; border-color: #ffd700; background: #5e0000; }
+/* Original L744: Blank line separates stylesheet rules. */
+/* Original L745: Comment: Coin Toss 3D Elements. *//* Coin Toss 3D Elements */
+/* Original L746: Selects .coin-stage; the declarations inside control its matching elements. */.coin-stage {
+/* Original L747: Sets perspective: 1000px (sets perspective). */  perspective: 1000px;
+/* Original L748: Sets height: 160px (sets used height). */  height: 160px;
+/* Original L749: Sets display: flex (controls layout mode/visibility). */  display: flex;
+/* Original L750: Sets justify-content: center (distributes children on main axis). */  justify-content: center;
+/* Original L751: Sets align-items: center (aligns children on cross axis). */  align-items: center;
+/* Original L752: Sets width: 100% (sets used width). */  width: 100%;
+/* Original L753: Closes the current CSS rule or responsive/animation block. */}
+/* Original L754: Blank line separates stylesheet rules. */
+/* Original L755: Selects .three-coin-stage; the declarations inside control its matching elements. */.three-coin-stage {
+/* Original L756: Sets perspective: 1000px (sets perspective). */  perspective: 1000px;
+/* Original L757: Sets height: 160px (sets used height). */  height: 160px;
+/* Original L758: Sets display: flex (controls layout mode/visibility). */  display: flex;
+/* Original L759: Sets justify-content: space-evenly (distributes children on main axis). */  justify-content: space-evenly;
+/* Original L760: Sets align-items: center (aligns children on cross axis). */  align-items: center;
+/* Original L761: Sets width: 100% (sets used width). */  width: 100%;
+/* Original L762: Closes the current CSS rule or responsive/animation block. */}
+/* Original L763: Blank line separates stylesheet rules. */
+/* Original L764: Selects .coin; the declarations inside control its matching elements. */.coin {
+/* Original L765: Sets width: 130px (sets used width). */  width: 130px;
+/* Original L766: Sets height: 130px (sets used height). */  height: 130px;
+/* Original L767: Sets position: relative (sets positioning scheme). */  position: relative;
+/* Original L768: Sets transform-style: preserve-3d (preserves 3D child transforms). */  transform-style: preserve-3d;
+/* Original L769: Sets transform: rotateY(0deg) (applies geometric transform). */  transform: rotateY(0deg);
+/* Original L770: Closes the current CSS rule or responsive/animation block. */}
+/* Original L771: Blank line separates stylesheet rules. */
+/* Original L772: Selects .coin.animate-heads; the declarations inside control its matching elements. */.coin.animate-heads {
+/* Original L773: Sets animation: flipToHeads 1.5s cubic-bezier(0.1, 0.8, 0.2, 1) forwards (runs a named CSS animation). */  animation: flipToHeads 1.5s cubic-bezier(0.1, 0.8, 0.2, 1) forwards;
+/* Original L774: Closes the current CSS rule or responsive/animation block. */}
+/* Original L775: Blank line separates stylesheet rules. */
+/* Original L776: Selects .coin.animate-tails; the declarations inside control its matching elements. */.coin.animate-tails {
+/* Original L777: Sets animation: flipToTails 1.5s cubic-bezier(0.1, 0.8, 0.2, 1) forwards (runs a named CSS animation). */  animation: flipToTails 1.5s cubic-bezier(0.1, 0.8, 0.2, 1) forwards;
+/* Original L778: Closes the current CSS rule or responsive/animation block. */}
+/* Original L779: Blank line separates stylesheet rules. */
+/* Original L780: Defines animation timeline flipToHeads for changing properties over time. */@keyframes flipToHeads {
+/* Original L781: Selects 0% and applies transform: rotateY(0deg) scale(1). */  0% { transform: rotateY(0deg) scale(1); }
+/* Original L782: Selects 50% and applies transform: rotateY(900deg) scale(1.3). */  50% { transform: rotateY(900deg) scale(1.3); }
+/* Original L783: Selects 100% and applies transform: rotateY(1800deg) scale(1). */  100% { transform: rotateY(1800deg) scale(1); }
+/* Original L784: Closes the current CSS rule or responsive/animation block. */}
+/* Original L785: Blank line separates stylesheet rules. */
+/* Original L786: Defines animation timeline flipToTails for changing properties over time. */@keyframes flipToTails {
+/* Original L787: Selects 0% and applies transform: rotateY(0deg) scale(1). */  0% { transform: rotateY(0deg) scale(1); }
+/* Original L788: Selects 50% and applies transform: rotateY(990deg) scale(1.3). */  50% { transform: rotateY(990deg) scale(1.3); }
+/* Original L789: Selects 100% and applies transform: rotateY(1980deg) scale(1). */  100% { transform: rotateY(1980deg) scale(1); }
+/* Original L790: Closes the current CSS rule or responsive/animation block. */}
+/* Original L791: Blank line separates stylesheet rules. */
+/* Original L792: Selects .coin-face; the declarations inside control its matching elements. */.coin-face {
+/* Original L793: Sets position: absolute (sets positioning scheme). */  position: absolute;
+/* Original L794: Sets width: 100% (sets used width). */  width: 100%;
+/* Original L795: Sets height: 100% (sets used height). */  height: 100%;
+/* Original L796: Sets border-radius: 50% (rounds corners). */  border-radius: 50%;
+/* Original L797: Sets border: 4px solid var(--gold-primary) (sets border width/style/color). */  border: 4px solid var(--gold-primary);
+/* Original L798: Sets background: radial-gradient(circle, #2c2508 0%, #0a0902 100%) (paints the background). */  background: radial-gradient(circle, #2c2508 0%, #0a0902 100%);
+/* Original L799: Sets display: flex (controls layout mode/visibility). */  display: flex;
+/* Original L800: Sets flex-direction: column (sets flex main-axis direction). */  flex-direction: column;
+/* Original L801: Sets align-items: center (aligns children on cross axis). */  align-items: center;
+/* Original L802: Sets justify-content: center (distributes children on main axis). */  justify-content: center;
+/* Original L803: Sets font-size: 2.8rem (sets text size). */  font-size: 2.8rem;
+/* Original L804: Sets backface-visibility: hidden (sets backface-visibility). */  backface-visibility: hidden;
+/* Original L805: Sets box-shadow: 0 0 15px rgba(255, 215, 0, 0.3) (adds outer/inset shadow). */  box-shadow: 0 0 15px rgba(255, 215, 0, 0.3);
+/* Original L806: Closes the current CSS rule or responsive/animation block. */}
+/* Original L807: Blank line separates stylesheet rules. */
+/* Original L808: Selects .coin-face span; the declarations inside control its matching elements. */.coin-face span {
+/* Original L809: Sets font-size: 0.8rem (sets text size). */  font-size: 0.8rem;
+/* Original L810: Sets font-weight: bold (sets text weight). */  font-weight: bold;
+/* Original L811: Sets color: var(--gold-primary) (sets text color). */  color: var(--gold-primary);
+/* Original L812: Closes the current CSS rule or responsive/animation block. */}
+/* Original L813: Blank line separates stylesheet rules. */
+/* Original L814: Selects .coin-heads and applies transform: rotateY(0deg). */.coin-heads { transform: rotateY(0deg); }
+/* Original L815: Selects .coin-tails and applies transform: rotateY(180deg). */.coin-tails { transform: rotateY(180deg); }
+/* Original L816: Blank line separates stylesheet rules. */
+/* Original L817: Selects .choice-selector; the declarations inside control its matching elements. */.choice-selector {
+/* Original L818: Sets display: flex (controls layout mode/visibility). */  display: flex;
+/* Original L819: Sets gap: 12px (sets spacing between flex/grid children). */  gap: 12px;
+/* Original L820: Sets width: 100% (sets used width). */  width: 100%;
+/* Original L821: Closes the current CSS rule or responsive/animation block. */}
+/* Original L822: Blank line separates stylesheet rules. */
+/* Original L823: Selects .choice-btn; the declarations inside control its matching elements. */.choice-btn {
+/* Original L824: Sets flex: 1 (sets flex growth/shrink/basis). */  flex: 1;
+/* Original L825: Sets background: #252530 (paints the background). */  background: #252530;
+/* Original L826: Sets border: 2px solid #444 (sets border width/style/color). */  border: 2px solid #444;
+/* Original L827: Sets color: #aaa (sets text color). */  color: #aaa;
+/* Original L828: Sets padding: 10px (adds inner spacing). */  padding: 10px;
+/* Original L829: Sets border-radius: 10px (rounds corners). */  border-radius: 10px;
+/* Original L830: Sets font-weight: bold (sets text weight). */  font-weight: bold;
+/* Original L831: Sets cursor: pointer (sets pointer cursor). */  cursor: pointer;
+/* Original L832: Sets transition: all 0.2s (animates changes to listed properties). */  transition: all 0.2s;
+/* Original L833: Closes the current CSS rule or responsive/animation block. */}
+/* Original L834: Blank line separates stylesheet rules. */
+/* Original L835: Selects .choice-btn.active-choice; the declarations inside control its matching elements. */.choice-btn.active-choice {
+/* Original L836: Sets background: #3b3111 (paints the background). */  background: #3b3111;
+/* Original L837: Sets border-color: var(--gold-primary) (sets border color). */  border-color: var(--gold-primary);
+/* Original L838: Sets color: var(--gold-primary) (sets text color). */  color: var(--gold-primary);
+/* Original L839: Closes the current CSS rule or responsive/animation block. */}
+/* Original L840: Blank line separates stylesheet rules. */
+/* Original L841: Comment: Bonus HUD. *//* Bonus HUD */
+/* Original L842: Selects .bonus-hud; the declarations inside control its matching elements. */.bonus-hud {
+/* Original L843: Sets background: radial-gradient(circle, #5b1380 0%, #200430 100%) (paints the background). */  background: radial-gradient(circle, #5b1380 0%, #200430 100%);
+/* Original L844: Sets border: 2px solid #e056fd (sets border width/style/color). */  border: 2px solid #e056fd;
+/* Original L845: Sets border-radius: 12px (rounds corners). */  border-radius: 12px;
+/* Original L846: Sets width: 100% (sets used width). */  width: 100%;
+/* Original L847: Sets padding: 8px 16px (adds inner spacing). */  padding: 8px 16px;
+/* Original L848: Sets display: flex (controls layout mode/visibility). */  display: flex;
+/* Original L849: Sets justify-content: space-around (distributes children on main axis). */  justify-content: space-around;
+/* Original L850: Sets box-shadow: 0 0 15px rgba(224, 86, 253, 0.4) (adds outer/inset shadow). */  box-shadow: 0 0 15px rgba(224, 86, 253, 0.4);
+/* Original L851: Closes the current CSS rule or responsive/animation block. */}
+/* Original L852: Blank line separates stylesheet rules. */
+/* Original L853: Selects .bonus-stat and applies font-weight: bold; font-size: 0.95rem; color: #fff. */.bonus-stat { font-weight: bold; font-size: 0.95rem; color: #fff; }
+/* Original L854: Selects .bonus-stat span and applies color: #ffd700; font-size: 1.1rem. */.bonus-stat span { color: #ffd700; font-size: 1.1rem; }
+/* Original L855: Blank line separates stylesheet rules. */
+/* Original L856: Comment: Viewports & Reels. *//* Viewports & Reels */
+/* Original L857: Selects .reels-viewport; the declarations inside control its matching elements. */.reels-viewport {
+/* Original L858: Sets display: flex (controls layout mode/visibility). */  display: flex;
+/* Original L859: Sets justify-content: center (distributes children on main axis). */  justify-content: center;
+/* Original L860: Sets gap: 10px (sets spacing between flex/grid children). */  gap: 10px;
+/* Original L861: Sets background: #000 (paints the background). */  background: #000;
+/* Original L862: Sets padding: 10px (adds inner spacing). */  padding: 10px;
+/* Original L863: Sets border-radius: 14px (rounds corners). */  border-radius: 14px;
+/* Original L864: Sets border: 3px solid #333 (sets border width/style/color). */  border: 3px solid #333;
+/* Original L865: Sets height: calc(var(--symbol-size-3reel) * 3 + 20px) (sets used height). */  height: calc(var(--symbol-size-3reel) * 3 + 20px);
+/* Original L866: Sets overflow: hidden (controls clipping/scrolling). */  overflow: hidden;
+/* Original L867: Sets position: relative (sets positioning scheme). */  position: relative;
+/* Original L868: Sets width: 100% (sets used width). */  width: 100%;
+/* Original L869: Closes the current CSS rule or responsive/animation block. */}
+/* Original L870: Blank line separates stylesheet rules. */
+/* Original L871: Selects .payline-overlay; the declarations inside control its matching elements. */.payline-overlay {
+/* Original L872: Sets position: absolute (sets positioning scheme). */  position: absolute;
+/* Original L873: Sets top: 50% (sets top offset). */  top: 50%;
+/* Original L874: Sets left: 0 (sets left offset). */  left: 0;
+/* Original L875: Sets right: 0 (sets right offset). */  right: 0;
+/* Original L876: Sets height: 2px (sets used height). */  height: 2px;
+/* Original L877: Sets background: rgba(255, 215, 0, 0.4) (paints the background). */  background: rgba(255, 215, 0, 0.4);
+/* Original L878: Sets pointer-events: none (controls hit testing). */  pointer-events: none;
+/* Original L879: Sets z-index: 10 (sets stacking order). */  z-index: 10;
+/* Original L880: Closes the current CSS rule or responsive/animation block. */}
+/* Original L881: Blank line separates stylesheet rules. */
+/* Original L882: Selects .reel; the declarations inside control its matching elements. */.reel {
+/* Original L883: Sets width: var(--symbol-size-3reel) (sets used width). */  width: var(--symbol-size-3reel);
+/* Original L884: Sets height: 100% (sets used height). */  height: 100%;
+/* Original L885: Sets position: relative (sets positioning scheme). */  position: relative;
+/* Original L886: Sets background: #181820 (paints the background). */  background: #181820;
+/* Original L887: Sets border-radius: 8px (rounds corners). */  border-radius: 8px;
+/* Original L888: Sets overflow: hidden (controls clipping/scrolling). */  overflow: hidden;
+/* Original L889: Closes the current CSS rule or responsive/animation block. */}
+/* Original L890: Blank line separates stylesheet rules. */
+/* Original L891: Selects .reel .symbol and applies height: var(--symbol-size-3reel); font-size: 2.8rem. */.reel .symbol { height: var(--symbol-size-3reel); font-size: 2.8rem; }
+/* Original L892: Blank line separates stylesheet rules. */
+/* Original L893: Selects .reels-viewport-5reel; the declarations inside control its matching elements. */.reels-viewport-5reel {
+/* Original L894: Sets display: flex (controls layout mode/visibility). */  display: flex;
+/* Original L895: Sets justify-content: center (distributes children on main axis). */  justify-content: center;
+/* Original L896: Sets gap: 6px (sets spacing between flex/grid children). */  gap: 6px;
+/* Original L897: Sets background: #000 (paints the background). */  background: #000;
+/* Original L898: Sets padding: 8px (adds inner spacing). */  padding: 8px;
+/* Original L899: Sets border-radius: 14px (rounds corners). */  border-radius: 14px;
+/* Original L900: Sets border: 3px solid #333 (sets border width/style/color). */  border: 3px solid #333;
+/* Original L901: Sets height: calc(var(--symbol-size-5reel) * 3 + 16px) (sets used height). */  height: calc(var(--symbol-size-5reel) * 3 + 16px);
+/* Original L902: Sets overflow: hidden (controls clipping/scrolling). */  overflow: hidden;
+/* Original L903: Sets position: relative (sets positioning scheme). */  position: relative;
+/* Original L904: Sets width: 100% (sets used width). */  width: 100%;
+/* Original L905: Closes the current CSS rule or responsive/animation block. */}
+/* Original L906: Blank line separates stylesheet rules. */
+/* Original L907: Selects .reel-5reel; the declarations inside control its matching elements. */.reel-5reel {
+/* Original L908: Sets width: var(--symbol-size-5reel) (sets used width). */  width: var(--symbol-size-5reel);
+/* Original L909: Sets height: 100% (sets used height). */  height: 100%;
+/* Original L910: Sets position: relative (sets positioning scheme). */  position: relative;
+/* Original L911: Sets background: #181820 (paints the background). */  background: #181820;
+/* Original L912: Sets border-radius: 6px (rounds corners). */  border-radius: 6px;
+/* Original L913: Sets overflow: hidden (controls clipping/scrolling). */  overflow: hidden;
+/* Original L914: Closes the current CSS rule or responsive/animation block. */}
+/* Original L915: Blank line separates stylesheet rules. */
+/* Original L916: Selects .reel-5reel .symbol and applies height: var(--symbol-size-5reel); font-size: 2rem. */.reel-5reel .symbol { height: var(--symbol-size-5reel); font-size: 2rem; }
+/* Original L917: Blank line separates stylesheet rules. */
+/* Original L918: Selects .strip; the declarations inside control its matching elements. */.strip {
+/* Original L919: Sets position: absolute (sets positioning scheme). */  position: absolute;
+/* Original L920: Sets width: 100% (sets used width). */  width: 100%;
+/* Original L921: Sets top: 0 (sets top offset). */  top: 0;
+/* Original L922: Sets left: 0 (sets left offset). */  left: 0;
+/* Original L923: Sets display: flex (controls layout mode/visibility). */  display: flex;
+/* Original L924: Sets flex-direction: column (sets flex main-axis direction). */  flex-direction: column;
+/* Original L925: Closes the current CSS rule or responsive/animation block. */}
+/* Original L926: Blank line separates stylesheet rules. */
+/* Original L927: Selects .strip.is-spinning; the declarations inside control its matching elements. */.strip.is-spinning {
+/* Original L928: Sets transition: transform var(--spin-duration) cubic-bezier(0.1, 0.9, 0.2, 1.05) (animates changes to listed properties). */  transition: transform var(--spin-duration) cubic-bezier(0.1, 0.9, 0.2, 1.05);
+/* Original L929: Sets transform: translateY(var(--spin-target-y)) (applies geometric transform). */  transform: translateY(var(--spin-target-y));
+/* Original L930: Closes the current CSS rule or responsive/animation block. */}
+/* Original L931: Blank line separates stylesheet rules. */
+/* Original L932: Selects .symbol; the declarations inside control its matching elements. */.symbol {
+/* Original L933: Sets width: 100% (sets used width). */  width: 100%;
+/* Original L934: Sets display: flex (controls layout mode/visibility). */  display: flex;
+/* Original L935: Sets align-items: center (aligns children on cross axis). */  align-items: center;
+/* Original L936: Sets justify-content: center (distributes children on main axis). */  justify-content: center;
+/* Original L937: Sets background: #1d1d26 (paints the background). */  background: #1d1d26;
+/* Original L938: Sets border-bottom: 1px solid #2a2a38 (sets bottom border). */  border-bottom: 1px solid #2a2a38;
+/* Original L939: Closes the current CSS rule or responsive/animation block. */}
+/* Original L940: Blank line separates stylesheet rules. */
+/* Original L941: Selects .symbol.highlight; the declarations inside control its matching elements. */.symbol.highlight {
+/* Original L942: Sets background: #3b3111 (paints the background). */  background: #3b3111;
+/* Original L943: Sets border: 2px solid var(--gold-primary) (sets border width/style/color). */  border: 2px solid var(--gold-primary);
+/* Original L944: Closes the current CSS rule or responsive/animation block. */}
+/* Original L945: Blank line separates stylesheet rules. */
+/* Original L946: Selects .symbol.sticky-wild; the declarations inside control its matching elements. */.symbol.sticky-wild {
+/* Original L947: Sets background: #4a154b !important (paints the background). */  background: #4a154b !important;
+/* Original L948: Sets border: 2px solid #e056fd !important (sets border width/style/color). */  border: 2px solid #e056fd !important;
+/* Original L949: Sets box-shadow: inset 0 0 10px #e056fd (adds outer/inset shadow). */  box-shadow: inset 0 0 10px #e056fd;
+/* Original L950: Closes the current CSS rule or responsive/animation block. */}
+/* Original L951: Blank line separates stylesheet rules. */
+/* Original L952: Selects .dashboard and applies width: 100%. */.dashboard { width: 100%; }
+/* Original L953: Selects .card; the declarations inside control its matching elements. */.card {
+/* Original L954: Sets background: var(--panel-bg) (paints the background). */  background: var(--panel-bg);
+/* Original L955: Sets border: 1px solid #333 (sets border width/style/color). */  border: 1px solid #333;
+/* Original L956: Sets padding: 10px (adds inner spacing). */  padding: 10px;
+/* Original L957: Sets border-radius: 10px (rounds corners). */  border-radius: 10px;
+/* Original L958: Sets display: flex (controls layout mode/visibility). */  display: flex;
+/* Original L959: Sets flex-direction: column (sets flex main-axis direction). */  flex-direction: column;
+/* Original L960: Sets align-items: center (aligns children on cross axis). */  align-items: center;
+/* Original L961: Closes the current CSS rule or responsive/animation block. */}
+/* Original L962: Blank line separates stylesheet rules. */
+/* Original L963: Selects .card .label and applies font-size: 0.75rem; color: #aaa. */.card .label { font-size: 0.75rem; color: #aaa; }
+/* Original L964: Selects .card .value and applies font-size: 1.2rem; font-weight: bold. */.card .value { font-size: 1.2rem; font-weight: bold; }
+/* Original L965: Blank line separates stylesheet rules. */
+/* Original L966: Selects .bet-controls and applies display: flex; align-items: center; gap: 8px. */.bet-controls { display: flex; align-items: center; gap: 8px; }
+/* Original L967: Selects .btn-small; the declarations inside control its matching elements. */.btn-small {
+/* Original L968: Sets background: #333 (paints the background). */  background: #333;
+/* Original L969: Sets color: var(--gold-primary) (sets text color). */  color: var(--gold-primary);
+/* Original L970: Sets border: 1px solid var(--gold-dark) (sets border width/style/color). */  border: 1px solid var(--gold-dark);
+/* Original L971: Sets width: 28px (sets used width). */  width: 28px;
+/* Original L972: Sets height: 28px (sets used height). */  height: 28px;
+/* Original L973: Sets border-radius: 6px (rounds corners). */  border-radius: 6px;
+/* Original L974: Sets cursor: pointer (sets pointer cursor). */  cursor: pointer;
+/* Original L975: Closes the current CSS rule or responsive/animation block. */}
+/* Original L976: Blank line separates stylesheet rules. */
+/* Original L977: Selects .actions and applies display: flex; gap: 10px; width: 100%. */.actions { display: flex; gap: 10px; width: 100%; }
+/* Original L978: Selects .spin-btn; the declarations inside control its matching elements. */.spin-btn {
+/* Original L979: Sets flex: 2 (sets flex growth/shrink/basis). */  flex: 2;
+/* Original L980: Sets background: linear-gradient(180deg, #ffd700 0%, #b8860b 100%) (paints the background). */  background: linear-gradient(180deg, #ffd700 0%, #b8860b 100%);
+/* Original L981: Sets color: #000 (sets text color). */  color: #000;
+/* Original L982: Sets border: none (sets border width/style/color). */  border: none;
+/* Original L983: Sets padding: 14px (adds inner spacing). */  padding: 14px;
+/* Original L984: Sets font-size: 1.3rem (sets text size). */  font-size: 1.3rem;
+/* Original L985: Sets font-weight: 900 (sets text weight). */  font-weight: 900;
+/* Original L986: Sets border-radius: 12px (rounds corners). */  border-radius: 12px;
+/* Original L987: Sets cursor: pointer (sets pointer cursor). */  cursor: pointer;
+/* Original L988: Closes the current CSS rule or responsive/animation block. */}
+/* Original L989: Blank line separates stylesheet rules. */
+/* Original L990: Selects .spin-btn:disabled and applies opacity: 0.5; cursor: not-allowed. */.spin-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+/* Original L991: Selects .max-btn; the declarations inside control its matching elements. */.max-btn {
+/* Original L992: Sets flex: 1 (sets flex growth/shrink/basis). */  flex: 1;
+/* Original L993: Sets background: #3a1c1c (paints the background). */  background: #3a1c1c;
+/* Original L994: Sets color: #ff6b6b (sets text color). */  color: #ff6b6b;
+/* Original L995: Sets border: 1px solid #ff4d4d (sets border width/style/color). */  border: 1px solid #ff4d4d;
+/* Original L996: Sets border-radius: 12px (rounds corners). */  border-radius: 12px;
+/* Original L997: Sets font-weight: bold (sets text weight). */  font-weight: bold;
+/* Original L998: Sets cursor: pointer (sets pointer cursor). */  cursor: pointer;
+/* Original L999: Closes the current CSS rule or responsive/animation block. */}
+/* Original L1000: Blank line separates stylesheet rules. */
+/* Original L1001: Comment: ========================================. *//* Original L1002: Sets MOBILE RESPONSIVE OVERRIDES (max-width: 768px) (sets MOBILE RESPONSIVE OVERRIDES (max-width). *//* Original L1003: Finishes the multiline comment labeling the following max-width: 768px mobile overrides. *//* ==========================================
+   MOBILE RESPONSIVE OVERRIDES (max-width: 768px)
+   ========================================== */
+/* Original L1004: Blank line separates stylesheet rules. */
+/* Original L1005: Begins a responsive rule block that applies only when (max-width: 768px). */@media (max-width: 768px) {
+/* Original L1006: Blank line separates stylesheet rules. */
+/* Original L1007: Comment: 1. Global Header Adaptations. */  /* 1. Global Header Adaptations */
+/* Original L1008: Selects .global-bar; the declarations inside control its matching elements. */  .global-bar {
+/* Original L1009: Sets flex-direction: column (sets flex main-axis direction). */    flex-direction: column;
+/* Original L1010: Sets padding: 10px 14px (adds inner spacing). */    padding: 10px 14px;
+/* Original L1011: Sets gap: 8px (sets spacing between flex/grid children). */    gap: 8px;
+/* Original L1012: Closes the current CSS rule or responsive/animation block. */  }
+/* Original L1013: Blank line separates stylesheet rules. */
+/* Original L1014: Selects .logo-title; the declarations inside control its matching elements. */  .logo-title {
+/* Original L1015: Sets font-size: 1.1rem (sets text size). */    font-size: 1.1rem;
+/* Original L1016: Sets letter-spacing: 1px (sets spacing between characters). */    letter-spacing: 1px;
+/* Original L1017: Closes the current CSS rule or responsive/animation block. */  }
+/* Original L1018: Blank line separates stylesheet rules. */
+/* Original L1019: Selects .xp-header-widget; the declarations inside control its matching elements. */  .xp-header-widget {
+/* Original L1020: Sets width: 100% (sets used width). */    width: 100%;
+/* Original L1021: Sets justify-content: space-between (distributes children on main axis). */    justify-content: space-between;
+/* Original L1022: Closes the current CSS rule or responsive/animation block. */  }
+/* Original L1023: Blank line separates stylesheet rules. */
+/* Original L1024: Selects .xp-bar-container; the declarations inside control its matching elements. */  .xp-bar-container {
+/* Original L1025: Sets flex: 1 (sets flex growth/shrink/basis). */    flex: 1;
+/* Original L1026: Sets max-width: 140px (sets maximum width). */    max-width: 140px;
+/* Original L1027: Closes the current CSS rule or responsive/animation block. */  }
+/* Original L1028: Blank line separates stylesheet rules. */
+/* Original L1029: Selects .jackpot-ticker-container; the declarations inside control its matching elements. */  .jackpot-ticker-container {
+/* Original L1030: Sets width: 100% (sets used width). */    width: 100%;
+/* Original L1031: Sets padding: 4px 10px (adds inner spacing). */    padding: 4px 10px;
+/* Original L1032: Closes the current CSS rule or responsive/animation block. */  }
+/* Original L1033: Blank line separates stylesheet rules. */
+/* Original L1034: Selects .jackpot-amount; the declarations inside control its matching elements. */  .jackpot-amount {
+/* Original L1035: Sets font-size: 1.1rem (sets text size). */    font-size: 1.1rem;
+/* Original L1036: Closes the current CSS rule or responsive/animation block. */  }
+/* Original L1037: Blank line separates stylesheet rules. */
+/* Original L1038: Selects .header-right; the declarations inside control its matching elements. */  .header-right {
+/* Original L1039: Sets width: 100% (sets used width). */    width: 100%;
+/* Original L1040: Sets justify-content: space-between (distributes children on main axis). */    justify-content: space-between;
+/* Original L1041: Sets flex-wrap: wrap (allows children to wrap). */    flex-wrap: wrap;
+/* Original L1042: Sets gap: 6px (sets spacing between flex/grid children). */    gap: 6px;
+/* Original L1043: Closes the current CSS rule or responsive/animation block. */  }
+/* Original L1044: Blank line separates stylesheet rules. */
+/* Original L1045: Selects .wallet-display; the declarations inside control its matching elements. */  .wallet-display {
+/* Original L1046: Sets padding: 2px 8px (adds inner spacing). */    padding: 2px 8px;
+/* Original L1047: Closes the current CSS rule or responsive/animation block. */  }
+/* Original L1048: Blank line separates stylesheet rules. */
+/* Original L1049: Selects .wallet-amount; the declarations inside control its matching elements. */  .wallet-amount {
+/* Original L1050: Sets font-size: 0.95rem (sets text size). */    font-size: 0.95rem;
+/* Original L1051: Closes the current CSS rule or responsive/animation block. */  }
+/* Original L1052: Blank line separates stylesheet rules. */
+/* Original L1053: Selects .wheel-header-btn, .bank-btn, .icon-btn, .reset-data-btn; the declarations inside control its matching elements. */  .wheel-header-btn, .bank-btn, .icon-btn, .reset-data-btn {
+/* Original L1054: Sets padding: 6px 10px (adds inner spacing). */    padding: 6px 10px;
+/* Original L1055: Sets font-size: 0.8rem (sets text size). */    font-size: 0.8rem;
+/* Original L1056: Closes the current CSS rule or responsive/animation block. */  }
+/* Original L1057: Blank line separates stylesheet rules. */
+/* Original L1058: Comment: 2. Main Container & Stage Scaling. */  /* 2. Main Container & Stage Scaling */
+/* Original L1059: Selects #app-container; the declarations inside control its matching elements. */  #app-container {
+/* Original L1060: Sets padding: 10px 8px (adds inner spacing). */    padding: 10px 8px;
+/* Original L1061: Closes the current CSS rule or responsive/animation block. */  }
+/* Original L1062: Blank line separates stylesheet rules. */
+/* Original L1063: Selects .slot-machine; the declarations inside control its matching elements. */  .slot-machine {
+/* Original L1064: Sets padding: 14px 10px (adds inner spacing). */    padding: 14px 10px;
+/* Original L1065: Sets border-radius: 16px (rounds corners). */    border-radius: 16px;
+/* Original L1066: Sets gap: 14px (sets spacing between flex/grid children). */    gap: 14px;
+/* Original L1067: Closes the current CSS rule or responsive/animation block. */  }
+/* Original L1068: Blank line separates stylesheet rules. */
+/* Original L1069: Continues the mobile selector list for the 5-reel slot machine, whose width is capped at 100% below. */  .slot-machine.slot-5reel,
+/* Original L1070: Continues the mobile selector list for the coin-toss machine, grouping it with the other full-width game cabinets. */  .slot-machine.coin-toss-machine,
+/* Original L1071: Selects .slot-machine.blackjack-table; the declarations inside control its matching elements. */  .slot-machine.blackjack-table {
+/* Original L1072: Sets max-width: 100% (sets maximum width). */    max-width: 100%;
+/* Original L1073: Closes the current CSS rule or responsive/animation block. */  }
+/* Original L1074: Blank line separates stylesheet rules. */
+/* Original L1075: Comment: 3. 3-Reel & 5-Reel Slot Scaling. */  /* 3. 3-Reel & 5-Reel Slot Scaling */
+/* Original L1076: Selects :root; the declarations inside control its matching elements. */  :root {
+/* Original L1077: Sets --symbol-size-3reel: 90px (sets --symbol-size-3reel). */    --symbol-size-3reel: 90px;
+/* Original L1078: Sets --symbol-size-5reel: 70px (sets --symbol-size-5reel). */    --symbol-size-5reel: 70px;
+/* Original L1079: Closes the current CSS rule or responsive/animation block. */  }
+/* Original L1080: Blank line separates stylesheet rules. */
+/* Original L1081: Selects .reel .symbol; the declarations inside control its matching elements. */  .reel .symbol {
+/* Original L1082: Sets font-size: 2rem (sets text size). */    font-size: 2rem;
+/* Original L1083: Closes the current CSS rule or responsive/animation block. */  }
+/* Original L1084: Blank line separates stylesheet rules. */
+/* Original L1085: Selects .reel-5reel .symbol; the declarations inside control its matching elements. */  .reel-5reel .symbol {
+/* Original L1086: Sets font-size: 1.4rem (sets text size). */    font-size: 1.4rem;
+/* Original L1087: Closes the current CSS rule or responsive/animation block. */  }
+/* Original L1088: Blank line separates stylesheet rules. */
+/* Original L1089: Selects .reels-viewport-5reel; the declarations inside control its matching elements. */  .reels-viewport-5reel {
+/* Original L1090: Sets gap: 3px (sets spacing between flex/grid children). */    gap: 3px;
+/* Original L1091: Sets padding: 4px (adds inner spacing). */    padding: 4px;
+/* Original L1092: Closes the current CSS rule or responsive/animation block. */  }
+/* Original L1093: Blank line separates stylesheet rules. */
+/* Original L1094: Comment: 4. Felt Table & Card Visuals for Mobile. */  /* 4. Felt Table & Card Visuals for Mobile */
+/* Original L1095: Selects .felt-table; the declarations inside control its matching elements. */  .felt-table {
+/* Original L1096: Sets padding: 12px 8px (adds inner spacing). */    padding: 12px 8px;
+/* Original L1097: Closes the current CSS rule or responsive/animation block. */  }
+/* Original L1098: Blank line separates stylesheet rules. */
+/* Original L1099: Selects .playing-card; the declarations inside control its matching elements. */  .playing-card {
+/* Original L1100: Sets width: 44px (sets used width). */    width: 44px;
+/* Original L1101: Sets height: 64px (sets used height). */    height: 64px;
+/* Original L1102: Sets padding: 2px 4px (adds inner spacing). */    padding: 2px 4px;
+/* Original L1103: Closes the current CSS rule or responsive/animation block. */  }
+/* Original L1104: Blank line separates stylesheet rules. */
+/* Original L1105: Selects .card-top, .card-bottom; the declarations inside control its matching elements. */  .card-top, .card-bottom {
+/* Original L1106: Sets font-size: 0.75rem (sets text size). */    font-size: 0.75rem;
+/* Original L1107: Closes the current CSS rule or responsive/animation block. */  }
+/* Original L1108: Blank line separates stylesheet rules. */
+/* Original L1109: Selects .card-center; the declarations inside control its matching elements. */  .card-center {
+/* Original L1110: Sets font-size: 1rem (sets text size). */    font-size: 1rem;
+/* Original L1111: Closes the current CSS rule or responsive/animation block. */  }
+/* Original L1112: Blank line separates stylesheet rules. */
+/* Original L1113: Selects .cards-container; the declarations inside control its matching elements. */  .cards-container {
+/* Original L1114: Sets min-height: 66px (sets minimum height). */    min-height: 66px;
+/* Original L1115: Sets gap: 4px (sets spacing between flex/grid children). */    gap: 4px;
+/* Original L1116: Closes the current CSS rule or responsive/animation block. */  }
+/* Original L1117: Blank line separates stylesheet rules. */
+/* Original L1118: Selects .score-badge; the declarations inside control its matching elements. */  .score-badge {
+/* Original L1119: Sets font-size: 0.75rem (sets text size). */    font-size: 0.75rem;
+/* Original L1120: Sets padding: 2px 6px (adds inner spacing). */    padding: 2px 6px;
+/* Original L1121: Closes the current CSS rule or responsive/animation block. */  }
+/* Original L1122: Blank line separates stylesheet rules. */
+/* Original L1123: Comment: 5. Mobile Touch Action Controls. */  /* 5. Mobile Touch Action Controls */
+/* Original L1124: Selects .actions; the declarations inside control its matching elements. */  .actions {
+/* Original L1125: Sets flex-wrap: wrap (allows children to wrap). */    flex-wrap: wrap;
+/* Original L1126: Closes the current CSS rule or responsive/animation block. */  }
+/* Original L1127: Blank line separates stylesheet rules. */
+/* Original L1128: Selects .spin-btn, .action-btn-green, .action-btn-red, .action-btn-gold, .max-btn; the declarations inside control its matching elements. */  .spin-btn, .action-btn-green, .action-btn-red, .action-btn-gold, .max-btn {
+/* Original L1129: Sets font-size: 1rem (sets text size). */    font-size: 1rem;
+/* Original L1130: Sets padding: 12px (adds inner spacing). */    padding: 12px;
+/* Original L1131: Closes the current CSS rule or responsive/animation block. */  }
+/* Original L1132: Blank line separates stylesheet rules. */
+/* Original L1133: Selects .choice-selector; the declarations inside control its matching elements. */  .choice-selector {
+/* Original L1134: Sets flex-direction: row (sets flex main-axis direction). */    flex-direction: row;
+/* Original L1135: Sets gap: 8px (sets spacing between flex/grid children). */    gap: 8px;
+/* Original L1136: Closes the current CSS rule or responsive/animation block. */  }
+/* Original L1137: Blank line separates stylesheet rules. */
+/* Original L1138: Selects .choice-btn; the declarations inside control its matching elements. */  .choice-btn {
+/* Original L1139: Sets padding: 8px (adds inner spacing). */    padding: 8px;
+/* Original L1140: Sets font-size: 0.85rem (sets text size). */    font-size: 0.85rem;
+/* Original L1141: Closes the current CSS rule or responsive/animation block. */  }
+/* Original L1142: Blank line separates stylesheet rules. */
+/* Original L1143: Comment: 6. Wheel Stage Scaling. */  /* 6. Wheel Stage Scaling */
+/* Original L1144: Selects .wheel-modal-card; the declarations inside control its matching elements. */  .wheel-modal-card {
+/* Original L1145: Sets padding: 20px 14px (adds inner spacing). */    padding: 20px 14px;
+/* Original L1146: Closes the current CSS rule or responsive/animation block. */  }
+/* Original L1147: Blank line separates stylesheet rules. */
+/* Original L1148: Selects .wheel-stage-container; the declarations inside control its matching elements. */  .wheel-stage-container {
+/* Original L1149: Sets width: 260px (sets used width). */    width: 260px;
+/* Original L1150: Sets height: 260px (sets used height). */    height: 260px;
+/* Original L1151: Closes the current CSS rule or responsive/animation block. */  }
+/* Original L1152: Blank line separates stylesheet rules. */
+/* Original L1153: Selects #wheel-canvas; the declarations inside control its matching elements. */  #wheel-canvas {
+/* Original L1154: Sets width: 260px !important (sets used width). */    width: 260px !important;
+/* Original L1155: Sets height: 260px !important (sets used height). */    height: 260px !important;
+/* Original L1156: Closes the current CSS rule or responsive/animation block. */  }
+/* Original L1157: Closes the current CSS rule or responsive/animation block. */}
+/* Original L1158: Blank line separates stylesheet rules. */
+/* Original L1159: Blank line separates stylesheet rules. */
+/* Original L1160: Comment: Local save controls. *//* Local save controls */
+/* Original L1161: Selects .local-save-header-btn; the declarations inside control its matching elements. */.local-save-header-btn {
+/* Original L1162: Sets background: linear-gradient(180deg, #59419c 0%, #33245e 100%) (paints the background). */  background: linear-gradient(180deg, #59419c 0%, #33245e 100%);
+/* Original L1163: Sets color: #fff (sets text color). */  color: #fff;
+/* Original L1164: Sets border: 1px solid #8f75d6 (sets border width/style/color). */  border: 1px solid #8f75d6;
+/* Original L1165: Sets border-radius: 8px (rounds corners). */  border-radius: 8px;
+/* Original L1166: Sets padding: 6px 10px (adds inner spacing). */  padding: 6px 10px;
+/* Original L1167: Sets font-weight: 800 (sets text weight). */  font-weight: 800;
+/* Original L1168: Sets cursor: pointer (sets pointer cursor). */  cursor: pointer;
+/* Original L1169: Closes the current CSS rule or responsive/animation block. */}
+/* Original L1170: Selects .local-save-header-btn:hover and applies background: #634bad. */.local-save-header-btn:hover { background: #634bad; }
+/* Original L1171: Selects .startup-overlay; the declarations inside control its matching elements. */.startup-overlay {
+/* Original L1172: Sets position: fixed (sets positioning scheme). */  position: fixed;
+/* Original L1173: Sets inset: 0 (sets inset). */  inset: 0;
+/* Original L1174: Sets z-index: 3000 (sets stacking order). */  z-index: 3000;
+/* Original L1175: Sets display: grid (controls layout mode/visibility). */  display: grid;
+/* Original L1176: Sets place-items: center (centers/aligns grid items). */  place-items: center;
+/* Original L1177: Sets padding: 20px (adds inner spacing). */  padding: 20px;
+/* Original L1178: Sets background: rgba(8, 5, 18, 0.94) (paints the background). */  background: rgba(8, 5, 18, 0.94);
+/* Original L1179: Closes the current CSS rule or responsive/animation block. */}
+/* Original L1180: Selects .startup-card; the declarations inside control its matching elements. */.startup-card {
+/* Original L1181: Sets display: flex (controls layout mode/visibility). */  display: flex;
+/* Original L1182: Sets align-items: center (aligns children on cross axis). */  align-items: center;
+/* Original L1183: Sets gap: 14px (sets spacing between flex/grid children). */  gap: 14px;
+/* Original L1184: Sets color: #fff (sets text color). */  color: #fff;
+/* Original L1185: Sets background: #181820 (paints the background). */  background: #181820;
+/* Original L1186: Sets border: 1px solid var(--gold-primary) (sets border width/style/color). */  border: 1px solid var(--gold-primary);
+/* Original L1187: Sets border-radius: 14px (rounds corners). */  border-radius: 14px;
+/* Original L1188: Sets padding: 20px 24px (adds inner spacing). */  padding: 20px 24px;
+/* Original L1189: Sets box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7) (adds outer/inset shadow). */  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
+/* Original L1190: Closes the current CSS rule or responsive/animation block. */}
+/* Original L1191: Selects .startup-spinner; the declarations inside control its matching elements. */.startup-spinner {
+/* Original L1192: Sets width: 22px (sets used width). */  width: 22px;
+/* Original L1193: Sets height: 22px (sets used height). */  height: 22px;
+/* Original L1194: Sets border: 3px solid rgba(255, 255, 255, 0.25) (sets border width/style/color). */  border: 3px solid rgba(255, 255, 255, 0.25);
+/* Original L1195: Sets border-top-color: var(--gold-primary) (sets border-top-color). */  border-top-color: var(--gold-primary);
+/* Original L1196: Sets border-radius: 50% (rounds corners). */  border-radius: 50%;
+/* Original L1197: Sets animation: local-save-spin 0.8s linear infinite (runs a named CSS animation). */  animation: local-save-spin 0.8s linear infinite;
+/* Original L1198: Closes the current CSS rule or responsive/animation block. */}
+/* Original L1199: Defines animation timeline local-save-spin for changing properties over time. */@keyframes local-save-spin { to { transform: rotate(360deg); } }
+/* Original L1200: Selects .local-save-modal-card and applies max-width: 460px. */.local-save-modal-card { max-width: 460px; }
+/* Original L1201: Selects .local-save-actions and applies display: grid; gap: 9px; margin-top: 16px. */.local-save-actions { display: grid; gap: 9px; margin-top: 16px; }
+/* Original L1202: Selects .local-save-action-btn, .local-save-secondary-btn; the declarations inside control its matching elements. */.local-save-action-btn, .local-save-secondary-btn {
+/* Original L1203: Sets border-radius: 8px (rounds corners). */  border-radius: 8px;
+/* Original L1204: Sets padding: 11px 14px (adds inner spacing). */  padding: 11px 14px;
+/* Original L1205: Sets font-weight: 800 (sets text weight). */  font-weight: 800;
+/* Original L1206: Sets cursor: pointer (sets pointer cursor). */  cursor: pointer;
+/* Original L1207: Closes the current CSS rule or responsive/animation block. */}
+/* Original L1208: Selects .local-save-action-btn; the declarations inside control its matching elements. */.local-save-action-btn {
+/* Original L1209: Sets border: 1px solid var(--gold-primary) (sets border width/style/color). */  border: 1px solid var(--gold-primary);
+/* Original L1210: Sets background: linear-gradient(180deg, #b8860b, #72520a) (paints the background). */  background: linear-gradient(180deg, #b8860b, #72520a);
+/* Original L1211: Sets color: #fff (sets text color). */  color: #fff;
+/* Original L1212: Closes the current CSS rule or responsive/animation block. */}
+/* Original L1213: Selects .local-save-secondary-btn and applies border: 1px solid #585866; background: #292933; color: #ddd. */.local-save-secondary-btn { border: 1px solid #585866; background: #292933; color: #ddd; }
+/* Original L1214: Selects .local-save-status; the declarations inside control its matching elements. */.local-save-status {
+/* Original L1215: Sets border: 1px solid #464652 (sets border width/style/color). */  border: 1px solid #464652;
+/* Original L1216: Sets border-radius: 8px (rounds corners). */  border-radius: 8px;
+/* Original L1217: Sets background: #101017 (paints the background). */  background: #101017;
+/* Original L1218: Sets color: #cfcfd8 (sets text color). */  color: #cfcfd8;
+/* Original L1219: Sets padding: 10px 12px (adds inner spacing). */  padding: 10px 12px;
+/* Original L1220: Sets font-size: 0.82rem (sets text size). */  font-size: 0.82rem;
+/* Original L1221: Sets line-height: 1.45 (sets line height). */  line-height: 1.45;
+/* Original L1222: Closes the current CSS rule or responsive/animation block. */}
+/* Original L1223: Selects .local-save-status[data-state="linked"] and applies color: #8ef0ae; border-color: #286b42. */.local-save-status[data-state="linked"] { color: #8ef0ae; border-color: #286b42; }
+/* Original L1224: Selects .local-save-status[data-state="warning"] and applies color: #ffadad; border-color: #873c3c. */.local-save-status[data-state="warning"] { color: #ffadad; border-color: #873c3c; }
+/* Original L1225: Selects .local-save-note and applies margin-top: 15px; color: #9696a2; font-size: 0.75rem; line-height: 1.5. */.local-save-note { margin-top: 15px; color: #9696a2; font-size: 0.75rem; line-height: 1.5; }
+/* Original L1226: Blank line separates stylesheet rules. */
+/* Original L1227: Begins a responsive rule block that applies only when (max-width: 768px). */@media (max-width: 768px) {
+/* Original L1228: Selects .local-save-header-btn and applies flex: 1 1 100%. */  .local-save-header-btn { flex: 1 1 100%; }
+/* Original L1229: Selects .local-save-modal-card and applies padding: 24px 18px. */  .local-save-modal-card { padding: 24px 18px; }
+/* Original L1230: Closes the current CSS rule or responsive/animation block. */}
+/* Original L1231: Blank line separates stylesheet rules. */
+/* Original L1232: Blank line separates stylesheet rules. */
+/* Original L1233: Comment: Password-protected browser-local profiles. *//* Password-protected browser-local profiles */
+/* Original L1234: Selects .profile-header-btn; the declarations inside control its matching elements. */.profile-header-btn {
+/* Original L1235: Sets background: #251d36 (paints the background). */  background: #251d36;
+/* Original L1236: Sets border: 1px solid var(--gold-primary) (sets border width/style/color). */  border: 1px solid var(--gold-primary);
+/* Original L1237: Sets color: #fff (sets text color). */  color: #fff;
+/* Original L1238: Sets border-radius: 8px (rounds corners). */  border-radius: 8px;
+/* Original L1239: Sets padding: 6px 10px (adds inner spacing). */  padding: 6px 10px;
+/* Original L1240: Sets font-weight: 800 (sets text weight). */  font-weight: 800;
+/* Original L1241: Sets cursor: pointer (sets pointer cursor). */  cursor: pointer;
+/* Original L1242: Sets max-width: 150px (sets maximum width). */  max-width: 150px;
+/* Original L1243: Sets overflow: hidden (controls clipping/scrolling). */  overflow: hidden;
+/* Original L1244: Sets text-overflow: ellipsis (controls overflowing text marker). */  text-overflow: ellipsis;
+/* Original L1245: Sets white-space: nowrap (controls wrapping). */  white-space: nowrap;
+/* Original L1246: Closes the current CSS rule or responsive/animation block. */}
+/* Original L1247: Selects .profile-header-btn:hover and applies background: #3a2b55. */.profile-header-btn:hover { background: #3a2b55; }
+/* Original L1248: Selects .profile-gate; the declarations inside control its matching elements. */.profile-gate {
+/* Original L1249: Sets position: fixed (sets positioning scheme). */  position: fixed;
+/* Original L1250: Sets inset: 0 (sets inset). */  inset: 0;
+/* Original L1251: Sets z-index: 4000 (sets stacking order). */  z-index: 4000;
+/* Original L1252: Sets display: grid (controls layout mode/visibility). */  display: grid;
+/* Original L1253: Sets place-items: center (centers/aligns grid items). */  place-items: center;
+/* Original L1254: Sets overflow-y: auto (controls vertical overflow). */  overflow-y: auto;
+/* Original L1255: Sets padding: 20px (adds inner spacing). */  padding: 20px;
+/* Original L1256: Sets background: rgba(8, 5, 18, 0.97) (paints the background). */  background: rgba(8, 5, 18, 0.97);
+/* Original L1257: Closes the current CSS rule or responsive/animation block. */}
+/* Original L1258: Selects .profile-card; the declarations inside control its matching elements. */.profile-card {
+/* Original L1259: Sets width: min(100%, 520px) (sets used width). */  width: min(100%, 520px);
+/* Original L1260: Sets max-height: calc(100vh - 40px) (sets maximum height). */  max-height: calc(100vh - 40px);
+/* Original L1261: Sets overflow-y: auto (controls vertical overflow). */  overflow-y: auto;
+/* Original L1262: Sets background: #181820 (paints the background). */  background: #181820;
+/* Original L1263: Sets border: 2px solid var(--gold-primary) (sets border width/style/color). */  border: 2px solid var(--gold-primary);
+/* Original L1264: Sets border-radius: 18px (rounds corners). */  border-radius: 18px;
+/* Original L1265: Sets padding: 28px (adds inner spacing). */  padding: 28px;
+/* Original L1266: Sets box-shadow: 0 16px 44px rgba(0, 0, 0, 0.75) (adds outer/inset shadow). */  box-shadow: 0 16px 44px rgba(0, 0, 0, 0.75);
+/* Original L1267: Closes the current CSS rule or responsive/animation block. */}
+/* Original L1268: Selects .profile-card h2; the declarations inside control its matching elements. */.profile-card h2 {
+/* Original L1269: Sets color: var(--gold-primary) (sets text color). */  color: var(--gold-primary);
+/* Original L1270: Sets text-align: center (aligns text). */  text-align: center;
+/* Original L1271: Sets font-size: 1.45rem (sets text size). */  font-size: 1.45rem;
+/* Original L1272: Sets margin-bottom: 8px (sets bottom outer spacing). */  margin-bottom: 8px;
+/* Original L1273: Closes the current CSS rule or responsive/animation block. */}
+/* Original L1274: Selects .profile-subtitle; the declarations inside control its matching elements. */.profile-subtitle {
+/* Original L1275: Sets text-align: center (aligns text). */  text-align: center;
+/* Original L1276: Sets color: #bbb (sets text color). */  color: #bbb;
+/* Original L1277: Sets font-size: 0.92rem (sets text size). */  font-size: 0.92rem;
+/* Original L1278: Sets line-height: 1.5 (sets line height). */  line-height: 1.5;
+/* Original L1279: Sets margin-bottom: 18px (sets bottom outer spacing). */  margin-bottom: 18px;
+/* Original L1280: Closes the current CSS rule or responsive/animation block. */}
+/* Original L1281: Selects .profile-form and applies display: grid; gap: 12px. */.profile-form { display: grid; gap: 12px; }
+/* Original L1282: Selects .profile-field and applies display: grid; gap: 6px; color: #e3e3e8; font-size: 0.86rem; font-weight: 700. */.profile-field { display: grid; gap: 6px; color: #e3e3e8; font-size: 0.86rem; font-weight: 700; }
+/* Original L1283: Selects .profile-field input; the declarations inside control its matching elements. */.profile-field input {
+/* Original L1284: Sets width: 100% (sets used width). */  width: 100%;
+/* Original L1285: Sets min-height: 44px (sets minimum height). */  min-height: 44px;
+/* Original L1286: Sets border: 1px solid #585866 (sets border width/style/color). */  border: 1px solid #585866;
+/* Original L1287: Sets border-radius: 8px (rounds corners). */  border-radius: 8px;
+/* Original L1288: Sets padding: 10px 12px (adds inner spacing). */  padding: 10px 12px;
+/* Original L1289: Sets background: #101017 (paints the background). */  background: #101017;
+/* Original L1290: Sets color: #fff (sets text color). */  color: #fff;
+/* Original L1291: Sets font-size: 1rem (sets text size). */  font-size: 1rem;
+/* Original L1292: Closes the current CSS rule or responsive/animation block. */}
+/* Original L1293: Selects .profile-field input:focus and applies outline: 2px solid var(--gold-primary); outline-offset: 1px. */.profile-field input:focus { outline: 2px solid var(--gold-primary); outline-offset: 1px; }
+/* Original L1294: Selects .profile-field input:disabled and applies opacity: 0.5. */.profile-field input:disabled { opacity: 0.5; }
+/* Original L1295: Selects .profile-primary-btn, .profile-secondary-btn; the declarations inside control its matching elements. */.profile-primary-btn, .profile-secondary-btn {
+/* Original L1296: Sets min-height: 44px (sets minimum height). */  min-height: 44px;
+/* Original L1297: Sets border-radius: 8px (rounds corners). */  border-radius: 8px;
+/* Original L1298: Sets padding: 10px 14px (adds inner spacing). */  padding: 10px 14px;
+/* Original L1299: Sets font-weight: 800 (sets text weight). */  font-weight: 800;
+/* Original L1300: Sets cursor: pointer (sets pointer cursor). */  cursor: pointer;
+/* Original L1301: Closes the current CSS rule or responsive/animation block. */}
+/* Original L1302: Selects .profile-primary-btn and applies border: 1px solid var(--gold-primary); background: linear-gradient(180deg, #b8860b, #72520a); color: #fff. */.profile-primary-btn { border: 1px solid var(--gold-primary); background: linear-gradient(180deg, #b8860b, #72520a); color: #fff; }
+/* Original L1303: Selects .profile-secondary-btn and applies border: 1px solid #555566; background: #282832; color: #ddd. */.profile-secondary-btn { border: 1px solid #555566; background: #282832; color: #ddd; }
+/* Original L1304: Selects .profile-primary-btn:hover:not(:disabled), .profile-secondary-btn:hover and applies filter: brightness(1.15). */.profile-primary-btn:hover:not(:disabled), .profile-secondary-btn:hover { filter: brightness(1.15); }
+/* Original L1305: Selects .profile-primary-btn:disabled and applies opacity: 0.55; cursor: not-allowed. */.profile-primary-btn:disabled { opacity: 0.55; cursor: not-allowed; }
+/* Original L1306: Selects .profile-list and applies display: grid; gap: 8px; margin-bottom: 14px. */.profile-list { display: grid; gap: 8px; margin-bottom: 14px; }
+/* Original L1307: Selects .profile-choice-btn; the declarations inside control its matching elements. */.profile-choice-btn {
+/* Original L1308: Sets min-height: 46px (sets minimum height). */  min-height: 46px;
+/* Original L1309: Sets border: 1px solid #4b4658 (sets border width/style/color). */  border: 1px solid #4b4658;
+/* Original L1310: Sets border-radius: 8px (rounds corners). */  border-radius: 8px;
+/* Original L1311: Sets padding: 10px 14px (adds inner spacing). */  padding: 10px 14px;
+/* Original L1312: Sets color: #fff (sets text color). */  color: #fff;
+/* Original L1313: Sets background: #24232d (paints the background). */  background: #24232d;
+/* Original L1314: Sets text-align: left (aligns text). */  text-align: left;
+/* Original L1315: Sets font-weight: 800 (sets text weight). */  font-weight: 800;
+/* Original L1316: Sets cursor: pointer (sets pointer cursor). */  cursor: pointer;
+/* Original L1317: Closes the current CSS rule or responsive/animation block. */}
+/* Original L1318: Selects .profile-choice-btn:hover, .profile-choice-btn.selected and applies border-color: var(--gold-primary); background: #352b46. */.profile-choice-btn:hover, .profile-choice-btn.selected { border-color: var(--gold-primary); background: #352b46; }
+/* Original L1319: Selects .profile-feedback and applies min-height: 1.3em; margin-top: 10px; color: #ffadad; font-size: 0.85rem; text-align: center. */.profile-feedback { min-height: 1.3em; margin-top: 10px; color: #ffadad; font-size: 0.85rem; text-align: center; }
+/* Original L1320: Selects .profile-note, .profile-migration-note and applies margin-top: 14px; color: #9999a6; font-size: 0.76rem; line-height: 1.55. */.profile-note, .profile-migration-note { margin-top: 14px; color: #9999a6; font-size: 0.76rem; line-height: 1.55; }
+/* Original L1321: Selects .profile-migration-note and applies padding: 10px 12px; border: 1px solid #5c4b16; border-radius: 8px; color: #f0d991; background: rgba(184, 134, 11, 0.12). */.profile-migration-note { padding: 10px 12px; border: 1px solid #5c4b16; border-radius: 8px; color: #f0d991; background: rgba(184, 134, 11, 0.12); }
+/* Original L1322: Blank line separates stylesheet rules. */
+/* Original L1323: Comment: Simulated racing stays visually consistent with the casino while making live movement and betting state clear.. *//* Simulated racing stays visually consistent with the casino while making live movement and betting state clear. */
+/* Original L1324: Selects .race-machine and applies max-width: 900px. */.race-machine { max-width: 900px; }
+/* Original L1325: Selects .race-header and applies width: 100%. */.race-header { width: 100%; }
+/* Original L1326: Selects .race-local-note and applies margin: 5px 0 12px; color: #b9b4c6; font-size: 0.82rem; text-align: center. */.race-local-note { margin: 5px 0 12px; color: #b9b4c6; font-size: 0.82rem; text-align: center; }
+/* Original L1327: Selects .race-mode-switch and applies display: flex; justify-content: center; gap: 8px; margin: 10px 0 14px. */.race-mode-switch { display: flex; justify-content: center; gap: 8px; margin: 10px 0 14px; }
+/* Original L1328: Selects .race-mode-switch > span and applies min-height: 40px; padding: 8px 16px; display: flex; align-items: center; border: 1px solid #584a68; border-radius: 9px; color: #e6dfef; background: #211c2b; font-weight: 800. */.race-mode-switch > span { min-height: 40px; padding: 8px 16px; display: flex; align-items: center; border: 1px solid #584a68; border-radius: 9px; color: #e6dfef; background: #211c2b; font-weight: 800; }
+/* Original L1329: Selects .race-mode-switch > span.is-active and applies border-color: var(--gold-primary); color: #211707; background: var(--gold-primary); box-shadow: 0 0 12px rgba(255,215,0,0.18). */.race-mode-switch > span.is-active { border-color: var(--gold-primary); color: #211707; background: var(--gold-primary); box-shadow: 0 0 12px rgba(255,215,0,0.18); }
+/* Original L1330: Selects .race-info-strip and applies width: 100%; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px. */.race-info-strip { width: 100%; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; }
+/* Original L1331: Selects .race-info-item and applies display: grid; gap: 4px; padding: 10px 8px; background: #17131f; border: 1px solid #423853; border-radius: 9px; text-align: center. */.race-info-item { display: grid; gap: 4px; padding: 10px 8px; background: #17131f; border: 1px solid #423853; border-radius: 9px; text-align: center; }
+/* Original L1332: Selects .race-info-item span and applies color: #aaa2ba; font-size: 0.62rem; font-weight: 800; letter-spacing: 0.08em. */.race-info-item span { color: #aaa2ba; font-size: 0.62rem; font-weight: 800; letter-spacing: 0.08em; }
+/* Original L1333: Selects .race-info-item strong and applies color: var(--gold-primary); font-size: 0.9rem. */.race-info-item strong { color: var(--gold-primary); font-size: 0.9rem; }
+/* Original L1334: Selects .race-stage, .race-betting-panel and applies width: 100%; border-radius: 14px; background: #15141a; border: 1px solid #3d3548; padding: 14px. */.race-stage, .race-betting-panel { width: 100%; border-radius: 14px; background: #15141a; border: 1px solid #3d3548; padding: 14px; }
+/* Original L1335: Selects .race-track-heading and applies display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; color: #d9d2e4; font-size: 0.7rem; font-weight: 900; letter-spacing: 0.08em. */.race-track-heading { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; color: #d9d2e4; font-size: 0.7rem; font-weight: 900; letter-spacing: 0.08em; }
+/* Original L1336: Selects .race-finish-label and applies color: #ffd700. */.race-finish-label { color: #ffd700; }
+/* Original L1337: Selects .race-track and applies display: grid; gap: 5px. */.race-track { display: grid; gap: 5px; }
+/* Original L1338: Selects .race-lane and applies min-width: 0; display: grid; grid-template-columns: 24px minmax(0, 1fr) 118px; align-items: center; gap: 8px. */.race-lane { min-width: 0; display: grid; grid-template-columns: 24px minmax(0, 1fr) 118px; align-items: center; gap: 8px; }
+/* Original L1339: Selects .race-lane-number and applies color: #aaa; font-size: 0.68rem; font-weight: 800; text-align: center. */.race-lane-number { color: #aaa; font-size: 0.68rem; font-weight: 800; text-align: center; }
+/* Original L1340: Selects .race-lane-rail and applies position: relative; height: 36px; overflow: hidden; border: 1px solid #4d4850; border-radius: 5px; background: repeating-linear-gradient(0deg, #284b30 0, #284b30 7px, #1c3d26 7px, #1c3d26 14px). */.race-lane-rail { position: relative; height: 36px; overflow: hidden; border: 1px solid #4d4850; border-radius: 5px; background: repeating-linear-gradient(0deg, #284b30 0, #284b30 7px, #1c3d26 7px, #1c3d26 14px); }
+/* Original L1341: Selects .race-lane-rail::before and applies content: ''; position: absolute; inset: 50% 0 auto; border-top: 1px dashed rgba(255,255,255,0.16). */.race-lane-rail::before { content: ''; position: absolute; inset: 50% 0 auto; border-top: 1px dashed rgba(255,255,255,0.16); }
+/* Original L1342: Selects .race-finish-line and applies position: absolute; top: 0; right: 4%; z-index: 1; height: 100%; border-left: 3px solid #fff; box-shadow: 1px 0 #111. */.race-finish-line { position: absolute; top: 0; right: 4%; z-index: 1; height: 100%; border-left: 3px solid #fff; box-shadow: 1px 0 #111; }
+/* Original L1343: Selects .race-horse-token and applies position: absolute; top: 50%; left: 0; z-index: 2; width: 30px; height: 30px; display: grid; place-items: center; border: 2px solid var(--silks-color, #fff); border-radius: 50%; background: #101017; font-size: 1rem; transform: translate(-50%, -50%); transition: left 220ms linear, box-shadow 180ms ease. */.race-horse-token { position: absolute; top: 50%; left: 0; z-index: 2; width: 30px; height: 30px; display: grid; place-items: center; border: 2px solid var(--silks-color, #fff); border-radius: 50%; background: #101017; font-size: 1rem; transform: translate(-50%, -50%); transition: left 220ms linear, box-shadow 180ms ease; }
+/* Original L1344: Selects .race-car-token and applies width: 34px; height: 28px; border-radius: 8px; font-size: 1.15rem. */.race-car-token { width: 34px; height: 28px; border-radius: 8px; font-size: 1.15rem; }
+/* Original L1345: Selects .race-lane-name and applies overflow: hidden; color: #d7d3df; font-size: 0.72rem; text-overflow: ellipsis; white-space: nowrap. */.race-lane-name { overflow: hidden; color: #d7d3df; font-size: 0.72rem; text-overflow: ellipsis; white-space: nowrap; }
+/* Original L1346: Selects .race-lane.is-race-running .race-horse-token and applies box-shadow: 0 0 10px var(--silks-color). */.race-lane.is-race-running .race-horse-token { box-shadow: 0 0 10px var(--silks-color); }
+/* Original L1347: Selects .race-lane.is-race-winner .race-horse-token and applies box-shadow: 0 0 16px #ffd700; border-color: #ffd700. */.race-lane.is-race-winner .race-horse-token { box-shadow: 0 0 16px #ffd700; border-color: #ffd700; }
+/* Original L1348: Selects .race-panel-heading and applies margin-bottom: 11px. */.race-panel-heading { margin-bottom: 11px; }
+/* Original L1349: Selects .race-panel-heading h2 and applies color: var(--gold-primary); font-size: 1.1rem. */.race-panel-heading h2 { color: var(--gold-primary); font-size: 1.1rem; }
+/* Original L1350: Selects .race-panel-heading p and applies margin-top: 3px; color: #aaa; font-size: 0.77rem; line-height: 1.4. */.race-panel-heading p { margin-top: 3px; color: #aaa; font-size: 0.77rem; line-height: 1.4; }
+/* Original L1351: Selects .race-runner-list and applies display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px. */.race-runner-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+/* Original L1352: Selects .race-runner-option and applies min-width: 0; display: grid; grid-template-columns: 38px minmax(0, 1fr) auto; align-items: center; gap: 8px; padding: 9px; border: 1px solid #484251; border-radius: 9px; color: #fff; background: #201c29; text-align: left; cursor: pointer; transition: border-color 150ms ease, background 150ms ease, transform 150ms ease. */.race-runner-option { min-width: 0; display: grid; grid-template-columns: 38px minmax(0, 1fr) auto; align-items: center; gap: 8px; padding: 9px; border: 1px solid #484251; border-radius: 9px; color: #fff; background: #201c29; text-align: left; cursor: pointer; transition: border-color 150ms ease, background 150ms ease, transform 150ms ease; }
+/* Original L1353: Selects .race-runner-option:hover:not(:disabled) and applies transform: translateY(-1px); border-color: var(--gold-primary). */.race-runner-option:hover:not(:disabled) { transform: translateY(-1px); border-color: var(--gold-primary); }
+/* Original L1354: Selects .race-runner-option.is-selected and applies border-color: var(--gold-primary); background: #352b1a; box-shadow: 0 0 0 1px rgba(255,215,0,0.15). */.race-runner-option.is-selected { border-color: var(--gold-primary); background: #352b1a; box-shadow: 0 0 0 1px rgba(255,215,0,0.15); }
+/* Original L1355: Selects .race-runner-option:disabled and applies cursor: not-allowed; opacity: 0.72. */.race-runner-option:disabled { cursor: not-allowed; opacity: 0.72; }
+/* Original L1356: Selects .race-runner-silks and applies width: 34px; height: 34px; display: grid; place-items: center; border-radius: 50%; background: #111018; font-size: 1.2rem. */.race-runner-silks { width: 34px; height: 34px; display: grid; place-items: center; border-radius: 50%; background: #111018; font-size: 1.2rem; }
+/* Original L1357: Selects .race-runner-details and applies min-width: 0; display: grid; gap: 3px. */.race-runner-details { min-width: 0; display: grid; gap: 3px; }
+/* Original L1358: Selects .race-runner-details strong and applies overflow: hidden; font-size: 0.78rem; text-overflow: ellipsis; white-space: nowrap. */.race-runner-details strong { overflow: hidden; font-size: 0.78rem; text-overflow: ellipsis; white-space: nowrap; }
+/* Original L1359: Selects .race-runner-details small, .race-odds-wrap small and applies color: #aaa4b2; font-size: 0.61rem. */.race-runner-details small, .race-odds-wrap small { color: #aaa4b2; font-size: 0.61rem; }
+/* Original L1360: Selects .race-odds-wrap and applies display: grid; justify-items: end; gap: 2px. */.race-odds-wrap { display: grid; justify-items: end; gap: 2px; }
+/* Original L1361: Selects .race-runner-odds and applies color: #ffe17a; font-size: 0.88rem; font-weight: 900; white-space: nowrap. */.race-runner-odds { color: #ffe17a; font-size: 0.88rem; font-weight: 900; white-space: nowrap; }
+/* Original L1362: Selects .race-dashboard and applies width: 100%; margin: 0. */.race-dashboard { width: 100%; margin: 0; }
+/* Original L1363: Selects .race-dashboard .card and applies flex: 1. */.race-dashboard .card { flex: 1; }
+/* Original L1364: Selects .race-return-card and applies align-items: flex-end. */.race-return-card { align-items: flex-end; }
+/* Original L1365: Selects .race-return-card .value and applies color: #4eef90. */.race-return-card .value { color: #4eef90; }
+/* Original L1366: Selects .race-actions and applies width: 100%. */.race-actions { width: 100%; }
+/* Original L1367: Selects .race-actions button and applies min-height: 46px. */.race-actions button { min-height: 46px; }
+/* Original L1368: Selects .race-actions button:disabled and applies cursor: not-allowed; opacity: 0.48. */.race-actions button:disabled { cursor: not-allowed; opacity: 0.48; }
+/* Original L1369: Selects .race-ticket-note and applies min-height: 1.4em; color: #ffe17a; font-size: 0.82rem; line-height: 1.45; text-align: center. */.race-ticket-note { min-height: 1.4em; color: #ffe17a; font-size: 0.82rem; line-height: 1.45; text-align: center; }
+/* Original L1370: Selects .race-odds-note and applies max-width: 620px; color: #9d98a7; font-size: 0.69rem; line-height: 1.45; text-align: center. */.race-odds-note { max-width: 620px; color: #9d98a7; font-size: 0.69rem; line-height: 1.45; text-align: center; }
+/* Original L1371: Selects .race-result-notice and applies display: flex; justify-content: center; align-items: center; flex-wrap: wrap; gap: 10px 18px; padding: 12px 18px; border-bottom: 1px solid var(--gold-primary); background: #352b1a; color: #fff3c4; text-align: center. */.race-result-notice { display: flex; justify-content: center; align-items: center; flex-wrap: wrap; gap: 10px 18px; padding: 12px 18px; border-bottom: 1px solid var(--gold-primary); background: #352b1a; color: #fff3c4; text-align: center; }
+/* Original L1372: Selects .race-result-notice p and applies flex: 1 1 360px; max-width: 900px; font-size: 0.88rem; font-weight: 700; line-height: 1.45. */.race-result-notice p { flex: 1 1 360px; max-width: 900px; font-size: 0.88rem; font-weight: 700; line-height: 1.45; }
+/* Original L1373: Selects .race-result-actions and applies display: flex; justify-content: center; flex-wrap: wrap; gap: 8px. */.race-result-actions { display: flex; justify-content: center; flex-wrap: wrap; gap: 8px; }
+/* Original L1374: Selects .race-result-action-btn, .race-result-dismiss-btn and applies min-height: 38px; padding: 7px 12px; border: 1px solid #ffd700; border-radius: 8px; color: #17120a; background: #ffd700; font-weight: 800; cursor: pointer. */.race-result-action-btn, .race-result-dismiss-btn { min-height: 38px; padding: 7px 12px; border: 1px solid #ffd700; border-radius: 8px; color: #17120a; background: #ffd700; font-weight: 800; cursor: pointer; }
+/* Original L1375: Selects .race-result-dismiss-btn and applies border-color: #8b7848; color: #fff3c4; background: #272116. */.race-result-dismiss-btn { border-color: #8b7848; color: #fff3c4; background: #272116; }
+/* Original L1376: Selects .race-result-action-btn:focus-visible, .race-result-dismiss-btn:focus-visible and applies outline: 2px solid #fff; outline-offset: 2px. */.race-result-action-btn:focus-visible, .race-result-dismiss-btn:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+/* Original L1377: Blank line separates stylesheet rules. */
+/* Original L1378: Begins a responsive rule block that applies only when (max-width: 768px). */@media (max-width: 768px) {
+/* Original L1379: Selects .profile-header-btn and applies flex: 1 1 100%; max-width: none. */  .profile-header-btn { flex: 1 1 100%; max-width: none; }
+/* Original L1380: Selects .profile-card and applies padding: 22px 18px. */  .profile-card { padding: 22px 18px; }
+/* Original L1381: Selects .race-machine and applies padding: 14px 10px. */  .race-machine { padding: 14px 10px; }
+/* Original L1382: Selects .race-mode-switch > span and applies flex: 1; padding: 8px 10px. */  .race-mode-switch > span { flex: 1; padding: 8px 10px; }
+/* Original L1383: Selects .race-info-strip and applies grid-template-columns: repeat(2, minmax(0, 1fr)). */  .race-info-strip { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+/* Original L1384: Selects .race-runner-list and applies grid-template-columns: 1fr. */  .race-runner-list { grid-template-columns: 1fr; }
+/* Original L1385: Selects .race-stage, .race-betting-panel and applies padding: 10px. */  .race-stage, .race-betting-panel { padding: 10px; }
+/* Original L1386: Selects .race-lane and applies grid-template-columns: 18px minmax(0, 1fr) 92px; gap: 5px. */  .race-lane { grid-template-columns: 18px minmax(0, 1fr) 92px; gap: 5px; }
+/* Original L1387: Selects .race-lane-name and applies font-size: 0.63rem. */  .race-lane-name { font-size: 0.63rem; }
+/* Original L1388: Selects .race-actions and applies flex-direction: column. */  .race-actions { flex-direction: column; }
+/* Original L1389: Selects .race-actions button and applies width: 100%; min-height: 44px. */  .race-actions button { width: 100%; min-height: 44px; }
+/* Original L1390: Selects .race-dashboard and applies flex-wrap: wrap. */  .race-dashboard { flex-wrap: wrap; }
+/* Original L1391: Selects .race-result-notice and applies padding: 10px 12px. */  .race-result-notice { padding: 10px 12px; }
+/* Original L1392: Selects .race-result-notice p and applies flex-basis: 100%. */  .race-result-notice p { flex-basis: 100%; }
+/* Original L1393: Selects .race-result-actions and applies width: 100%. */  .race-result-actions { width: 100%; }
+/* Original L1394: Selects .race-result-actions button and applies flex: 1 1 auto. */  .race-result-actions button { flex: 1 1 auto; }
+/* Original L1395: Closes the current CSS rule or responsive/animation block. */}
+/* Original L1396: Blank line separates stylesheet rules. */
+/* Original L1397: Comment: The intro is a viewport overlay and only runs after the save loader is dismissed.. *//* The intro is a viewport overlay and only runs after the save loader is dismissed. */
+/* Original L1398: Selects .splash-modal.active-view; the declarations inside control its matching elements. */.splash-modal.active-view {
+/* Original L1399: Sets position: fixed (sets positioning scheme). */  position: fixed;
+/* Original L1400: Sets inset: 0 (sets inset). */  inset: 0;
+/* Original L1401: Sets z-index: 2000 (sets stacking order). */  z-index: 2000;
+/* Original L1402: Sets display: flex (controls layout mode/visibility). */  display: flex;
+/* Original L1403: Sets flex-direction: column (sets flex main-axis direction). */  flex-direction: column;
+/* Original L1404: Sets justify-content: center (distributes children on main axis). */  justify-content: center;
+/* Original L1405: Sets align-items: center (aligns children on cross axis). */  align-items: center;
+/* Original L1406: Sets gap: clamp(8px, 1.8vh, 18px) (sets spacing between flex/grid children). */  gap: clamp(8px, 1.8vh, 18px);
+/* Original L1407: Sets overflow: hidden (controls clipping/scrolling). */  overflow: hidden;
+/* Original L1408: Sets padding: clamp(16px, 4vw, 48px) (adds inner spacing). */  padding: clamp(16px, 4vw, 48px);
+/* Original L1409: Sets background:  (paints the background). */  background:
+/* Original L1410: Continues the splash overlay background with a purple radial glow centered near 50% horizontal and 34% vertical, fading after 55%. */    radial-gradient(ellipse at 50% 34%, rgba(105, 25, 125, 0.38), transparent 55%),
+/* Original L1411: Continues the splash overlay background with a vertical gradient from #100817 at the top to #080510 at the bottom. */    linear-gradient(180deg, #100817 0%, #080510 100%);
+/* Original L1412: Looks like a JavaScript-style comment rather than valid CSS; the proposed splash-intro animation is therefore disabled and has no CSS effect. */  //animation: splash-intro 8.6s ease-in-out both;
+/* Original L1413: Sets object-fit: cover (fits replaced content within its box). */  object-fit: cover;
+/* Original L1414: Comment: Traces alpha transparency of the asset. */  /* Traces alpha transparency of the asset */
+/* Original L1415: Sets filter: drop-shadow(0 0 0px rgba(99, 102, 241, 0)) (applies visual filter). */  filter: drop-shadow(0 0 0px rgba(99, 102, 241, 0));
+/* Original L1416: Sets animation: ambientGlow 7.5s ease-in-out alternate (runs a named CSS animation). */  animation: ambientGlow 7.5s ease-in-out alternate;
+/* Original L1417: Closes the current CSS rule or responsive/animation block. */}
+/* Original L1418: Blank line separates stylesheet rules. */
+/* Original L1419: Selects .splash-logo; the declarations inside control its matching elements. */.splash-logo {
+/* Original L1420: Sets width: min(62vw, 46vh, 520px) (sets used width). */  width: min(62vw, 46vh, 520px);
+/* Original L1421: Sets max-height: 46vh (sets maximum height). */  max-height: 46vh;
+/* Original L1422: Closes the current CSS rule or responsive/animation block. */  }
+/* Original L1423: Blank line separates stylesheet rules. */
+/* Original L1424: Defines animation timeline ambientGlow for changing properties over time. */@keyframes ambientGlow {
+/* Original L1425: Selects 0%; the declarations inside control its matching elements. */  0% {
+/* Original L1426: Sets filter: drop-shadow(0 0 15px rgba(99, 102, 241, 0.3)) (applies visual filter). */    filter: drop-shadow(0 0 15px rgba(99, 102, 241, 0.3));
+/* Original L1427: Sets transform: translateY(0) (applies geometric transform). */    transform: translateY(0);
+/* Original L1428: Sets opacity: 1.0 (sets transparency). */    opacity: 1.0;
+/* Original L1429: Closes the current CSS rule or responsive/animation block. */  }
+/* Original L1430: Selects 73%; the declarations inside control its matching elements. */  73% {
+/* Original L1431: Sets opacity: 1.0 (sets transparency). */    opacity: 1.0;
+/* Original L1432: Closes the current CSS rule or responsive/animation block. */  }
+/* Original L1433: Selects 100%; the declarations inside control its matching elements. */  100% {
+/* Original L1434: Sets filter: drop-shadow(0 0 40px rgba(168, 85, 247, 0.6)) (applies visual filter). */    filter: drop-shadow(0 0 40px rgba(168, 85, 247, 0.6));
+/* Original L1435: Sets transform: translateY(-5px) (applies geometric transform). */    transform: translateY(-5px); /* Smooth GPU-promoted layer lift */
+/* Original L1436: Sets opacity: 0.0 (sets transparency). */    opacity: 0.0;
+/* Original L1437: Closes the current CSS rule or responsive/animation block. */  }
+/* Original L1438: Closes the current CSS rule or responsive/animation block. */}
+/* Original L1439: Blank line separates stylesheet rules. */
+/* Original L1440: Selects .splash-copy and applies text-align: center. */.splash-copy { text-align: center; }
+/* Original L1441: Selects .splash-kicker; the declarations inside control its matching elements. */.splash-kicker {
+/* Original L1442: Sets color: #ffe17a (sets text color). */  color: #ffe17a;
+/* Original L1443: Sets font-size: 0.68rem (sets text size). */  font-size: 0.68rem;
+/* Original L1444: Sets font-weight: 900 (sets text weight). */  font-weight: 900;
+/* Original L1445: Sets letter-spacing: 0.28em (sets spacing between characters). */  letter-spacing: 0.28em;
+/* Original L1446: Closes the current CSS rule or responsive/animation block. */}
+/* Original L1447: Selects .splash-copy h1; the declarations inside control its matching elements. */.splash-copy h1 {
+/* Original L1448: Sets margin: 4px 0 6px (sets outer spacing). */  margin: 4px 0 6px;
+/* Original L1449: Sets color: #ffd700 (sets text color). */  color: #ffd700;
+/* Original L1450: Sets font-size: clamp(1.65rem, 5vw, 2.75rem) (sets text size). */  font-size: clamp(1.65rem, 5vw, 2.75rem);
+/* Original L1451: Sets font-weight: 950 (sets text weight). */  font-weight: 950;
+/* Original L1452: Sets letter-spacing: 0.08em (sets spacing between characters). */  letter-spacing: 0.08em;
+/* Original L1453: Sets text-shadow: 0 2px 18px rgba(255, 190, 40, 0.3) (adds shadow behind text). */  text-shadow: 0 2px 18px rgba(255, 190, 40, 0.3);
+/* Original L1454: Closes the current CSS rule or responsive/animation block. */}
+/* Original L1455: Selects .splash-tagline and applies color: #e7dff1; font-size: clamp(0.78rem, 2vw, 0.95rem). */.splash-tagline { color: #e7dff1; font-size: clamp(0.78rem, 2vw, 0.95rem); }
+/* Original L1456: Selects .splash-disclaimer and applies margin-top: 8px; color: #a8a0b1; font-size: 0.75rem. */.splash-disclaimer { margin-top: 8px; color: #a8a0b1; font-size: 0.75rem; }
+/* Original L1457: Selects .splash-skip; the declarations inside control its matching elements. */.splash-skip {
+/* Original L1458: Sets position: absolute (sets positioning scheme). */  position: absolute;
+/* Original L1459: Sets right: max(16px, env(safe-area-inset-right)) (sets right offset). */  right: max(16px, env(safe-area-inset-right));
+/* Original L1460: Sets bottom: max(16px, env(safe-area-inset-bottom)) (sets bottom offset). */  bottom: max(16px, env(safe-area-inset-bottom));
+/* Original L1461: Sets min-height: 44px (sets minimum height). */  min-height: 44px;
+/* Original L1462: Sets padding: 0 16px (adds inner spacing). */  padding: 0 16px;
+/* Original L1463: Sets border: 1px solid rgba(255, 215, 0, 0.55) (sets border width/style/color). */  border: 1px solid rgba(255, 215, 0, 0.55);
+/* Original L1464: Sets border-radius: 999px (rounds corners). */  border-radius: 999px;
+/* Original L1465: Sets background: rgba(24, 18, 32, 0.88) (paints the background). */  background: rgba(24, 18, 32, 0.88);
+/* Original L1466: Sets color: #f7edce (sets text color). */  color: #f7edce;
+/* Original L1467: Sets font-size: 0.8rem (sets text size). */  font-size: 0.8rem;
+/* Original L1468: Sets font-weight: 800 (sets text weight). */  font-weight: 800;
+/* Original L1469: Sets cursor: pointer (sets pointer cursor). */  cursor: pointer;
+/* Original L1470: Closes the current CSS rule or responsive/animation block. */}
+/* Original L1471: Selects .splash-skip:hover, .splash-skip:focus-visible; the declarations inside control its matching elements. */.splash-skip:hover, .splash-skip:focus-visible {
+/* Original L1472: Sets background: #332345 (paints the background). */  background: #332345;
+/* Original L1473: Sets outline: 2px solid #ffd700 (draws focus/selection outline). */  outline: 2px solid #ffd700;
+/* Original L1474: Sets outline-offset: 3px (moves outline away from edge). */  outline-offset: 3px;
+/* Original L1475: Closes the current CSS rule or responsive/animation block. */}
+/* Original L1476: Blank line separates stylesheet rules. */
+/* Original L1477: Defines animation timeline splash-intro for changing properties over time. */@keyframes splash-intro {
+/* Original L1478: Selects 0% and applies opacity: 0; transform: scale(0.97). */  0% { opacity: 0; transform: scale(0.97); }
+/* Original L1479: Selects 12%, 76% and applies opacity: 1; transform: scale(1). */  12%, 76% { opacity: 1; transform: scale(1); }
+/* Original L1480: Selects 100% and applies opacity: 0; transform: scale(1.10); visibility: hidden. */  100% { opacity: 0; transform: scale(1.10); visibility: hidden; }
+/* Original L1481: Closes the current CSS rule or responsive/animation block. */}
+/* Original L1482: Blank line separates stylesheet rules. */
+/* Original L1483: Begins a responsive rule block that applies only when (max-width: 560px). */@media (max-width: 560px) {
+/* Original L1484: Selects .splash-modal.active-view and applies gap: 10px. */  .splash-modal.active-view { gap: 10px; }
+/* Original L1485: Selects .splash-logo and applies width: min(78vw, 48vh, 420px); max-height: 48vh. */  .splash-logo { width: min(78vw, 48vh, 420px); max-height: 48vh; }
+/* Original L1486: Selects .splash-skip and applies right: max(12px, env(safe-area-inset-right)); bottom: max(12px, env(safe-area-inset-bottom)). */  .splash-skip { right: max(12px, env(safe-area-inset-right)); bottom: max(12px, env(safe-area-inset-bottom)); }
+/* Original L1487: Closes the current CSS rule or responsive/animation block. */}
+/* Original L1488: Blank line separates stylesheet rules. */
+/* Original L1489: Begins a responsive rule block that applies only when (max-height: 560px). */@media (max-height: 560px) {
+/* Original L1490: Selects .splash-logo and applies width: min(42vh, 320px); max-height: 38vh. */  .splash-logo { width: min(42vh, 320px); max-height: 38vh; }
+/* Original L1491: Selects .splash-modal.active-view and applies gap: 6px; padding: 12px. */  .splash-modal.active-view { gap: 6px; padding: 12px; }
+/* Original L1492: Selects .splash-disclaimer and applies margin-top: 4px. */  .splash-disclaimer { margin-top: 4px; }
+/* Original L1493: Closes the current CSS rule or responsive/animation block. */}
+/* Original L1494: Blank line separates stylesheet rules. */
+/* Original L1495: Begins a responsive rule block that applies only when (prefers-reduced-motion: reduce). */@media (prefers-reduced-motion: reduce) {
+/* Original L1496: Selects .splash-modal.active-view and applies animation-duration: 1ms. */  .splash-modal.active-view { animation-duration: 1ms; }
+/* Original L1497: Closes the current CSS rule or responsive/animation block. */}
+/* Original L1498: Blank line separates stylesheet rules. */
+/* Original L1499: Comment: Lobby services room. *//* Lobby services room */
+/* Original L1500: Selects .lobby-services-room; the declarations inside control its matching elements. */.lobby-services-room {
+/* Original L1501: Sets margin-top: 24px (sets top outer spacing). */  margin-top: 24px;
+/* Original L1502: Sets padding: 22px (adds inner spacing). */  padding: 22px;
+/* Original L1503: Sets border: 1px solid rgba(255, 215, 0, 0.42) (sets border width/style/color). */  border: 1px solid rgba(255, 215, 0, 0.42);
+/* Original L1504: Sets border-radius: 18px (rounds corners). */  border-radius: 18px;
+/* Original L1505: Sets background: linear-gradient(145deg, rgba(42, 29, 58, 0.96), rgba(19, 15, 29, 0.96)) (paints the background). */  background: linear-gradient(145deg, rgba(42, 29, 58, 0.96), rgba(19, 15, 29, 0.96));
+/* Original L1506: Sets box-shadow: 0 12px 30px rgba(0, 0, 0, 0.24) (adds outer/inset shadow). */  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.24);
+/* Original L1507: Closes the current CSS rule or responsive/animation block. */}
+/* Original L1508: Blank line separates stylesheet rules. */
+/* Original L1509: Selects .lobby-services-heading; the declarations inside control its matching elements. */.lobby-services-heading {
+/* Original L1510: Sets display: flex (controls layout mode/visibility). */  display: flex;
+/* Original L1511: Sets align-items: center (aligns children on cross axis). */  align-items: center;
+/* Original L1512: Sets justify-content: space-between (distributes children on main axis). */  justify-content: space-between;
+/* Original L1513: Sets gap: 18px (sets spacing between flex/grid children). */  gap: 18px;
+/* Original L1514: Sets margin-bottom: 16px (sets bottom outer spacing). */  margin-bottom: 16px;
+/* Original L1515: Closes the current CSS rule or responsive/animation block. */}
+/* Original L1516: Blank line separates stylesheet rules. */
+/* Original L1517: Selects .lobby-room-kicker; the declarations inside control its matching elements. */.lobby-room-kicker {
+/* Original L1518: Sets margin-bottom: 4px (sets bottom outer spacing). */  margin-bottom: 4px;
+/* Original L1519: Sets color: #c9b2e8 (sets text color). */  color: #c9b2e8;
+/* Original L1520: Sets font-size: 0.65rem (sets text size). */  font-size: 0.65rem;
+/* Original L1521: Sets font-weight: 900 (sets text weight). */  font-weight: 900;
+/* Original L1522: Sets letter-spacing: 0.14em (sets spacing between characters). */  letter-spacing: 0.14em;
+/* Original L1523: Closes the current CSS rule or responsive/animation block. */}
+/* Original L1524: Blank line separates stylesheet rules. */
+/* Original L1525: Selects .lobby-services-heading h3; the declarations inside control its matching elements. */.lobby-services-heading h3 {
+/* Original L1526: Sets color: var(--gold-primary) (sets text color). */  color: var(--gold-primary);
+/* Original L1527: Sets font-size: 1.35rem (sets text size). */  font-size: 1.35rem;
+/* Original L1528: Sets margin-bottom: 4px (sets bottom outer spacing). */  margin-bottom: 4px;
+/* Original L1529: Closes the current CSS rule or responsive/animation block. */}
+/* Original L1530: Blank line separates stylesheet rules. */
+/* Original L1531: Selects .lobby-services-heading > div > p:last-child; the declarations inside control its matching elements. */.lobby-services-heading > div > p:last-child {
+/* Original L1532: Sets color: #c8c1d0 (sets text color). */  color: #c8c1d0;
+/* Original L1533: Sets font-size: 0.82rem (sets text size). */  font-size: 0.82rem;
+/* Original L1534: Closes the current CSS rule or responsive/animation block. */}
+/* Original L1535: Blank line separates stylesheet rules. */
+/* Original L1536: Selects .lobby-room-emblem; the declarations inside control its matching elements. */.lobby-room-emblem {
+/* Original L1537: Sets display: grid (controls layout mode/visibility). */  display: grid;
+/* Original L1538: Sets min-width: 64px (sets minimum width). */  min-width: 64px;
+/* Original L1539: Sets min-height: 64px (sets minimum height). */  min-height: 64px;
+/* Original L1540: Sets place-items: center (centers/aligns grid items). */  place-items: center;
+/* Original L1541: Sets border: 1px solid rgba(255, 215, 0, 0.3) (sets border width/style/color). */  border: 1px solid rgba(255, 215, 0, 0.3);
+/* Original L1542: Sets border-radius: 16px (rounds corners). */  border-radius: 16px;
+/* Original L1543: Sets background: rgba(13, 10, 20, 0.6) (paints the background). */  background: rgba(13, 10, 20, 0.6);
+/* Original L1544: Sets font-size: 1.55rem (sets text size). */  font-size: 1.55rem;
+/* Original L1545: Sets white-space: nowrap (controls wrapping). */  white-space: nowrap;
+/* Original L1546: Closes the current CSS rule or responsive/animation block. */}
+/* Original L1547: Blank line separates stylesheet rules. */
+/* Original L1548: Selects .lobby-service-grid; the declarations inside control its matching elements. */.lobby-service-grid {
+/* Original L1549: Sets display: grid (controls layout mode/visibility). */  display: grid;
+/* Original L1550: Sets grid-template-columns: repeat(2, minmax(0, 1fr)) (defines grid columns). */  grid-template-columns: repeat(2, minmax(0, 1fr));
+/* Original L1551: Sets gap: 12px (sets spacing between flex/grid children). */  gap: 12px;
+/* Original L1552: Closes the current CSS rule or responsive/animation block. */}
+/* Original L1553: Blank line separates stylesheet rules. */
+/* Original L1554: Selects .lobby-service-card; the declarations inside control its matching elements. */.lobby-service-card {
+/* Original L1555: Sets display: grid (controls layout mode/visibility). */  display: grid;
+/* Original L1556: Sets grid-template-columns: 46px minmax(0, 1fr) auto (defines grid columns). */  grid-template-columns: 46px minmax(0, 1fr) auto;
+/* Original L1557: Sets align-items: center (aligns children on cross axis). */  align-items: center;
+/* Original L1558: Sets gap: 12px (sets spacing between flex/grid children). */  gap: 12px;
+/* Original L1559: Sets min-width: 0 (sets minimum width). */  min-width: 0;
+/* Original L1560: Sets padding: 14px (adds inner spacing). */  padding: 14px;
+/* Original L1561: Sets border: 1px solid #393143 (sets border width/style/color). */  border: 1px solid #393143;
+/* Original L1562: Sets border-radius: 13px (rounds corners). */  border-radius: 13px;
+/* Original L1563: Sets background: rgba(20, 18, 27, 0.88) (paints the background). */  background: rgba(20, 18, 27, 0.88);
+/* Original L1564: Sets transition: border-color 0.18s ease, transform 0.18s ease (animates changes to listed properties). */  transition: border-color 0.18s ease, transform 0.18s ease;
+/* Original L1565: Closes the current CSS rule or responsive/animation block. */}
+/* Original L1566: Blank line separates stylesheet rules. */
+/* Original L1567: Selects .lobby-service-card:hover; the declarations inside control its matching elements. */.lobby-service-card:hover {
+/* Original L1568: Sets transform: translateY(-2px) (applies geometric transform). */  transform: translateY(-2px);
+/* Original L1569: Sets border-color: rgba(255, 215, 0, 0.5) (sets border color). */  border-color: rgba(255, 215, 0, 0.5);
+/* Original L1570: Closes the current CSS rule or responsive/animation block. */}
+/* Original L1571: Blank line separates stylesheet rules. */
+/* Original L1572: Selects .lobby-service-icon; the declarations inside control its matching elements. */.lobby-service-icon {
+/* Original L1573: Sets display: grid (controls layout mode/visibility). */  display: grid;
+/* Original L1574: Sets width: 46px (sets used width). */  width: 46px;
+/* Original L1575: Sets height: 46px (sets used height). */  height: 46px;
+/* Original L1576: Sets place-items: center (centers/aligns grid items). */  place-items: center;
+/* Original L1577: Sets border: 1px solid #514465 (sets border width/style/color). */  border: 1px solid #514465;
+/* Original L1578: Sets border-radius: 12px (rounds corners). */  border-radius: 12px;
+/* Original L1579: Sets background: #292236 (paints the background). */  background: #292236;
+/* Original L1580: Sets font-size: 1.45rem (sets text size). */  font-size: 1.45rem;
+/* Original L1581: Closes the current CSS rule or responsive/animation block. */}
+/* Original L1582: Blank line separates stylesheet rules. */
+/* Original L1583: Selects .lobby-service-copy and applies min-width: 0. */.lobby-service-copy { min-width: 0; }
+/* Original L1584: Selects .lobby-service-copy h4 and applies margin-bottom: 4px; color: #fff; font-size: 0.95rem. */.lobby-service-copy h4 { margin-bottom: 4px; color: #fff; font-size: 0.95rem; }
+/* Original L1585: Selects .lobby-service-copy p and applies color: #b8b1c2; font-size: 0.75rem; line-height: 1.4. */.lobby-service-copy p { color: #b8b1c2; font-size: 0.75rem; line-height: 1.4; }
+/* Original L1586: Blank line separates stylesheet rules. */
+/* Original L1587: Selects .lobby-service-btn; the declarations inside control its matching elements. */.lobby-service-btn {
+/* Original L1588: Sets min-height: 42px (sets minimum height). */  min-height: 42px;
+/* Original L1589: Sets padding: 8px 12px (adds inner spacing). */  padding: 8px 12px;
+/* Original L1590: Sets border-radius: 8px (rounds corners). */  border-radius: 8px;
+/* Original L1591: Sets color: #fff (sets text color). */  color: #fff;
+/* Original L1592: Sets font-size: 0.78rem (sets text size). */  font-size: 0.78rem;
+/* Original L1593: Sets font-weight: 900 (sets text weight). */  font-weight: 900;
+/* Original L1594: Sets white-space: nowrap (controls wrapping). */  white-space: nowrap;
+/* Original L1595: Sets cursor: pointer (sets pointer cursor). */  cursor: pointer;
+/* Original L1596: Closes the current CSS rule or responsive/animation block. */}
+/* Original L1597: Blank line separates stylesheet rules. */
+/* Original L1598: Selects .lobby-service-card .wheel-header-btn; the declarations inside control its matching elements. */.lobby-service-card .wheel-header-btn {
+/* Original L1599: Sets padding: 8px 12px (adds inner spacing). */  padding: 8px 12px;
+/* Original L1600: Sets font-size: 0.78rem (sets text size). */  font-size: 0.78rem;
+/* Original L1601: Closes the current CSS rule or responsive/animation block. */}
+/* Original L1602: Blank line separates stylesheet rules. */
+/* Original L1603: Selects .lobby-service-card .bank-btn; the declarations inside control its matching elements. */.lobby-service-card .bank-btn {
+/* Original L1604: Sets padding: 8px 12px (adds inner spacing). */  padding: 8px 12px;
+/* Original L1605: Sets font-size: 0.78rem (sets text size). */  font-size: 0.78rem;
+/* Original L1606: Closes the current CSS rule or responsive/animation block. */}
+/* Original L1607: Blank line separates stylesheet rules. */
+/* Original L1608: Selects .lobby-service-btn:hover and applies filter: brightness(1.12). */.lobby-service-btn:hover { filter: brightness(1.12); }
+/* Original L1609: Sets .lobby-service-btn: focus-visible, (sets .lobby-service-btn). */.lobby-service-btn:focus-visible,
+/* Original L1610: Selects .settings-reset-btn:focus-visible; the declarations inside control its matching elements. */.settings-reset-btn:focus-visible {
+/* Original L1611: Sets outline: 2px solid var(--gold-primary) (draws focus/selection outline). */  outline: 2px solid var(--gold-primary);
+/* Original L1612: Sets outline-offset: 3px (moves outline away from edge). */  outline-offset: 3px;
+/* Original L1613: Closes the current CSS rule or responsive/animation block. */}
+/* Original L1614: Blank line separates stylesheet rules. */
+/* Original L1615: Comment: Keep reset in Settings visually distinct without changing its handler.. *//* Keep reset in Settings visually distinct without changing its handler. */
+/* Original L1616: Selects .settings-reset-note; the declarations inside control its matching elements. */.settings-reset-note {
+/* Original L1617: Sets margin: -3px 0 14px (sets outer spacing). */  margin: -3px 0 14px;
+/* Original L1618: Sets color: #bdb7c6 (sets text color). */  color: #bdb7c6;
+/* Original L1619: Sets font-size: 0.8rem (sets text size). */  font-size: 0.8rem;
+/* Original L1620: Sets line-height: 1.5 (sets line height). */  line-height: 1.5;
+/* Original L1621: Closes the current CSS rule or responsive/animation block. */}
+/* Original L1622: Blank line separates stylesheet rules. */
+/* Original L1623: Selects .reset-data-btn.settings-reset-btn; the declarations inside control its matching elements. */.reset-data-btn.settings-reset-btn {
+/* Original L1624: Sets min-height: 42px (sets minimum height). */  min-height: 42px;
+/* Original L1625: Sets padding: 9px 14px (adds inner spacing). */  padding: 9px 14px;
+/* Original L1626: Sets border-color: #995050 (sets border color). */  border-color: #995050;
+/* Original L1627: Sets background: #3a2222 (paints the background). */  background: #3a2222;
+/* Original L1628: Sets color: #ffdada (sets text color). */  color: #ffdada;
+/* Original L1629: Sets font-size: 0.84rem (sets text size). */  font-size: 0.84rem;
+/* Original L1630: Sets font-weight: 800 (sets text weight). */  font-weight: 800;
+/* Original L1631: Closes the current CSS rule or responsive/animation block. */}
+/* Original L1632: Blank line separates stylesheet rules. */
+/* Original L1633: Selects .reset-data-btn.settings-reset-btn:hover; the declarations inside control its matching elements. */.reset-data-btn.settings-reset-btn:hover {
+/* Original L1634: Sets background: #4d2c2c (paints the background). */  background: #4d2c2c;
+/* Original L1635: Sets border-color: #d06c6c (sets border color). */  border-color: #d06c6c;
+/* Original L1636: Closes the current CSS rule or responsive/animation block. */}
+/* Original L1637: Blank line separates stylesheet rules. */
+/* Original L1638: Selects #modal-settings .modal-card; the declarations inside control its matching elements. */#modal-settings .modal-card {
+/* Original L1639: Sets max-height: calc(100vh - 40px) (sets maximum height). */  max-height: calc(100vh - 40px);
+/* Original L1640: Sets max-height: calc(100dvh - 40px) (sets maximum height). */  max-height: calc(100dvh - 40px);
+/* Original L1641: Sets overflow-y: auto (controls vertical overflow). */  overflow-y: auto;
+/* Original L1642: Sets overscroll-behavior: contain (controls scroll chaining). */  overscroll-behavior: contain;
+/* Original L1643: Closes the current CSS rule or responsive/animation block. */}
+/* Original L1644: Blank line separates stylesheet rules. */
+/* Original L1645: Selects .data-row; the declarations inside control its matching elements. */.data-row {
+/* Original L1646: Sets display: flex (controls layout mode/visibility). */  display: flex;
+/* Original L1647: Sets flex-direction: column (sets flex main-axis direction). */  flex-direction: column;
+/* Original L1648: Sets text-align: center (aligns text). */  text-align: center;
+/* Original L1649: Sets justify-content: center (distributes children on main axis). */  justify-content: center;
+/* Original L1650: Sets align-items: center (aligns children on cross axis). */  align-items: center;
+/* Original L1651: Closes the current CSS rule or responsive/animation block. */}
+/* Original L1652: Blank line separates stylesheet rules. */
+/* Original L1653: Comment: Mobile overrides stack dense controls and shrink room padding without changing desktop structure.. *//* Mobile overrides stack dense controls and shrink room padding without changing desktop structure. */
+/* Original L1654: Begins a responsive rule block that applies only when (max-width: 640px). */@media (max-width: 640px) {
+/* Original L1655: Selects .lobby-slot-room, .lobby-coin-room and applies padding: 16px. */  .lobby-slot-room, .lobby-coin-room { padding: 16px; }
+/* Original L1656: Selects .lobby-slot-room-heading, .lobby-coin-room-heading and applies gap: 10px. */  .lobby-slot-room-heading, .lobby-coin-room-heading { gap: 10px; }
+/* Original L1657: Selects .lobby-slot-room-heading h3, .lobby-coin-room-heading h3 and applies font-size: 1.15rem. */  .lobby-slot-room-heading h3, .lobby-coin-room-heading h3 { font-size: 1.15rem; }
+/* Original L1658: Selects .lobby-services-room and applies padding: 16px. */  .lobby-services-room { padding: 16px; }
+/* Original L1659: Selects .lobby-services-heading and applies gap: 10px. */  .lobby-services-heading { gap: 10px; }
+/* Original L1660: Selects .lobby-services-heading h3 and applies font-size: 1.15rem. */  .lobby-services-heading h3 { font-size: 1.15rem; }
+/* Original L1661: Selects .lobby-room-emblem and applies min-width: 52px; min-height: 52px; padding: 6px; font-size: 1.2rem. */  .lobby-room-emblem { min-width: 52px; min-height: 52px; padding: 6px; font-size: 1.2rem; }
+/* Original L1662: Selects .lobby-service-grid and applies grid-template-columns: 1fr. */  .lobby-service-grid { grid-template-columns: 1fr; }
+/* Original L1663: Selects .lobby-service-card and applies grid-template-columns: 42px minmax(0, 1fr); gap: 10px; padding: 12px. */  .lobby-service-card { grid-template-columns: 42px minmax(0, 1fr); gap: 10px; padding: 12px; }
+/* Original L1664: Selects .lobby-service-icon and applies width: 42px; height: 42px. */  .lobby-service-icon { width: 42px; height: 42px; }
+/* Original L1665: Selects .lobby-service-btn and applies grid-column: 1 / -1; width: 100%. */  .lobby-service-btn { grid-column: 1 / -1; width: 100%; }
+/* Original L1666: Selects .reset-data-btn.settings-reset-btn and applies width: 100%. */  .reset-data-btn.settings-reset-btn { width: 100%; }
+/* Original L1667: Closes the current CSS rule or responsive/animation block. */}
+/* Original L1668: Blank line separates stylesheet rules. */
+/* Original L1669: Blank line separates stylesheet rules. */
+/* Original L1670: Comment: Reusable slot-template theme tokens. *//* Reusable slot-template theme tokens */
+/* Original L1671: Comment: Catalog themes set these custom properties inline; the shared rules below consume them for each machine.. *//* Catalog themes set these custom properties inline; the shared rules below consume them for each machine. */
+/* Original L1672: Selects .theme-slot-machine; the declarations inside control its matching elements. */.theme-slot-machine {
+/* Original L1673: Sets background-image: linear-gradient(145deg, var(--slot-machine-start, #2a2a35), var(--slot-machine-end, #141419)), var(--slot-background-image, none) (paints one or more background images/gradients). */  background-image: linear-gradient(145deg, var(--slot-machine-start, #2a2a35), var(--slot-machine-end, #141419)), var(--slot-background-image, none);
+/* Original L1674: Sets background-size: cover (sizes background images). */  background-size: cover;
+/* Original L1675: Sets border-color: var(--slot-accent, var(--gold-primary)) (sets border color). */  border-color: var(--slot-accent, var(--gold-primary));
+/* Original L1676: Closes the current CSS rule or responsive/animation block. */}
+/* Original L1677: Selects .theme-slot-machine .header h1 and applies color: var(--slot-accent, var(--gold-primary)). */.theme-slot-machine .header h1 { color: var(--slot-accent, var(--gold-primary)); }
+/* Original L1678: Continues the selector grouping for both classic and five-reel reel viewports so they share themed frame colors. */.theme-slot-machine .reels-viewport,
+/* Original L1679: Selects .theme-slot-machine .reels-viewport-5reel; the declarations inside control its matching elements. */.theme-slot-machine .reels-viewport-5reel {
+/* Original L1680: Sets background: var(--slot-frame, #000) (paints the background). */  background: var(--slot-frame, #000);
+/* Original L1681: Sets border-color: var(--slot-accent, #333) (sets border color). */  border-color: var(--slot-accent, #333);
+/* Original L1682: Closes the current CSS rule or responsive/animation block. */}
+/* Original L1683: Continues the selector grouping for classic and five-reel reels so both use the themed reel color. */.theme-slot-machine .reel,
+/* Original L1684: Selects .theme-slot-machine .reel-5reel and applies background: var(--slot-reel, #181820). */.theme-slot-machine .reel-5reel { background: var(--slot-reel, #181820); }
+/* Original L1685: Selects .theme-slot-machine .symbol; the declarations inside control its matching elements. */.theme-slot-machine .symbol {
+/* Original L1686: Sets background: var(--slot-symbol, #1d1d26) (paints the background). */  background: var(--slot-symbol, #1d1d26);
+/* Original L1687: Sets border-color: var(--slot-symbol-border, #2a2a38) (sets border color). */  border-color: var(--slot-symbol-border, #2a2a38);
+/* Original L1688: Closes the current CSS rule or responsive/animation block. */}
+/* Original L1689: Selects .theme-slot-machine .symbol.highlight; the declarations inside control its matching elements. */.theme-slot-machine .symbol.highlight {
+/* Original L1690: Sets background: var(--slot-highlight, #3b3111) (paints the background). */  background: var(--slot-highlight, #3b3111);
+/* Original L1691: Sets border: 2px solid var(--slot-accent, var(--gold-primary)) (sets border width/style/color). */  border: 2px solid var(--slot-accent, var(--gold-primary));
+/* Original L1692: Closes the current CSS rule or responsive/animation block. */}
+/* Original L1693: Selects .theme-slot-machine .spin-btn; the declarations inside control its matching elements. */.theme-slot-machine .spin-btn {
+/* Original L1694: Sets background: linear-gradient(180deg, var(--slot-button-start, #ffd700), var(--slot-button-end, #b8860b)) (paints the background). */  background: linear-gradient(180deg, var(--slot-button-start, #ffd700), var(--slot-button-end, #b8860b));
+/* Original L1695: Closes the current CSS rule or responsive/animation block. */}
+/* Original L1696: Selects .theme-slot-machine .btn-small and applies color: var(--slot-accent, var(--gold-primary)); border-color: var(--slot-accent, var(--gold-dark)). */.theme-slot-machine .btn-small { color: var(--slot-accent, var(--gold-primary)); border-color: var(--slot-accent, var(--gold-dark)); }
+/* Original L1697: Selects .theme-slot-machine .max-btn and applies color: var(--slot-accent, #ff6b6b); border-color: var(--slot-accent, #ff4d4d). */.theme-slot-machine .max-btn { color: var(--slot-accent, #ff6b6b); border-color: var(--slot-accent, #ff4d4d); }
+/* Original L1698: Selects .slot-theme-stakes and applies margin: 4px 0 0; color: var(--slot-accent, #ccc); text-align: center; font-size: 0.85rem. */.slot-theme-stakes { margin: 4px 0 0; color: var(--slot-accent, #ccc); text-align: center; font-size: 0.85rem; }
+/* Original L1699: Selects .slot-stakes-note and applies margin: 0; color: var(--gold-primary); font-size: 0.9rem; font-weight: 700. */.slot-stakes-note { margin: 0; color: var(--gold-primary); font-size: 0.9rem; font-weight: 700; }
+/* Original L1700: Selects .slot-symbol-image and applies width: 76%; height: 76%; object-fit: contain. */.slot-symbol-image { width: 76%; height: 76%; object-fit: contain; }
+/* Original L1701: Blank line separates stylesheet rules. */
+/* Original L1702: Comment: Local game additions: presentation only, never wager modifiers.. *//* Local game additions: presentation only, never wager modifiers. */
+/* Original L1703: Selects .bet-controls and applies flex-wrap: wrap. */.bet-controls { flex-wrap: wrap; }
+/* Original L1704: Selects .three-coin-stage and applies display: flex; justify-content: space-evenly; gap: 20px; padding: 42px 12px; perspective: 1000px; width: 100%. */.three-coin-stage { display: flex; justify-content: space-evenly; gap: 20px; padding: 42px 12px; perspective: 1000px; width: 100%; }
+/* Original L1705: Selects .three-coin-stage .coin and applies width: 120px; height: 120px; flex: 0 0 120px. */.three-coin-stage .coin { width: 120px; height: 120px; flex: 0 0 120px; }
+/* Original L1706: Selects .three-coin-stage .coin-face and applies font-size: 32px. */.three-coin-stage .coin-face { font-size: 32px; }
+/* Original L1707: Selects .three-coin-choices and applies display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin: 20px 0; width: 100%. */.three-coin-choices { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin: 20px 0; width: 100%; }
+/* Original L1708: Selects .three-coin-choices fieldset and applies border: 1px solid #807337; border-radius: 12px; padding: 10px; min-width: 0; text-align: center. */.three-coin-choices fieldset { border: 1px solid #807337; border-radius: 12px; padding: 10px; min-width: 0; text-align: center; }
+/* Original L1709: Selects .three-coin-choices legend and applies padding: 0 6px. */.three-coin-choices legend { padding: 0 6px; }
+/* Original L1710: Selects .three-coin-choices .choice-btn and applies width: 100%; margin: 4px 0; padding: 12px 4px. */.three-coin-choices .choice-btn { width: 100%; margin: 4px 0; padding: 12px 4px; }
+/* Original L1711: Selects .game-rules-note, .slot-paytable, .slot-result-breakdown and applies line-height: 1.5; font-size: .95rem. */.game-rules-note, .slot-paytable, .slot-result-breakdown { line-height: 1.5; font-size: .95rem; }
+/* Original L1712: Selects .slot-paytable, .slot-result-breakdown and applies padding: 14px; margin: 16px 0; border: 1px solid #75652e; border-radius: 12px; width: 100%. */.slot-paytable, .slot-result-breakdown { padding: 14px; margin: 16px 0; border: 1px solid #75652e; border-radius: 12px; width: 100%; }
+/* Original L1713: Selects .slot-paytable table and applies width: 100%; border-collapse: collapse. */.slot-paytable table { width: 100%; border-collapse: collapse; }
+/* Original L1714: Selects .slot-paytable th, .slot-paytable td and applies padding: 6px; text-align: left. */.slot-paytable th, .slot-paytable td { padding: 6px; text-align: left; }
+/* Original L1715: Selects button:focus-visible, summary:focus-visible, select:focus-visible and applies outline: 3px solid #80dcff; outline-offset: 3px. */button:focus-visible, summary:focus-visible, select:focus-visible { outline: 3px solid #80dcff; outline-offset: 3px; }
+/* Original L1716: Begins a responsive rule block that applies only when (max-width: 520px). */@media (max-width: 520px) {
+/* Original L1717: Selects .three-coin-stage and applies gap: 6px; padding: 26px 0. */  .three-coin-stage { gap: 6px; padding: 26px 0; }
+/* Original L1718: Selects .three-coin-stage .coin and applies width: 78px; height: 78px; flex-basis: 78px. */  .three-coin-stage .coin { width: 78px; height: 78px; flex-basis: 78px; }
+/* Original L1719: Selects .three-coin-stage .coin-face and applies font-size: 23px. */  .three-coin-stage .coin-face { font-size: 23px; }
+/* Original L1720: Selects .three-coin-stage .coin-face span and applies font-size: 12px. */  .three-coin-stage .coin-face span { font-size: 12px; }
+/* Original L1721: Selects .three-coin-choices and applies gap: 5px. */  .three-coin-choices { gap: 5px; }
+/* Original L1722: Selects .three-coin-choices fieldset and applies padding: 5px. */  .three-coin-choices fieldset { padding: 5px; }
+/* Original L1723: Closes the current CSS rule or responsive/animation block. */}
+/* Original L1724: Blank line separates stylesheet rules. */
+/* Original L1725: Selects .accomplishments-panel and applies margin-top: 24px; padding: 20px; border: 1px solid #75652e; border-radius: 16px; background: var(--panel-bg); line-height: 1.6. */.accomplishments-panel { margin-top: 24px; padding: 20px; border: 1px solid #75652e; border-radius: 16px; background: var(--panel-bg); line-height: 1.6; }
+/* Original L1726: Selects .accomplishments-panel h3 and applies color: var(--gold-primary). */.accomplishments-panel h3 { color: var(--gold-primary); }
+/* Original L1727: Selects .accomplishments-list, .accomplishments-history and applies margin: 14px 0. */.accomplishments-list, .accomplishments-history { margin: 14px 0; }
+/* Original L1728: Selects .accomplishments-history p and applies font-size: .85rem; color: #d2ced8. */.accomplishments-history p { font-size: .85rem; color: #d2ced8; }
+/* Original L1729: Selects .accomplishments-select and applies margin-left: 8px; padding: 9px; max-width: 100%; border-radius: 8px; color: white; background: #252530. */.accomplishments-select { margin-left: 8px; padding: 9px; max-width: 100%; border-radius: 8px; color: white; background: #252530; }
+/* Original L1730: Selects .cabinet-cosmetic-gold .slot-machine and applies box-shadow: 0 0 24px #b8860b88. */.cabinet-cosmetic-gold .slot-machine { box-shadow: 0 0 24px #b8860b88; }
+/* Original L1731: Selects .cabinet-cosmetic-neon .slot-machine and applies box-shadow: 0 0 24px #00d2d388, 0 0 42px #e056fd55. */.cabinet-cosmetic-neon .slot-machine { box-shadow: 0 0 24px #00d2d388, 0 0 42px #e056fd55; }
+/* Original L1732: Selects .cabinet-cosmetic-royal .slot-machine and applies outline: 3px solid #9c75d0; outline-offset: 4px. */.cabinet-cosmetic-royal .slot-machine { outline: 3px solid #9c75d0; outline-offset: 4px; }
+/* Original L1733: Selects .cabinet-cosmetic-ruby .slot-machine and applies box-shadow: 0 0 28px #ed445f88. */.cabinet-cosmetic-ruby .slot-machine { box-shadow: 0 0 28px #ed445f88; }
+/* Original L1734: Selects .cabinet-cosmetic-racing .slot-machine and applies box-shadow: 0 0 25px #44d96f77. */.cabinet-cosmetic-racing .slot-machine { box-shadow: 0 0 25px #44d96f77; }
+/* Original L1735: Selects .cabinet-cosmetic-checkered .slot-machine and applies outline: 4px dashed #eee; outline-offset: 4px. */.cabinet-cosmetic-checkered .slot-machine { outline: 4px dashed #eee; outline-offset: 4px; }
+/* Original L1736: Selects .cabinet-cosmetic-midnight .slot-machine and applies box-shadow: 0 0 28px #5578f788. */.cabinet-cosmetic-midnight .slot-machine { box-shadow: 0 0 28px #5578f788; }
+/* Original L1737: Blank line separates stylesheet rules. */
+/* Original L1738: Selects .bet-controls and applies flex-wrap: wrap. */.bet-controls { flex-wrap: wrap; }
+/* Original L1739: Selects .slot-paytable, .slot-result-breakdown and applies overflow-wrap: anywhere. */.slot-paytable, .slot-result-breakdown { overflow-wrap: anywhere; }
+/* Original L1740: Blank line separates stylesheet rules. */
+/* Original L1741: Selects [data-slot-clear], #btn-bj-clear, #btn-coin-clear, #btn-three-coin-clear, #btn-race-clear and applies width: auto; min-width: 82px; height: auto; min-height: 30px; padding: 6px 10px; white-space: nowrap; font-size: .85rem. */[data-slot-clear], #btn-bj-clear, #btn-coin-clear, #btn-three-coin-clear, #btn-race-clear { width: auto; min-width: 82px; height: auto; min-height: 30px; padding: 6px 10px; white-space: nowrap; font-size: .85rem; }

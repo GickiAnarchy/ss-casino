@@ -1,0 +1,707 @@
+<!-- Original L1: Declares HTML5 so the browser uses standards mode. --><!DOCTYPE html>
+<!-- Original L2: ‹html› is a html with lang='en'. --><html lang="en">
+<!-- Original L3: ‹head› is a head. --><head>
+<!-- Original L4: Comment: Keep the public entry point at the repository root for GitHub Pages. Deferred scripts execute in this order after HTML parsing, so each global API exists before its dependants and before app.js boots.. -->  <!-- Keep the public entry point at the repository root for GitHub Pages. Deferred scripts execute in this order after HTML parsing, so each global API exists before its dependants and before app.js boots. -->
+<!-- Original L5: ‹meta› is a document metadata with charset='UTF-8'. -->  <meta charset="UTF-8">
+<!-- Original L6: ‹meta› is a document metadata with name='viewport', content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no'. -->  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<!-- Original L7: ‹title› is a title with S, S, Casino, Hub, Simulated, Racing, title and displays 'S&S Casino Hub — Simulated Racing'. -->  <title>S&S Casino Hub — Simulated Racing</title>
+<!-- Original L8: ‹link› is a external stylesheet link with rel='stylesheet', href='src/css/style.css?v=coin-room-20261018'. -->  <link rel="stylesheet" href="src/css/style.css?v=coin-room-20261018">
+<!-- Original L9: ‹script› is a deferred JavaScript dependency with src='src/js/models.js?v=local-games-20261018', defer, script. -->  <script src="src/js/models.js?v=local-games-20261018" defer></script>
+<!-- Original L10: ‹script› is a deferred JavaScript dependency with src='src/js/local-save.js?v=local-games-20261018', defer, script. -->  <script src="src/js/local-save.js?v=local-games-20261018" defer></script>
+<!-- Original L11: ‹script› is a deferred JavaScript dependency with src='src/js/profiles.js?v=local-games-20261018', defer, script. -->  <script src="src/js/profiles.js?v=local-games-20261018" defer></script>
+<!-- Original L12: ‹script› is a deferred JavaScript dependency with src='src/js/race-engine.js?v=local-games-20261018', defer, script. -->  <script src="src/js/race-engine.js?v=local-games-20261018" defer></script>
+<!-- Original L13: ‹script› is a deferred JavaScript dependency with src='src/js/slot-bet-rules.js?v=local-games-20261018', defer, script. -->  <script src="src/js/slot-bet-rules.js?v=local-games-20261018" defer></script>
+<!-- Original L14: ‹script› is a deferred JavaScript dependency with src='src/js/slot-templates.js?v=slot-themes-20261016', defer, script. -->  <script src="src/js/slot-templates.js?v=slot-themes-20261016" defer></script>
+<!-- Original L15: ‹script› is a deferred JavaScript dependency with src='src/js/slot-outcomes.js?v=local-games-20261018', defer, script. -->  <script src="src/js/slot-outcomes.js?v=local-games-20261018" defer></script>
+<!-- Original L16: ‹script› is a deferred JavaScript dependency with src='src/js/game-rules.js?v=local-games-20261018', defer, script. -->  <script src="src/js/game-rules.js?v=local-games-20261018" defer></script>
+<!-- Original L17: ‹script› is a deferred JavaScript dependency with src='src/js/accomplishments.js?v=local-games-20261018', defer, script. -->  <script src="src/js/accomplishments.js?v=local-games-20261018" defer></script>
+<!-- Original L18: ‹script› is a deferred JavaScript dependency with src='src/js/app.js?v=local-games-20261018', defer, script. -->  <script src="src/js/app.js?v=local-games-20261018" defer></script>
+<!-- Original L19: Closes the head element opened by the surrounding markup. --></head>
+<!-- Original L20: ‹body› is a body. --><body>
+<!-- Original L21: Blank line separates nearby markup sections. -->
+<!-- Original L22: Comment: Fullscreen Particle FX Canvas. -->  <!-- Fullscreen Particle FX Canvas -->
+<!-- Original L23: ‹canvas› is a drawing surface with id='fx-canvas', canvas. -->  <canvas id="fx-canvas"></canvas>
+<!-- Original L24: Blank line separates nearby markup sections. -->
+<!-- Original L25: ‹div› is a layout container with id='startup-overlay', class='startup-overlay', role='status', aria-live='polite'. -->  <div id="startup-overlay" class="startup-overlay" role="status" aria-live="polite">
+<!-- Original L26: ‹div› is a layout container with class='startup-card'. -->    <div class="startup-card">
+<!-- Original L27: ‹span› is a inline status/text element with class='startup-spinner', aria-hidden='true', span. -->      <span class="startup-spinner" aria-hidden="true"></span>
+<!-- Original L28: ‹span› is a inline status/text element with id='startup-message', Loading, your, local, save, span and displays 'Loading your local save…'. -->      <span id="startup-message">Loading your local save…</span>
+<!-- Original L29: Closes the div element opened by the surrounding markup. -->    </div>
+<!-- Original L30: Closes the div element opened by the surrounding markup. -->  </div>
+<!-- Original L31: Blank line separates nearby markup sections. -->
+<!-- Original L32: ‹div› is a layout container with id='profile-gate', class='profile-gate', role='dialog', aria-modal='true', aria-labelledby='profile-gate-title'. -->  <div id="profile-gate" class="profile-gate" role="dialog" aria-modal="true" aria-labelledby="profile-gate-title">
+<!-- Original L33: ‹div› is a layout container with class='profile-card'. -->    <div class="profile-card">
+<!-- Original L34: ‹div› is a layout container with id='profile-gate-content', div. -->      <div id="profile-gate-content"></div>
+<!-- Original L35: Closes the div element opened by the surrounding markup. -->    </div>
+<!-- Original L36: Closes the div element opened by the surrounding markup. -->  </div>
+<!-- Original L37: Blank line separates nearby markup sections. -->
+<!-- Original L38: Comment: Global Casino Header. -->  <!-- Global Casino Header -->
+<!-- Original L39: ‹header› is a header region with class='global-bar'. -->  <header class="global-bar">
+<!-- Original L40: ‹div› is a layout container with class='logo-area'. -->    <div class="logo-area">
+<!-- Original L41: ‹div› is a layout container with class='logo-title', Sluts, and, Slots, div and displays 'Sluts and Slots'. -->      <div class="logo-title">Sluts and Slots</div>
+<!-- Original L42: Comment: Progressive Jackpot Ticker moved right under the title for compactness. -->      <!-- Progressive Jackpot Ticker moved right under the title for compactness -->
+<!-- Original L43: ‹div› is a layout container with class='jackpot-ticker-container'. -->      <div class="jackpot-ticker-container">
+<!-- Original L44: ‹span› is a inline status/text element with class='jackpot-label', JACKPOT, span and displays 'JACKPOT'. -->        <span class="jackpot-label">JACKPOT</span>
+<!-- Original L45: ‹span› is a inline status/text element with id='global-jackpot', class='jackpot-amount', 10, 000, 00, span and displays '$10,000.00'. -->        <span id="global-jackpot" class="jackpot-amount">$10,000.00</span>
+<!-- Original L46: Closes the div element opened by the surrounding markup. -->      </div>
+<!-- Original L47: Closes the div element opened by the surrounding markup. -->    </div>
+<!-- Original L48: Blank line separates nearby markup sections. -->
+<!-- Original L49: Comment: XP Level & Progress Header Widget. -->    <!-- XP Level & Progress Header Widget -->
+<!-- Original L50: ‹div› is a layout container with class='xp-header-widget'. -->    <div class="xp-header-widget">
+<!-- Original L51: ‹div› is a layout container with class='level-badge', id='player-level-badge', LVL, 1, div and displays 'LVL 1'. -->      <div class="level-badge" id="player-level-badge">LVL 1</div>
+<!-- Original L52: ‹div› is a layout container with class='xp-bar-container'. -->      <div class="xp-bar-container">
+<!-- Original L53: ‹div› is a layout container with class='xp-bar-fill', id='xp-bar-fill', style='width: 0%;', div. -->        <div class="xp-bar-fill" id="xp-bar-fill" style="width: 0%;"></div>
+<!-- Original L54: ‹span› is a inline status/text element with class='xp-bar-text', id='xp-bar-text', 0, 100, XP, span and displays '0 / 100 XP'. -->        <span class="xp-bar-text" id="xp-bar-text">0 / 100 XP</span>
+<!-- Original L55: Closes the div element opened by the surrounding markup. -->      </div>
+<!-- Original L56: ‹span› is a inline status/text element with class='vip-tier-tag', id='vip-tier-tag', BRONZE, span and displays 'BRONZE'. -->      <span class="vip-tier-tag" id="vip-tier-tag">BRONZE</span>
+<!-- Original L57: Closes the div element opened by the surrounding markup. -->    </div>
+<!-- Original L58: Blank line separates nearby markup sections. -->
+<!-- Original L59: ‹div› is a layout container with class='header-right'. -->    <div class="header-right">
+<!-- Original L60: ‹button› is a interactive button with id='btn-profile-manager', class='profile-header-btn', type='button', aria-label='Switch local profile', span, id='active-profile-name', Profile, span, button and displays '👤 Profile'. -->      <button id="btn-profile-manager" class="profile-header-btn" type="button" aria-label="Switch local profile">👤 <span id="active-profile-name">Profile</span></button>
+<!-- Original L61: ‹button› is a interactive button with id='btn-open-settings', class='icon-btn', type='button', title='Casino Settings', button and displays '⚙️'. -->      <button id="btn-open-settings" class="icon-btn" type="button" title="Casino Settings">⚙️</button>
+<!-- Original L62: ‹div› is a layout container with class='wallet-display'. -->      <div class="wallet-display">
+<!-- Original L63: ‹span› is a inline status/text element with class='wallet-label', BALANCE, span and displays 'BALANCE'. -->        <span class="wallet-label">BALANCE</span>
+<!-- Original L64: ‹span› is a inline status/text element with id='global-balance', class='wallet-amount', 100, 00, span and displays '$100.00'. -->          <span id="global-balance" class="wallet-amount">$100.00</span>
+<!-- Original L65: Closes the div element opened by the surrounding markup. -->      </div>
+<!-- Original L66: Closes the div element opened by the surrounding markup. -->    </div>
+<!-- Original L67: Closes the header element opened by the surrounding markup. -->  </header>
+<!-- Original L68: Blank line separates nearby markup sections. -->
+<!-- Original L69: ‹aside› is a complementary status region with id='race-result-notice', class='race-result-notice hidden-view', role='status', aria-live='polite'. -->  <aside id="race-result-notice" class="race-result-notice hidden-view" role="status" aria-live="polite">
+<!-- Original L70: ‹p› is a paragraph with id='race-result-notice-text', p. -->    <p id="race-result-notice-text"></p>
+<!-- Original L71: ‹div› is a layout container with class='race-result-actions'. -->    <div class="race-result-actions">
+<!-- Original L72: ‹button› is a interactive button with id='btn-view-race-results', class='race-result-action-btn', type='button', View, race, results, button and displays 'View race results'. -->      <button id="btn-view-race-results" class="race-result-action-btn" type="button">View race results</button>
+<!-- Original L73: ‹button› is a interactive button with id='btn-dismiss-race-result', class='race-result-dismiss-btn', type='button', Dismiss, button and displays 'Dismiss'. -->      <button id="btn-dismiss-race-result" class="race-result-dismiss-btn" type="button">Dismiss</button>
+<!-- Original L74: Closes the div element opened by the surrounding markup. -->    </div>
+<!-- Original L75: Closes the aside element opened by the surrounding markup. -->  </aside>
+<!-- Original L76: Blank line separates nearby markup sections. -->
+<!-- Original L77: Comment: LOCAL SAVE CONTROLS. -->  <!-- LOCAL SAVE CONTROLS -->
+<!-- Original L78: ‹div› is a layout container with id='modal-local-save', class='modal-overlay hidden-view', role='dialog', aria-modal='true', aria-labelledby='local-save-title'. -->  <div id="modal-local-save" class="modal-overlay hidden-view" role="dialog" aria-modal="true" aria-labelledby="local-save-title">
+<!-- Original L79: ‹div› is a layout container with class='modal-card local-save-modal-card'. -->    <div class="modal-card local-save-modal-card">
+<!-- Original L80: ‹button› is a interactive button with id='btn-close-local-save', class='modal-close-btn', type='button', aria-label='Close local save dialog', times, button and displays '&times;'. -->      <button id="btn-close-local-save" class="modal-close-btn" type="button" aria-label="Close local save dialog">&times;</button>
+<!-- Original L81: ‹h2› is a section heading with id='local-save-title', LOCAL, SAVE, h2 and displays '💾 LOCAL SAVE'. -->      <h2 id="local-save-title">💾 LOCAL SAVE</h2>
+<!-- Original L82: ‹p› is a paragraph with class='modal-subtitle', Game, progress, and, preferences, stay, on, this, device, p and displays 'Game progress and preferences stay on this device.'. -->      <p class="modal-subtitle">Game progress and preferences stay on this device.</p>
+<!-- Original L83: ‹div› is a layout container with id='local-save-status', class='local-save-status', aria-live='polite', data-state='local', Saved, automatically, in, this, browser, div and displays 'Saved automatically in this browser.'. -->      <div id="local-save-status" class="local-save-status" aria-live="polite" data-state="local">Saved automatically in this browser.</div>
+<!-- Original L84: ‹div› is a layout container with class='local-save-actions'. -->      <div class="local-save-actions">
+<!-- Original L85: ‹button› is a interactive button with id='btn-link-save-file', class='local-save-action-btn', type='button', Choose, link, a, save, file, button and displays 'Choose / link a save file'. -->        <button id="btn-link-save-file" class="local-save-action-btn" type="button">Choose / link a save file</button>
+<!-- Original L86: ‹button› is a interactive button with id='btn-export-save', class='local-save-secondary-btn', type='button', Download, save, backup, button and displays 'Download save backup'. -->        <button id="btn-export-save" class="local-save-secondary-btn" type="button">Download save backup</button>
+<!-- Original L87: ‹button› is a interactive button with id='btn-import-save', class='local-save-secondary-btn', type='button', Import, save, file, button and displays 'Import save file'. -->        <button id="btn-import-save" class="local-save-secondary-btn" type="button">Import save file</button>
+<!-- Original L88: ‹button› is a interactive button with id='btn-recover-legacy-save', class='local-save-secondary-btn hidden-view', type='button', Recover, older, local, profile, button and displays 'Recover older local profile'. -->        <button id="btn-recover-legacy-save" class="local-save-secondary-btn hidden-view" type="button">Recover older local profile</button>
+<!-- Original L89: ‹input› is a form control with id='local-save-import-input', type='file', accept='.json,application/json', hidden. -->        <input id="local-save-import-input" type="file" accept=".json,application/json" hidden>
+<!-- Original L90: Closes the div element opened by the surrounding markup. -->      </div>
+<!-- Original L91: ‹p› is a paragraph with class='local-save-note', Browser, saves, are, automatic, on, this, device, On, supported, desktop, browsers, link, a, JSON, file, to, keep, it, updated, automatically, Otherwise, download, a, backup, and, import, it, when, needed, p and displays 'Browser saves are automatic on this device. On supported desktop browsers, link a JSON file to keep it updated automatically. Otherwise, download a backup and import it when needed.'. -->      <p class="local-save-note">Browser saves are automatic on this device. On supported desktop browsers, link a JSON file to keep it updated automatically. Otherwise, download a backup and import it when needed.</p>
+<!-- Original L92: Closes the div element opened by the surrounding markup. -->    </div>
+<!-- Original L93: Closes the div element opened by the surrounding markup. -->  </div>
+<!-- Original L94: Blank line separates nearby markup sections. -->
+<!-- Original L95: Comment: DAILY WHEEL MODAL OVERLAY. -->  <!-- DAILY WHEEL MODAL OVERLAY -->
+<!-- Original L96: ‹div› is a layout container with id='modal-wheel', class='modal-overlay hidden-view'. -->  <div id="modal-wheel" class="modal-overlay hidden-view">
+<!-- Original L97: ‹div› is a layout container with class='modal-card wheel-modal-card'. -->    <div class="modal-card wheel-modal-card">
+<!-- Original L98: ‹button› is a interactive button with id='btn-close-wheel', class='modal-close-btn', times, button and displays '&times;'. -->      <button id="btn-close-wheel" class="modal-close-btn">&times;</button>
+<!-- Original L99: ‹h2› is a section heading with DAILY, LUCKY, WHEEL, h2 and displays '🎡 DAILY LUCKY WHEEL'. -->      <h2>🎡 DAILY LUCKY WHEEL</h2>
+<!-- Original L100: ‹p› is a paragraph with class='modal-subtitle', Spin, once, every, 24, hours, to, claim, free, bonus, chips, p and displays 'Spin once every 24 hours to claim free bonus chips!'. -->      <p class="modal-subtitle">Spin once every 24 hours to claim free bonus chips!</p>
+<!-- Original L101: Blank line separates nearby markup sections. -->
+<!-- Original L102: ‹div› is a layout container with class='wheel-stage-container'. -->      <div class="wheel-stage-container">
+<!-- Original L103: ‹div› is a layout container with class='wheel-pointer', div and displays '▼'. -->        <div class="wheel-pointer">▼</div>
+<!-- Original L104: ‹canvas› is a drawing surface with id='wheel-canvas', width='320', height='320', canvas. -->        <canvas id="wheel-canvas" width="320" height="320"></canvas>
+<!-- Original L105: Closes the div element opened by the surrounding markup. -->      </div>
+<!-- Original L106: Blank line separates nearby markup sections. -->
+<!-- Original L107: ‹div› is a layout container with class='wheel-action-area'. -->      <div class="wheel-action-area">
+<!-- Original L108: ‹div› is a layout container with id='wheel-cooldown-timer', class='cooldown-badge hidden-view', NEXT, SPIN, IN:, 23:59:59, div and displays 'NEXT SPIN IN: 23:59:59'. -->        <div id="wheel-cooldown-timer" class="cooldown-badge hidden-view">NEXT SPIN IN: 23:59:59</div>
+<!-- Original L109: ‹button› is a interactive button with id='btn-spin-wheel', class='spin-wheel-btn', SPIN, WHEEL, NOW, button and displays 'SPIN WHEEL NOW'. -->        <button id="btn-spin-wheel" class="spin-wheel-btn">SPIN WHEEL NOW</button>
+<!-- Original L110: Closes the div element opened by the surrounding markup. -->      </div>
+<!-- Original L111: Closes the div element opened by the surrounding markup. -->    </div>
+<!-- Original L112: Closes the div element opened by the surrounding markup. -->  </div>
+<!-- Original L113: Blank line separates nearby markup sections. -->
+<!-- Original L114: Comment: SETTINGS MODAL OVERLAY. -->  <!-- SETTINGS MODAL OVERLAY -->
+<!-- Original L115: ‹div› is a layout container with id='modal-settings', class='modal-overlay hidden-view'. -->  <div id="modal-settings" class="modal-overlay hidden-view">
+<!-- Original L116: ‹div› is a layout container with class='modal-card'. -->    <div class="modal-card">
+<!-- Original L117: ‹button› is a interactive button with id='btn-close-settings', class='modal-close-btn', times, button and displays '&times;'. -->      <button id="btn-close-settings" class="modal-close-btn">&times;</button>
+<!-- Original L118: ‹h2› is a section heading with CASINO, SETTINGS, h2 and displays '⚙️ CASINO SETTINGS'. -->      <h2>⚙️ CASINO SETTINGS</h2>
+<!-- Original L119: ‹p› is a paragraph with class='modal-subtitle', Customize, sound, effects, and, visual, appearance, p and displays 'Customize sound effects and visual appearance.'. -->      <p class="modal-subtitle">Customize sound effects and visual appearance.</p>
+<!-- Original L120: Blank line separates nearby markup sections. -->
+<!-- Original L121: ‹div› is a layout container with class='settings-section'. -->      <div class="settings-section">
+<!-- Original L122: ‹h3› is a subheading with AUDIO, MIXER, h3 and displays '🔊 AUDIO MIXER'. -->        <h3>🔊 AUDIO MIXER</h3>
+<!-- Original L123: ‹div› is a layout container with class='setting-row'. -->        <div class="setting-row">
+<!-- Original L124: ‹label› is a form label with for='slider-volume', Master, Volume, label and displays 'Master Volume'. -->          <label for="slider-volume">Master Volume</label>
+<!-- Original L125: ‹div› is a layout container with class='volume-control'. -->          <div class="volume-control">
+<!-- Original L126: ‹input› is a form control with type='range', id='slider-volume', min='0', max='100', value='80'. -->            <input type="range" id="slider-volume" min="0" max="100" value="80">
+<!-- Original L127: ‹span› is a inline status/text element with id='volume-display-val', 80, span and displays '80%'. -->            <span id="volume-display-val">80%</span>
+<!-- Original L128: Closes the div element opened by the surrounding markup. -->          </div>
+<!-- Original L129: Closes the div element opened by the surrounding markup. -->        </div>
+<!-- Original L130: ‹div› is a layout container with class='setting-row'. -->        <div class="setting-row">
+<!-- Original L131: ‹label› is a form label with Mute, Sound, Effects, label and displays 'Mute Sound Effects'. -->          <label>Mute Sound Effects</label>
+<!-- Original L132: ‹button› is a interactive button with id='btn-toggle-mute', class='toggle-btn', MUTE:, OFF, button and displays 'MUTE: OFF'. -->          <button id="btn-toggle-mute" class="toggle-btn">MUTE: OFF</button>
+<!-- Original L133: Closes the div element opened by the surrounding markup. -->        </div>
+<!-- Original L134: Closes the div element opened by the surrounding markup. -->      </div>
+<!-- Original L135: Blank line separates nearby markup sections. -->
+<!-- Original L136: ‹div› is a layout container with class='settings-section'. -->      <div class="settings-section">
+<!-- Original L137: ‹h3› is a subheading with VISUAL, THEME, h3 and displays '🎨 VISUAL THEME'. -->        <h3>🎨 VISUAL THEME</h3>
+<!-- Original L138: ‹div› is a layout container with class='theme-selector-grid'. -->        <div class="theme-selector-grid">
+<!-- Original L139: ‹button› is a interactive button with class='theme-btn active-theme', data-theme='vegas'. -->          <button class="theme-btn active-theme" data-theme="vegas">
+<!-- Original L140: ‹span› is a inline status/text element with class='theme-swatch swatch-vegas', span. --><!-- Original L141: Text shown to players: Vegas Purple --><!-- Original L142: Closes the button element opened by the surrounding markup. -->            <span class="theme-swatch swatch-vegas"></span>
+            Vegas Purple
+          </button>
+<!-- Original L143: ‹button› is a interactive button with class='theme-btn', data-theme='midnight'. -->          <button class="theme-btn" data-theme="midnight">
+<!-- Original L144: ‹span› is a inline status/text element with class='theme-swatch swatch-midnight', span. --><!-- Original L145: Text shown to players: Midnight Dark --><!-- Original L146: Closes the button element opened by the surrounding markup. -->            <span class="theme-swatch swatch-midnight"></span>
+            Midnight Dark
+          </button>
+<!-- Original L147: ‹button› is a interactive button with class='theme-btn', data-theme='gold'. -->          <button class="theme-btn" data-theme="gold">
+<!-- Original L148: ‹span› is a inline status/text element with class='theme-swatch swatch-gold', span. --><!-- Original L149: Text shown to players: High Roller Gold --><!-- Original L150: Closes the button element opened by the surrounding markup. -->            <span class="theme-swatch swatch-gold"></span>
+            High Roller Gold
+          </button>
+<!-- Original L151: ‹button› is a interactive button with class='theme-btn', data-theme='money'. -->          <button class="theme-btn" data-theme="money">
+<!-- Original L152: ‹span› is a inline status/text element with class='theme-swatch swatch-money', span. --><!-- Original L153: Text shown to players: Money Green --><!-- Original L154: Closes the button element opened by the surrounding markup. -->            <span class="theme-swatch swatch-money"></span>
+            Money Green
+          </button>
+<!-- Original L155: Closes the div element opened by the surrounding markup. -->        </div>
+<!-- Original L156: Closes the div element opened by the surrounding markup. -->      </div>
+<!-- Original L157: Blank line separates nearby markup sections. -->
+<!-- Original L158: ‹div› is a layout container with class='settings-section settings-reset-section'. -->      <div class="settings-section settings-reset-section">
+<!-- Original L159: ‹h3› is a subheading with CASINO, DATA, h3 and displays '🛠️ CASINO DATA'. -->        <h3>🛠️ CASINO DATA</h3> 
+<!-- Original L160: ‹div› is a layout container with class='data-row'. -->        <div class="data-row">
+<!-- Original L161: ‹p› is a paragraph with class='settings-reset-note', Local, save, file, import, or, export, Bind, a, file, to, save, data, to, p and displays 'Local save file import or export. Bind a file to save data to.'. -->          <p class="settings-reset-note">Local save file import or export. Bind a file to save data to.</p>
+<!-- Original L162: ‹button› is a interactive button with id='btn-open-local-save', class='settings-reset-btn reset-data-btn', aria-label='Manage local saves', SAVE, button and displays '💾 SAVE'. -->          <button id="btn-open-local-save" class="settings-reset-btn reset-data-btn" aria-label="Manage local saves">💾 SAVE</button>
+<!-- Original L163: Closes the div element opened by the surrounding markup. -->        </div>
+<!-- Original L164: ‹hr› is a hr with class='settings-hr'. -->        <hr class="settings-hr">
+<!-- Original L165: ‹div› is a layout container with class='data-row'. -->        <div class="data-row">
+<!-- Original L166: ‹p› is a paragraph with class='settings-reset-note', Reset, your, balance, credit, debt, level, XP, and, the, shared, jackpot, Your, profile, settings, race, progress, and, daily-wheel, cooldown, will, stay, intact, p and displays 'Reset your balance, credit, debt, level, XP, and the shared jackpot. Your profile, settings, race progress, and daily-wheel cooldown will stay intact.'. -->          <p class="settings-reset-note">Reset your balance, credit, debt, level, XP, and the shared jackpot. Your profile, settings, race progress, and daily-wheel cooldown will stay intact.</p>
+<!-- Original L167: ‹button› is a interactive button with id='btn-reset-data', class='reset-data-btn settings-reset-btn', type='button', title='Reset casino data', Reset, casino, data, button and displays '🔄 Reset casino data'. -->          <button id="btn-reset-data" class="reset-data-btn settings-reset-btn" type="button" title="Reset casino data">🔄 Reset casino data</button>
+<!-- Original L168: Closes the div element opened by the surrounding markup. -->        </div>
+<!-- Original L169: Closes the div element opened by the surrounding markup. -->      </div>
+<!-- Original L170: Closes the div element opened by the surrounding markup. -->    </div>
+<!-- Original L171: Closes the div element opened by the surrounding markup. -->  </div>
+<!-- Original L172: Blank line separates nearby markup sections. -->
+<!-- Original L173: Comment: BANK MODAL OVERLAY. -->  <!-- BANK MODAL OVERLAY -->
+<!-- Original L174: ‹div› is a layout container with id='modal-bank', class='modal-overlay hidden-view'. -->  <div id="modal-bank" class="modal-overlay hidden-view">
+<!-- Original L175: ‹div› is a layout container with class='modal-card'. -->    <div class="modal-card">
+<!-- Original L176: ‹button› is a interactive button with id='btn-close-bank', class='modal-close-btn', times, button and displays '&times;'. -->      <button id="btn-close-bank" class="modal-close-btn">&times;</button>
+<!-- Original L177: ‹h2› is a section heading with CASINO, BANK, LOAN, VAULT, h2 and displays '🏦 CASINO BANK & LOAN VAULT'. -->      <h2>🏦 CASINO BANK & LOAN VAULT</h2>
+<!-- Original L178: ‹p› is a paragraph with class='modal-subtitle', Borrow, extra, funds, or, repay, your, outstanding, debt, p and displays 'Borrow extra funds or repay your outstanding debt.'. -->      <p class="modal-subtitle">Borrow extra funds or repay your outstanding debt.</p>
+<!-- Original L179: Blank line separates nearby markup sections. -->
+<!-- Original L180: ‹div› is a layout container with class='bank-stats-grid'. -->      <div class="bank-stats-grid">
+<!-- Original L181: ‹div› is a layout container with class='bank-stat-card'. -->        <div class="bank-stat-card">
+<!-- Original L182: ‹span› is a inline status/text element with class='stat-label', OUTSTANDING, DEBT, span and displays 'OUTSTANDING DEBT'. -->          <span class="stat-label">OUTSTANDING DEBT</span>
+<!-- Original L183: ‹span› is a inline status/text element with id='bank-debt-display', class='stat-value debt-color', 0, 00, span and displays '$0.00'. -->          <span id="bank-debt-display" class="stat-value debt-color">$0.00</span>
+<!-- Original L184: Closes the div element opened by the surrounding markup. -->        </div>
+<!-- Original L185: ‹div› is a layout container with class='bank-stat-card'. -->        <div class="bank-stat-card">
+<!-- Original L186: ‹span› is a inline status/text element with class='stat-label', CREDIT, LIMIT, span and displays 'CREDIT LIMIT'. -->          <span class="stat-label">CREDIT LIMIT</span>
+<!-- Original L187: ‹span› is a inline status/text element with id='bank-credit-display', class='stat-value', 2, 000, 00, span and displays '$2,000.00'. -->          <span id="bank-credit-display" class="stat-value">$2,000.00</span>
+<!-- Original L188: Closes the div element opened by the surrounding markup. -->        </div>
+<!-- Original L189: ‹div› is a layout container with class='bank-stat-card'. -->        <div class="bank-stat-card">
+<!-- Original L190: ‹span› is a inline status/text element with class='stat-label', INTEREST, RATE, span and displays 'INTEREST RATE'. -->          <span class="stat-label">INTEREST RATE</span>
+<!-- Original L191: ‹span› is a inline status/text element with class='stat-value', 10, span and displays '10%'. -->          <span class="stat-value">10%</span>
+<!-- Original L192: Closes the div element opened by the surrounding markup. -->        </div>
+<!-- Original L193: Closes the div element opened by the surrounding markup. -->      </div>
+<!-- Original L194: Blank line separates nearby markup sections. -->
+<!-- Original L195: ‹div› is a layout container with class='bank-actions-container'. -->      <div class="bank-actions-container">
+<!-- Original L196: ‹div› is a layout container with class='bank-action-box'. -->        <div class="bank-action-box">
+<!-- Original L197: ‹h3› is a subheading with BORROW, CASH, h3 and displays 'BORROW CASH'. -->          <h3>BORROW CASH</h3>
+<!-- Original L198: ‹p› is a paragraph with Get, instant, chip, credit, 10, flat, fee, added, to, debt, p and displays 'Get instant chip credit (10% flat fee added to debt).'. -->          <p>Get instant chip credit (10% flat fee added to debt).</p>
+<!-- Original L199: ‹div› is a layout container with class='action-inputs'. -->          <div class="action-inputs">
+<!-- Original L200: ‹button› is a interactive button with class='btn-preset-loan', data-amount='100', 100, button and displays '+$100'. -->            <button class="btn-preset-loan" data-amount="100">+$100</button>
+<!-- Original L201: ‹button› is a interactive button with class='btn-preset-loan', data-amount='250', 250, button and displays '+$250'. -->            <button class="btn-preset-loan" data-amount="250">+$250</button>
+<!-- Original L202: ‹button› is a interactive button with class='btn-preset-loan', data-amount='500', 500, button and displays '+$500'. -->            <button class="btn-preset-loan" data-amount="500">+$500</button>
+<!-- Original L203: Closes the div element opened by the surrounding markup. -->          </div>
+<!-- Original L204: Closes the div element opened by the surrounding markup. -->        </div>
+<!-- Original L205: Blank line separates nearby markup sections. -->
+<!-- Original L206: ‹div› is a layout container with class='bank-action-box'. -->        <div class="bank-action-box">
+<!-- Original L207: ‹h3› is a subheading with REPAY, DEBT, h3 and displays 'REPAY DEBT'. -->          <h3>REPAY DEBT</h3>
+<!-- Original L208: ‹p› is a paragraph with Deduct, debt, balance, from, your, current, wallet, p and displays 'Deduct debt balance from your current wallet.'. -->          <p>Deduct debt balance from your current wallet.</p>
+<!-- Original L209: ‹div› is a layout container with class='action-inputs'. -->          <div class="action-inputs">
+<!-- Original L210: ‹button› is a interactive button with id='btn-repay-100', class='btn-repay', Pay, 100, button and displays 'Pay $100'. -->            <button id="btn-repay-100" class="btn-repay">Pay $100</button>
+<!-- Original L211: ‹button› is a interactive button with id='btn-repay-all', class='btn-repay btn-repay-max', Pay, All, Debt, button and displays 'Pay All Debt'. -->            <button id="btn-repay-all" class="btn-repay btn-repay-max">Pay All Debt</button>
+<!-- Original L212: Closes the div element opened by the surrounding markup. -->          </div>
+<!-- Original L213: Closes the div element opened by the surrounding markup. -->        </div>
+<!-- Original L214: Closes the div element opened by the surrounding markup. -->      </div>
+<!-- Original L215: Closes the div element opened by the surrounding markup. -->    </div>
+<!-- Original L216: Closes the div element opened by the surrounding markup. -->  </div>
+<!-- Original L217: Blank line separates nearby markup sections. -->
+<!-- Original L218: ‹main› is a primary application content with id='app-container'. -->  <main id="app-container">
+<!-- Original L219: Blank line separates nearby markup sections. -->    
+<!-- Original L220: Comment: The lobby groups every slot choice in one dedicated room; the general game grid below is reserved for non-slot tables.. -->    <!-- The lobby groups every slot choice in one dedicated room; the general game grid below is reserved for non-slot tables. -->
+<!-- Original L221: ‹section› is a page/view section with id='view-lobby', class='view-screen active-view'. -->    <section id="view-lobby" class="view-screen active-view">
+<!-- Original L222: ‹div› is a layout container with class='lobby-header'. -->      <div class="lobby-header">
+<!-- Original L223: ‹h2› is a section heading with SELECT, A, ROOM, h2 and displays 'SELECT A ROOM'. -->        <h2>SELECT A ROOM</h2>
+<!-- Original L224: ‹p› is a paragraph with Pick, a, room, to, travel, to, p and displays 'Pick a room to travel to.'. -->        <p>Pick a room to travel to.</p>
+<!-- Original L225: Closes the div element opened by the surrounding markup. -->      </div>
+<!-- Original L226: Blank line separates nearby markup sections. -->
+<!-- Original L227: ‹section› is a page/view section with class='lobby-slot-room', aria-labelledby='slot-room-title'. -->      <section class="lobby-slot-room" aria-labelledby="slot-room-title">
+<!-- Original L228: ‹details› is a collapsible disclosure panel. -->        <details>
+<!-- Original L229: ‹summary› is a clickable disclosure heading. -->          <summary>
+<!-- Original L230: ‹div› is a layout container with class='lobby-slot-room-heading'. -->            <div class="lobby-slot-room-heading">
+<!-- Original L231: ‹div› is a layout container. -->              <div>
+<!-- Original L232: ‹p› is a paragraph with class='lobby-room-kicker', SLOT, TABLES, p and displays 'SLOT TABLES'. -->                <p class="lobby-room-kicker">SLOT TABLES</p>
+<!-- Original L233: ‹h3› is a subheading with id='slot-room-title', Slot, Room, h3 and displays 'Slot Room'. -->                <h3 id="slot-room-title">Slot Room</h3>
+<!-- Original L234: ‹p› is a paragraph with Choose, a, three-reel, or, five-reel, machine, and, its, stake, level, p and displays 'Choose a three-reel or five-reel machine and its stake level.'. -->                <p>Choose a three-reel or five-reel machine and its stake level.</p>
+<!-- Original L235: Closes the div element opened by the surrounding markup. -->              </div>
+<!-- Original L236: ‹span› is a inline status/text element with class='lobby-room-emblem', aria-hidden='true', span and displays '🎰 💎'. -->              <span class="lobby-room-emblem" aria-hidden="true">🎰 💎</span>
+<!-- Original L237: Closes the div element opened by the surrounding markup. -->            </div>
+<!-- Original L238: Closes the summary element opened by the surrounding markup. -->          </summary>
+<!-- Original L239: ‹div› is a layout container with class='slot-room-grid'. -->          <div class="slot-room-grid">
+<!-- Original L240: Comment: The two original high-stakes tables stay hand-authored; themed catalog tables are added to this same grid by slot-templates.js.. -->          <!-- The two original high-stakes tables stay hand-authored; themed catalog tables are added to this same grid by slot-templates.js. -->
+<!-- Original L241: ‹article› is a self-contained content card with class='game-card'. -->          <article class="game-card">
+<!-- Original L242: ‹div› is a layout container with class='card-icon', aria-hidden='true', div and displays '🎰'. -->            <div class="card-icon" aria-hidden="true">🎰</div>
+<!-- Original L243: ‹h3› is a subheading with Classic, 3-Reel, h3 and displays 'Classic 3-Reel'. -->            <h3>Classic 3-Reel</h3>
+<!-- Original L244: ‹p› is a paragraph with High, stakes:, 5, minimum, Traditional, 3-reel, slot, machine, with, wild, payouts, p and displays 'High stakes: $5 minimum. Traditional 3-reel slot machine with wild payouts.'. -->            <p>High stakes: $5 minimum. Traditional 3-reel slot machine with wild payouts.</p>
+<!-- Original L245: ‹button› is a interactive button with class='play-btn', type='button', data-game='classic-slots', PLAY, NOW, button and displays 'PLAY NOW'. -->            <button class="play-btn" type="button" data-game="classic-slots">PLAY NOW</button>
+<!-- Original L246: Closes the article element opened by the surrounding markup. -->          </article>
+<!-- Original L247: ‹article› is a self-contained content card with class='game-card'. -->          <article class="game-card">
+<!-- Original L248: ‹div› is a layout container with class='card-icon', aria-hidden='true', div and displays '💎'. -->            <div class="card-icon" aria-hidden="true">💎</div>
+<!-- Original L249: ‹h3› is a subheading with 5-Reel, Gem, Quest, h3 and displays '5-Reel Gem Quest'. -->            <h3>5-Reel Gem Quest</h3>
+<!-- Original L250: ‹p› is a paragraph with High, stakes:, 5, minimum, Five, reels, Free, Spins, Sticky, Wilds, amp, Jackpot, p and displays 'High stakes: $5 minimum. Five reels, Free Spins, Sticky Wilds &amp; Jackpot.'. -->            <p>High stakes: $5 minimum. Five reels, Free Spins, Sticky Wilds &amp; Jackpot.</p>
+<!-- Original L251: ‹button› is a interactive button with class='play-btn', type='button', data-game='5reel-slots', PLAY, NOW, button and displays 'PLAY NOW'. -->            <button class="play-btn" type="button" data-game="5reel-slots">PLAY NOW</button>
+<!-- Original L252: Closes the article element opened by the surrounding markup. -->          </article>
+<!-- Original L253: Closes the div element opened by the surrounding markup. -->        </div>
+<!-- Original L254: Closes the details element opened by the surrounding markup. -->        </details>
+<!-- Original L255: Closes the section element opened by the surrounding markup. -->      </section>
+<!-- Original L256: Blank line separates nearby markup sections. -->
+<!-- Original L257: Comment: These cards intentionally exclude all slot games; their launch buttons share one data-game navigation contract.. -->      <!-- These cards intentionally exclude all slot games; their launch buttons share one data-game navigation contract. -->
+<!-- Original L258: ‹section› is a page/view section with class='lobby-coin-room', aria-labelledby='coin-room-title'. -->      <section class="lobby-coin-room" aria-labelledby="coin-room-title">
+<!-- Original L259: ‹details› is a collapsible disclosure panel. -->        <details>
+<!-- Original L260: ‹summary› is a clickable disclosure heading. -->          <summary>
+<!-- Original L261: ‹div› is a layout container with class='lobby-coin-room-heading'. -->            <div class="lobby-coin-room-heading">
+<!-- Original L262: ‹div› is a layout container. -->              <div>
+<!-- Original L263: ‹p› is a paragraph with class='lobby-room-kicker', COIN, FLIPPING, p and displays 'COIN FLIPPING'. -->                <p class="lobby-room-kicker">COIN FLIPPING</p>
+<!-- Original L264: ‹h3› is a subheading with id='coin-room-title', Coin, Flip, Room, h3 and displays 'Coin Flip Room'. -->                <h3 id="coin-room-title">Coin Flip Room</h3>
+<!-- Original L265: ‹p› is a paragraph with Choose, a, three-coin, or, single-coin, game, p and displays 'Choose a three-coin or single-coin game.'. -->                <p>Choose a three-coin or single-coin game.</p>
+<!-- Original L266: Closes the div element opened by the surrounding markup. -->              </div>
+<!-- Original L267: ‹span› is a inline status/text element with class='lobby-room-emblem', aria-hidden='true', span and displays '🪙'. -->              <span class="lobby-room-emblem" aria-hidden="true">🪙</span>
+<!-- Original L268: Closes the div element opened by the surrounding markup. -->            </div>
+<!-- Original L269: Closes the summary element opened by the surrounding markup. -->          </summary>
+<!-- Original L270: ‹div› is a layout container with class='game-grid'. -->          <div class="game-grid">
+<!-- Original L271: Comment: Coin Toss Card. -->            <!-- Coin Toss Card -->
+<!-- Original L272: ‹div› is a layout container with class='game-card'. -->            <div class="game-card">
+<!-- Original L273: ‹div› is a layout container with class='card-icon', div and displays '🪙'. -->              <div class="card-icon">🪙</div>
+<!-- Original L274: ‹h3› is a subheading with High, Roller, Coin, Toss, h3 and displays 'High Roller Coin Toss'. -->              <h3>High Roller Coin Toss</h3>
+<!-- Original L275: ‹p› is a paragraph with Double, or, nothing, Flip, the, gold, coin, for, instant, 2x, payouts, p and displays 'Double or nothing! Flip the gold coin for instant 2x payouts.'. -->              <p>Double or nothing! Flip the gold coin for instant 2x payouts.</p>
+<!-- Original L276: ‹button› is a interactive button with class='play-btn', data-game='coin-toss', PLAY, NOW, button and displays 'PLAY NOW'. -->              <button class="play-btn" data-game="coin-toss">PLAY NOW</button>
+<!-- Original L277: Closes the div element opened by the surrounding markup. -->            </div>
+<!-- Original L278: ‹div› is a layout container with class='game-card'. -->            <div class="game-card">
+<!-- Original L279: ‹div› is a layout container with class='card-icon', aria-hidden='true', 3, div and displays '3×'. -->              <div class="card-icon" aria-hidden="true">3×</div>
+<!-- Original L280: ‹h3› is a subheading with Three, Coin, Toss, h3 and displays 'Three Coin Toss'. -->              <h3>Three Coin Toss</h3>
+<!-- Original L281: ‹p› is a paragraph with Predict, all, three, coins, Match, 2, for, 1, 5, or, all, 3, for, 3, total, return, p and displays 'Predict all three coins. Match 2 for 1.5× or all 3 for 3× total return.'. -->              <p>Predict all three coins. Match 2 for 1.5× or all 3 for 3× total return.</p>
+<!-- Original L282: ‹button› is a interactive button with class='play-btn', data-game='three-coin-toss', PLAY, NOW, button and displays 'PLAY NOW'. -->              <button class="play-btn" data-game="three-coin-toss">PLAY NOW</button>
+<!-- Original L283: Closes the div element opened by the surrounding markup. -->            </div>
+<!-- Original L284: Closes the div element opened by the surrounding markup. -->          </div>
+<!-- Original L285: Closes the details element opened by the surrounding markup. -->        </details>
+<!-- Original L286: Closes the section element opened by the surrounding markup. -->      </section>
+<!-- Original L287: Blank line separates nearby markup sections. -->
+<!-- Original L288: ‹div› is a layout container with class='game-grid'. -->      <div class="game-grid">
+<!-- Original L289: Comment: Blackjack 21 Card. -->        <!-- Blackjack 21 Card -->
+<!-- Original L290: ‹div› is a layout container with class='game-card'. -->        <div class="game-card">
+<!-- Original L291: ‹div› is a layout container with class='card-icon', div and displays '🃏'. -->          <div class="card-icon">🃏</div>
+<!-- Original L292: ‹h3› is a subheading with Blackjack, 21, h3 and displays 'Blackjack 21'. -->          <h3>Blackjack 21</h3>
+<!-- Original L293: ‹p› is a paragraph with Beat, the, dealer, Hit, Stand, or, Double, Down, for, 3:2, Blackjack, payouts, p and displays 'Beat the dealer! Hit, Stand, or Double Down for 3:2 Blackjack payouts.'. -->          <p>Beat the dealer! Hit, Stand, or Double Down for 3:2 Blackjack payouts.</p>
+<!-- Original L294: ‹button› is a interactive button with class='play-btn', data-game='blackjack', PLAY, NOW, button and displays 'PLAY NOW'. -->          <button class="play-btn" data-game="blackjack">PLAY NOW</button>
+<!-- Original L295: Closes the div element opened by the surrounding markup. -->        </div>
+<!-- Original L296: Blank line separates nearby markup sections. -->
+<!-- Original L297: Comment: Race Card. -->        <!-- Race Card -->
+<!-- Original L298: ‹div› is a layout container with class='game-card'. -->        <div class="game-card">
+<!-- Original L299: ‹div› is a layout container with class='card-icon', div and displays '🏁'. -->          <div class="card-icon">🏁</div>
+<!-- Original L300: ‹h3› is a subheading with Racing, h3 and displays 'Racing'. -->          <h3>Racing</h3>
+<!-- Original L301: ‹p› is a paragraph with Back, a, horse, or, car, in, daytime, races, Form, and, race, experience, affect, each, runner, s, simulated, win, chance, p and displays "Back a horse or car in daytime races. Form and race experience affect each runner's simulated win chance.". -->          <p>Back a horse or car in daytime races. Form and race experience affect each runner's simulated win chance.</p>
+<!-- Original L302: ‹button› is a interactive button with class='play-btn', data-game='horse-racing', RACE, NOW, button and displays 'RACE NOW'. -->          <button class="play-btn" data-game="horse-racing">RACE NOW</button>
+<!-- Original L303: Closes the div element opened by the surrounding markup. -->        </div>
+<!-- Original L304: Closes the div element opened by the surrounding markup. -->      </div>
+<!-- Original L305: Blank line separates nearby markup sections. -->
+<!-- Original L306: ‹section› is a page/view section with class='lobby-services-room', aria-labelledby='lobby-services-title'. -->      <section class="lobby-services-room" aria-labelledby="lobby-services-title">
+<!-- Original L307: ‹div› is a layout container with class='lobby-services-heading'. -->        <div class="lobby-services-heading">
+<!-- Original L308: ‹div› is a layout container. -->          <div>
+<!-- Original L309: ‹p› is a paragraph with class='lobby-room-kicker', CASINO, SERVICES, p and displays 'CASINO SERVICES'. -->            <p class="lobby-room-kicker">CASINO SERVICES</p>
+<!-- Original L310: ‹h3› is a subheading with id='lobby-services-title', Rewards, amp, Banking, Room, h3 and displays 'Rewards &amp; Banking Room'. -->            <h3 id="lobby-services-title">Rewards &amp; Banking Room</h3>
+<!-- Original L311: ‹p› is a paragraph with Claim, a, daily, bonus, or, manage, your, virtual-chip, credit, p and displays 'Claim a daily bonus or manage your virtual-chip credit.'. -->            <p>Claim a daily bonus or manage your virtual-chip credit.</p>
+<!-- Original L312: Closes the div element opened by the surrounding markup. -->          </div>
+<!-- Original L313: ‹span› is a inline status/text element with class='lobby-room-emblem', aria-hidden='true', span and displays '🎁 🏦'. -->          <span class="lobby-room-emblem" aria-hidden="true">🎁 🏦</span>
+<!-- Original L314: Closes the div element opened by the surrounding markup. -->        </div>
+<!-- Original L315: ‹div› is a layout container with class='lobby-service-grid'. -->        <div class="lobby-service-grid">
+<!-- Original L316: ‹article› is a self-contained content card with class='lobby-service-card'. -->          <article class="lobby-service-card">
+<!-- Original L317: ‹span› is a inline status/text element with class='lobby-service-icon', aria-hidden='true', span and displays '🎡'. -->            <span class="lobby-service-icon" aria-hidden="true">🎡</span>
+<!-- Original L318: ‹div› is a layout container with class='lobby-service-copy'. -->            <div class="lobby-service-copy">
+<!-- Original L319: ‹h4› is a service heading with Daily, Lucky, Wheel, h4 and displays 'Daily Lucky Wheel'. -->              <h4>Daily Lucky Wheel</h4>
+<!-- Original L320: ‹p› is a paragraph with Spin, once, every, 24, hours, for, free, bonus, chips, p and displays 'Spin once every 24 hours for free bonus chips.'. -->              <p>Spin once every 24 hours for free bonus chips.</p>
+<!-- Original L321: Closes the div element opened by the surrounding markup. -->            </div>
+<!-- Original L322: ‹button› is a interactive button with id='btn-open-wheel', class='lobby-service-btn wheel-header-btn', type='button', aria-haspopup='dialog', aria-controls='modal-wheel', Open, daily, wheel, button and displays 'Open daily wheel'. -->            <button id="btn-open-wheel" class="lobby-service-btn wheel-header-btn" type="button" aria-haspopup="dialog" aria-controls="modal-wheel">Open daily wheel</button>
+<!-- Original L323: Closes the article element opened by the surrounding markup. -->          </article>
+<!-- Original L324: ‹article› is a self-contained content card with class='lobby-service-card'. -->          <article class="lobby-service-card">
+<!-- Original L325: ‹span› is a inline status/text element with class='lobby-service-icon', aria-hidden='true', span and displays '🏦'. -->            <span class="lobby-service-icon" aria-hidden="true">🏦</span>
+<!-- Original L326: ‹div› is a layout container with class='lobby-service-copy'. -->            <div class="lobby-service-copy">
+<!-- Original L327: ‹h4› is a service heading with Casino, Bank, h4 and displays 'Casino Bank'. -->              <h4>Casino Bank</h4>
+<!-- Original L328: ‹p› is a paragraph with Borrow, virtual, chips, or, repay, outstanding, debt, p and displays 'Borrow virtual chips or repay outstanding debt.'. -->              <p>Borrow virtual chips or repay outstanding debt.</p>
+<!-- Original L329: Closes the div element opened by the surrounding markup. -->            </div>
+<!-- Original L330: ‹button› is a interactive button with id='btn-open-bank', class='lobby-service-btn bank-btn', type='button', aria-haspopup='dialog', aria-controls='modal-bank', Visit, the, bank, button and displays 'Visit the bank'. -->            <button id="btn-open-bank" class="lobby-service-btn bank-btn" type="button" aria-haspopup="dialog" aria-controls="modal-bank">Visit the bank</button>
+<!-- Original L331: Closes the article element opened by the surrounding markup. -->          </article>
+<!-- Original L332: Closes the div element opened by the surrounding markup. -->        </div>
+<!-- Original L333: Closes the section element opened by the surrounding markup. -->      </section>
+<!-- Original L334: Closes the section element opened by the surrounding markup. -->    </section>
+<!-- Original L335: Blank line separates nearby markup sections. -->
+<!-- Original L336: Comment: LOCAL SIMULATED RACING VIEW. -->    <!-- LOCAL SIMULATED RACING VIEW -->
+<!-- Original L337: ‹section› is a page/view section with id='view-horse-racing', class='view-screen hidden-view'. -->    <section id="view-horse-racing" class="view-screen hidden-view">
+<!-- Original L338: ‹button› is a interactive button with class='back-lobby-btn', type='button', BACK, TO, LOBBY, button and displays '⬅ BACK TO LOBBY'. -->      <button class="back-lobby-btn" type="button">⬅ BACK TO LOBBY</button>
+<!-- Original L339: ‹div› is a layout container with class='slot-machine race-machine'. -->      <div class="slot-machine race-machine">
+<!-- Original L340: ‹div› is a layout container with class='header race-header'. -->        <div class="header race-header">
+<!-- Original L341: ‹h1› is a top-level heading with id='race-title', Horse, Racing, h1 and displays 'Horse Racing'. -->          <h1 id="race-title">Horse Racing</h1>
+<!-- Original L342: ‹p› is a paragraph with class='race-local-note', A, race, every, hour, from, 7, AM, 9, PM, local, time, alternating, horse, and, car, previews, and, betting, open, 45, minutes, before, each, start, bets, close, 5, minutes, before, closed, overnight, virtual, chips, only, p and displays 'A race every hour from 7 AM–9 PM local time, alternating horse and car • previews and betting open 45 minutes before each start • bets close 5 minutes before • closed overnight • virtual chips only'. -->          <p class="race-local-note">A race every hour from 7 AM–9 PM local time, alternating horse and car • previews and betting open 45 minutes before each start • bets close 5 minutes before • closed overnight • virtual chips only</p>
+<!-- Original L343: ‹div› is a layout container with class='race-mode-switch', role='group', aria-label='Alternating hourly race schedule'. -->          <div class="race-mode-switch" role="group" aria-label="Alternating hourly race schedule">
+<!-- Original L344: ‹span› is a inline status/text element with data-race-type='horse', Horse, Racing, 7, AM, then, every, 2, hours, span and displays '🏇 Horse Racing · 7 AM, then every 2 hours'. -->            <span data-race-type="horse">🏇 Horse Racing · 7 AM, then every 2 hours</span>
+<!-- Original L345: ‹span› is a inline status/text element with data-race-type='car', Car, Racing, 8, AM, then, every, 2, hours, span and displays '🏎️ Car Racing · 8 AM, then every 2 hours'. -->            <span data-race-type="car">🏎️ Car Racing · 8 AM, then every 2 hours</span>
+<!-- Original L346: Closes the div element opened by the surrounding markup. -->          </div>
+<!-- Original L347: ‹div› is a layout container with id='race-status', class='status-banner status-spinning', role='status', aria-live='polite', Loading, the, next, local, race, div and displays 'Loading the next local race…'. -->          <div id="race-status" class="status-banner status-spinning" role="status" aria-live="polite">Loading the next local race…</div>
+<!-- Original L348: Closes the div element opened by the surrounding markup. -->        </div>
+<!-- Original L349: Blank line separates nearby markup sections. -->
+<!-- Original L350: ‹div› is a layout container with class='race-info-strip', aria-label='Race details'. -->        <div class="race-info-strip" aria-label="Race details">
+<!-- Original L351: ‹div› is a layout container with class='race-info-item', span, BETTING, FOR, span, strong, id='race-number', strong, div and displays 'BETTING FOR—'. -->          <div class="race-info-item"><span>BETTING FOR</span><strong id="race-number">—</strong></div>
+<!-- Original L352: ‹div› is a layout container with class='race-info-item', span, PHASE, span, strong, id='race-phase-label', strong, div and displays 'PHASE—'. -->          <div class="race-info-item"><span>PHASE</span><strong id="race-phase-label">—</strong></div>
+<!-- Original L353: ‹div› is a layout container with class='race-info-item', span, STARTS, IN, span, strong, id='race-countdown', strong, div and displays 'STARTS IN—'. -->          <div class="race-info-item"><span>STARTS IN</span><strong id="race-countdown">—</strong></div>
+<!-- Original L354: ‹div› is a layout container with class='race-info-item', span, NEXT, LOCAL, START, span, strong, id='race-start-time', strong, div and displays 'NEXT LOCAL START—'. -->          <div class="race-info-item"><span>NEXT LOCAL START</span><strong id="race-start-time">—</strong></div>
+<!-- Original L355: Comment: ‹div class="race-info-item"›‹span›SPRINT LENGTH‹/span›‹strong id="race-duration"›—‹/strong›‹/div›. -->          <!--<div class="race-info-item"><span>SPRINT LENGTH</span><strong id="race-duration">—</strong></div>-->
+<!-- Original L356: Closes the div element opened by the surrounding markup. -->        </div>
+<!-- Original L357: Blank line separates nearby markup sections. -->
+<!-- Original L358: ‹div› is a layout container with class='race-stage'. -->        <div class="race-stage">
+<!-- Original L359: ‹div› is a layout container with class='race-track-heading', span, id='race-track-caption', NEXT, RACE, PREVIEW, span, span, class='race-finish-label', FINISH, span, div and displays 'NEXT RACE PREVIEWFINISH'. -->          <div class="race-track-heading"><span id="race-track-caption">NEXT RACE PREVIEW</span><span class="race-finish-label">FINISH</span></div>
+<!-- Original L360: ‹div› is a layout container with id='race-track', class='race-track', aria-label='Animated simulated race track', div. -->          <div id="race-track" class="race-track" aria-label="Animated simulated race track"></div>
+<!-- Original L361: Closes the div element opened by the surrounding markup. -->        </div>
+<!-- Original L362: Blank line separates nearby markup sections. -->
+<!-- Original L363: ‹div› is a layout container with class='race-betting-panel'. -->        <div class="race-betting-panel">
+<!-- Original L364: ‹div› is a layout container with class='race-panel-heading'. -->          <div class="race-panel-heading">
+<!-- Original L365: ‹h2› is a section heading with Choose, a, winner, h2 and displays 'Choose a winner'. -->            <h2>Choose a winner</h2>
+<!-- Original L366: ‹p› is a paragraph with id='race-target-text', Choose, a, runner, Betting, closes, five, minutes, before, the, race, starts, p and displays 'Choose a runner. Betting closes five minutes before the race starts.'. -->            <p id="race-target-text">Choose a runner. Betting closes five minutes before the race starts.</p>
+<!-- Original L367: Closes the div element opened by the surrounding markup. -->          </div>
+<!-- Original L368: ‹div› is a layout container with id='race-runner-list', class='race-runner-list', role='group', aria-label='Choose a horse to win', div. -->          <div id="race-runner-list" class="race-runner-list" role="group" aria-label="Choose a horse to win"></div>
+<!-- Original L369: Closes the div element opened by the surrounding markup. -->        </div>
+<!-- Original L370: Blank line separates nearby markup sections. -->
+<!-- Original L371: ‹div› is a layout container with class='dashboard race-dashboard'. -->        <div class="dashboard race-dashboard">
+<!-- Original L372: ‹div› is a layout container with class='card'. -->          <div class="card">
+<!-- Original L373: ‹span› is a inline status/text element with class='label', Win, Bet, span and displays 'Win Bet'. -->            <span class="label">Win Bet</span>
+<!-- Original L374: ‹div› is a layout container with class='bet-controls'. -->            <div class="bet-controls">
+<!-- Original L375: ‹button› is a interactive button with id='btn-race-minus', class='btn-small', type='button', aria-label='Decrease race bet', button and displays '−'. -->              <button id="btn-race-minus" class="btn-small" type="button" aria-label="Decrease race bet">−</button>
+<!-- Original L376: ‹span› is a inline status/text element with id='race-bet-display', class='value', 10, 00, span and displays '$10.00'. -->              <span id="race-bet-display" class="value">$10.00</span>
+<!-- Original L377: ‹button› is a interactive button with id='btn-race-plus', class='btn-small', type='button', aria-label='Increase race bet', button and displays '+'. -->              <button id="btn-race-plus" class="btn-small" type="button" aria-label="Increase race bet">+</button>
+<!-- Original L378: Closes the div element opened by the surrounding markup. -->            </div>
+<!-- Original L379: Closes the div element opened by the surrounding markup. -->          </div>
+<!-- Original L380: ‹div› is a layout container with class='card race-return-card'. -->          <div class="card race-return-card">
+<!-- Original L381: ‹span› is a inline status/text element with class='label', Potential, total, return, span and displays 'Potential total return'. -->            <span class="label">Potential total return</span>
+<!-- Original L382: ‹span› is a inline status/text element with id='race-estimated-return', class='value', 0, 00, span and displays '$0.00'. -->            <span id="race-estimated-return" class="value">$0.00</span>
+<!-- Original L383: Closes the div element opened by the surrounding markup. -->          </div>
+<!-- Original L384: Closes the div element opened by the surrounding markup. -->        </div>
+<!-- Original L385: Blank line separates nearby markup sections. -->
+<!-- Original L386: ‹div› is a layout container with class='actions race-actions'. -->        <div class="actions race-actions">
+<!-- Original L387: ‹button› is a interactive button with id='btn-race-clear', class='btn-small', type='button', Clear, bet, button and displays 'Clear bet'. -->          <button id="btn-race-clear" class="btn-small" type="button">Clear bet</button>
+<!-- Original L388: ‹button› is a interactive button with id='btn-race-max', class='max-btn', type='button', MAX, BET, button and displays 'MAX BET'. -->          <button id="btn-race-max" class="max-btn" type="button">MAX BET</button>
+<!-- Original L389: ‹button› is a interactive button with id='btn-race-bet', class='spin-btn', type='button', disabled, SELECT, A, HORSE, button and displays 'SELECT A HORSE'. -->          <button id="btn-race-bet" class="spin-btn" type="button" disabled>SELECT A HORSE</button>
+<!-- Original L390: Closes the div element opened by the surrounding markup. -->        </div>
+<!-- Original L391: ‹p› is a paragraph with id='race-ticket-note', class='race-ticket-note', role='status', aria-live='polite', One, open, ticket, at, a, time, across, both, circuits, Your, stake, is, virtual, chips, only, p and displays 'One open ticket at a time across both circuits. Your stake is virtual chips only.'. -->        <p id="race-ticket-note" class="race-ticket-note" role="status" aria-live="polite">One open ticket at a time across both circuits. Your stake is virtual chips only.</p>
+<!-- Original L392: ‹p› is a paragraph with class='race-odds-note', Horse, races, field, 6, runners, and, car, races, field, 8, from, expanding, stables, Starts, and, wins, affect, future, simulated, ability, and, displayed, win, chances, Odds, show, total, return, including, your, stake, Race, schedules, and, results, use, this, device, s, local, clock, there, is, no, live, sports, feed, p and displays "Horse races field 6 runners and car races field 8 from expanding stables. Starts and wins affect future simulated ability and displayed win chances. Odds show total return including your stake. Race schedules and results use this device's local clock; there is no live sports feed.". -->        <p class="race-odds-note">Horse races field 6 runners and car races field 8 from expanding stables. Starts and wins affect future simulated ability and displayed win chances. Odds show total return including your stake. Race schedules and results use this device's local clock; there is no live sports feed.</p>
+<!-- Original L393: Closes the div element opened by the surrounding markup. -->      </div>
+<!-- Original L394: Closes the section element opened by the surrounding markup. -->    </section>
+<!-- Original L395: Blank line separates nearby markup sections. -->
+<!-- Original L396: Comment: BLACKJACK 21 VIEW. -->    <!-- BLACKJACK 21 VIEW -->
+<!-- Original L397: ‹section› is a page/view section with id='view-blackjack', class='view-screen hidden-view'. -->    <section id="view-blackjack" class="view-screen hidden-view">
+<!-- Original L398: ‹button› is a interactive button with class='back-lobby-btn', BACK, TO, LOBBY, button and displays '⬅ BACK TO LOBBY'. -->      <button class="back-lobby-btn">⬅ BACK TO LOBBY</button>
+<!-- Original L399: Blank line separates nearby markup sections. -->      
+<!-- Original L400: ‹div› is a layout container with class='slot-machine blackjack-table'. -->      <div class="slot-machine blackjack-table">
+<!-- Original L401: ‹div› is a layout container with class='header'. -->        <div class="header">
+<!-- Original L402: ‹h1› is a top-level heading with Blackjack, 21, h1 and displays 'Blackjack 21'. -->          <h1>Blackjack 21</h1>
+<!-- Original L403: ‹div› is a layout container with id='status-bj', class='status-banner', PLACE, YOUR, BET, TO, DEAL, div and displays 'PLACE YOUR BET TO DEAL'. -->          <div id="status-bj" class="status-banner">PLACE YOUR BET TO DEAL</div>
+<!-- Original L404: Closes the div element opened by the surrounding markup. -->        </div>
+<!-- Original L405: Blank line separates nearby markup sections. -->
+<!-- Original L406: Comment: Felt Play Table Area. -->        <!-- Felt Play Table Area -->
+<!-- Original L407: ‹div› is a layout container with class='felt-table'. -->        <div class="felt-table">
+<!-- Original L408: Comment: Dealer Area. -->          <!-- Dealer Area -->
+<!-- Original L409: ‹div› is a layout container with class='hand-section'. -->          <div class="hand-section">
+<!-- Original L410: ‹div› is a layout container with class='hand-header'. -->            <div class="hand-header">
+<!-- Original L411: ‹span› is a inline status/text element with DEALER, HAND, span and displays 'DEALER HAND'. -->              <span>DEALER HAND</span>
+<!-- Original L412: ‹span› is a inline status/text element with id='bj-dealer-score', class='score-badge', 0, span and displays '0'. -->              <span id="bj-dealer-score" class="score-badge">0</span>
+<!-- Original L413: Closes the div element opened by the surrounding markup. -->            </div>
+<!-- Original L414: ‹div› is a layout container with id='bj-dealer-cards', class='cards-container', div. -->            <div id="bj-dealer-cards" class="cards-container"></div>
+<!-- Original L415: Closes the div element opened by the surrounding markup. -->          </div>
+<!-- Original L416: Blank line separates nearby markup sections. -->
+<!-- Original L417: Comment: Divider Line. -->          <!-- Divider Line -->
+<!-- Original L418: ‹div› is a layout container with class='table-divider', span, BLACKJACK, PAYS, 3, TO, 2, DEALER, MUST, STAND, ON, 17, span, div and displays 'BLACKJACK PAYS 3 TO 2 — DEALER MUST STAND ON 17'. -->          <div class="table-divider"><span>BLACKJACK PAYS 3 TO 2 — DEALER MUST STAND ON 17</span></div>
+<!-- Original L419: Blank line separates nearby markup sections. -->
+<!-- Original L420: Comment: Player Area. -->          <!-- Player Area -->
+<!-- Original L421: ‹div› is a layout container with class='hand-section'. -->          <div class="hand-section">
+<!-- Original L422: ‹div› is a layout container with class='hand-header'. -->            <div class="hand-header">
+<!-- Original L423: ‹span› is a inline status/text element with YOUR, HAND, span and displays 'YOUR HAND'. -->              <span>YOUR HAND</span>
+<!-- Original L424: ‹span› is a inline status/text element with id='bj-player-score', class='score-badge', 0, span and displays '0'. -->              <span id="bj-player-score" class="score-badge">0</span>
+<!-- Original L425: Closes the div element opened by the surrounding markup. -->            </div>
+<!-- Original L426: ‹div› is a layout container with id='bj-player-cards', class='cards-container', div. -->            <div id="bj-player-cards" class="cards-container"></div>
+<!-- Original L427: Closes the div element opened by the surrounding markup. -->          </div>
+<!-- Original L428: Closes the div element opened by the surrounding markup. -->        </div>
+<!-- Original L429: Blank line separates nearby markup sections. -->
+<!-- Original L430: Comment: Controls Dashboard. -->        <!-- Controls Dashboard -->
+<!-- Original L431: ‹div› is a layout container with class='dashboard'. -->        <div class="dashboard">
+<!-- Original L432: ‹div› is a layout container with class='card'. -->          <div class="card">
+<!-- Original L433: ‹span› is a inline status/text element with class='label', Current, Bet, span and displays 'Current Bet'. -->            <span class="label">Current Bet</span>
+<!-- Original L434: ‹div› is a layout container with class='bet-controls'. -->            <div class="bet-controls">
+<!-- Original L435: ‹button› is a interactive button with id='btn-bj-minus', class='btn-small', -, button and displays '-'. -->              <button id="btn-bj-minus" class="btn-small">-</button>
+<!-- Original L436: ‹span› is a inline status/text element with id='bet-bj-display', class='value', 10, span and displays '$10'. -->              <span id="bet-bj-display" class="value">$10</span>
+<!-- Original L437: ‹button› is a interactive button with id='btn-bj-plus', class='btn-small', button and displays '+'. -->              <button id="btn-bj-plus" class="btn-small">+</button>
+<!-- Original L438: ‹button› is a interactive button with id='btn-bj-max', class='max-btn', type='button', MAX, button and displays 'MAX'. -->              <button id="btn-bj-max" class="max-btn" type="button">MAX</button>
+<!-- Original L439: ‹button› is a interactive button with id='btn-bj-clear', class='btn-small', type='button', Clear, bet, button and displays 'Clear bet'. -->              <button id="btn-bj-clear" class="btn-small" type="button">Clear bet</button>
+<!-- Original L440: Closes the div element opened by the surrounding markup. -->            </div>
+<!-- Original L441: Closes the div element opened by the surrounding markup. -->          </div>
+<!-- Original L442: Closes the div element opened by the surrounding markup. -->        </div>
+<!-- Original L443: Blank line separates nearby markup sections. -->
+<!-- Original L444: ‹div› is a layout container with class='actions'. -->        <div class="actions">
+<!-- Original L445: ‹button› is a interactive button with id='btn-bj-deal', class='spin-btn', DEAL, HAND, button and displays 'DEAL HAND'. -->          <button id="btn-bj-deal" class="spin-btn">DEAL HAND</button>
+<!-- Original L446: ‹button› is a interactive button with id='btn-bj-hit', class='action-btn-green hidden-view', HIT, button and displays 'HIT'. -->          <button id="btn-bj-hit" class="action-btn-green hidden-view">HIT</button>
+<!-- Original L447: ‹button› is a interactive button with id='btn-bj-stand', class='action-btn-red hidden-view', STAND, button and displays 'STAND'. -->          <button id="btn-bj-stand" class="action-btn-red hidden-view">STAND</button>
+<!-- Original L448: ‹button› is a interactive button with id='btn-bj-double', class='action-btn-gold hidden-view', DOUBLE, DOWN, button and displays 'DOUBLE DOWN'. -->          <button id="btn-bj-double" class="action-btn-gold hidden-view">DOUBLE DOWN</button>
+<!-- Original L449: Closes the div element opened by the surrounding markup. -->        </div>
+<!-- Original L450: Closes the div element opened by the surrounding markup. -->      </div>
+<!-- Original L451: Closes the section element opened by the surrounding markup. -->    </section>
+<!-- Original L452: Blank line separates nearby markup sections. -->
+<!-- Original L453: Comment: COIN TOSS ROOM. -->    <!-- COIN TOSS ROOM -->
+<!-- Original L454: ‹section› is a page/view section with id='view-coin-toss', class='view-screen hidden-view'. -->    <section id="view-coin-toss" class="view-screen hidden-view">
+<!-- Original L455: ‹button› is a interactive button with class='back-lobby-btn', BACK, TO, LOBBY, button and displays '⬅ BACK TO LOBBY'. -->      <button class="back-lobby-btn">⬅ BACK TO LOBBY</button>
+<!-- Original L456: Blank line separates nearby markup sections. -->      
+<!-- Original L457: ‹div› is a layout container with class='slot-machine coin-toss-machine'. -->      <div class="slot-machine coin-toss-machine">
+<!-- Original L458: ‹div› is a layout container with class='header'. -->        <div class="header">
+<!-- Original L459: ‹h1› is a top-level heading with Coin, Toss, h1 and displays 'Coin Toss'. -->          <h1>Coin Toss</h1>
+<!-- Original L460: ‹div› is a layout container with id='status-coin', class='status-banner', PICK, HEADS, OR, TAILS, div and displays 'PICK HEADS OR TAILS'. -->          <div id="status-coin" class="status-banner">PICK HEADS OR TAILS</div>
+<!-- Original L461: Closes the div element opened by the surrounding markup. -->        </div>
+<!-- Original L462: Blank line separates nearby markup sections. -->
+<!-- Original L463: ‹div› is a layout container with class='coin-stage'. -->        <div class="coin-stage">
+<!-- Original L464: ‹div› is a layout container with id='coin-element', class='coin'. -->          <div id="coin-element" class="coin">
+<!-- Original L465: ‹div› is a layout container with class='coin-face coin-heads', br, span, HEADS, span, div and displays '🪙HEADS'. -->            <div class="coin-face coin-heads">🪙<br><span>HEADS</span></div>
+<!-- Original L466: ‹div› is a layout container with class='coin-face coin-tails', br, span, TAILS, span, div and displays '👑TAILS'. -->            <div class="coin-face coin-tails">👑<br><span>TAILS</span></div>
+<!-- Original L467: Closes the div element opened by the surrounding markup. -->          </div>
+<!-- Original L468: Closes the div element opened by the surrounding markup. -->        </div>
+<!-- Original L469: Blank line separates nearby markup sections. -->
+<!-- Original L470: ‹div› is a layout container with class='choice-selector'. -->        <div class="choice-selector">
+<!-- Original L471: ‹button› is a interactive button with id='btn-pick-heads', data-coin-index='0', data-coin-choice='HEADS', class='choice-btn active-choice', HEADS, 2x, button and displays 'HEADS (2x)'. -->          <button id="btn-pick-heads" data-coin-index="0" data-coin-choice="HEADS" class="choice-btn active-choice">HEADS (2x)</button>
+<!-- Original L472: ‹button› is a interactive button with id='btn-pick-tails', data-coin-index='0', data-coin-choice='TAILS', class='choice-btn', TAILS, 2x, button and displays 'TAILS (2x)'. -->          <button id="btn-pick-tails" data-coin-index="0" data-coin-choice="TAILS" class="choice-btn">TAILS (2x)</button>
+<!-- Original L473: Closes the div element opened by the surrounding markup. -->        </div>
+<!-- Original L474: Blank line separates nearby markup sections. -->
+<!-- Original L475: ‹div› is a layout container with class='dashboard'. -->        <div class="dashboard">
+<!-- Original L476: ‹div› is a layout container with class='card'. -->          <div class="card">
+<!-- Original L477: ‹span› is a inline status/text element with class='label', Current, Bet, span and displays 'Current Bet'. -->            <span class="label">Current Bet</span>
+<!-- Original L478: ‹div› is a layout container with class='bet-controls'. -->            <div class="bet-controls">
+<!-- Original L479: ‹button› is a interactive button with id='btn-coin-minus', class='btn-small', -, button and displays '-'. -->              <button id="btn-coin-minus" class="btn-small">-</button>
+<!-- Original L480: ‹span› is a inline status/text element with id='bet-coin-display', class='value', 10, span and displays '$10'. -->              <span id="bet-coin-display" class="value">$10</span>
+<!-- Original L481: ‹button› is a interactive button with id='btn-coin-plus', class='btn-small', button and displays '+'. -->              <button id="btn-coin-plus" class="btn-small">+</button>
+<!-- Original L482: ‹button› is a interactive button with id='btn-coin-clear', class='btn-small', type='button', Clear, bet, button and displays 'Clear bet'. -->              <button id="btn-coin-clear" class="btn-small" type="button">Clear bet</button>
+<!-- Original L483: Closes the div element opened by the surrounding markup. -->            </div>
+<!-- Original L484: Closes the div element opened by the surrounding markup. -->          </div>
+<!-- Original L485: Closes the div element opened by the surrounding markup. -->        </div>
+<!-- Original L486: Blank line separates nearby markup sections. -->
+<!-- Original L487: ‹div› is a layout container with class='actions'. -->        <div class="actions">
+<!-- Original L488: ‹button› is a interactive button with id='btn-coin-max', class='max-btn', MAX, button and displays 'MAX'. -->          <button id="btn-coin-max" class="max-btn">MAX</button>
+<!-- Original L489: ‹button› is a interactive button with id='btn-coin-flip', class='spin-btn', FLIP, COIN, button and displays 'FLIP COIN'. -->          <button id="btn-coin-flip" class="spin-btn">FLIP COIN</button>
+<!-- Original L490: Closes the div element opened by the surrounding markup. -->        </div>
+<!-- Original L491: Closes the div element opened by the surrounding markup. -->      </div>
+<!-- Original L492: Closes the section element opened by the surrounding markup. -->    </section>
+<!-- Original L493: Blank line separates nearby markup sections. -->    
+<!-- Original L494: ‹section› is a page/view section with id='view-three-coin-toss', class='view-screen hidden-view'. -->    <section id="view-three-coin-toss" class="view-screen hidden-view">
+<!-- Original L495: ‹button› is a interactive button with class='back-lobby-btn', BACK, TO, LOBBY, button and displays '⬅ BACK TO LOBBY'. -->      <button class="back-lobby-btn">⬅ BACK TO LOBBY</button>
+<!-- Original L496: Blank line separates nearby markup sections. -->      
+<!-- Original L497: ‹div› is a layout container with class='slot-machine three-coin-toss-machine'. -->      <div class="slot-machine three-coin-toss-machine">
+<!-- Original L498: ‹div› is a layout container with class='header'. -->        <div class="header">
+<!-- Original L499: ‹h1› is a top-level heading with 3x, Coin, Toss, h1 and displays '3x Coin Toss'. -->          <h1>3x Coin Toss</h1>
+<!-- Original L500: ‹div› is a layout container with id='status-three-coin', class='status-banner', PREDICT, ALL, THREE, COINS, div and displays 'PREDICT ALL THREE COINS'. -->          <div id="status-three-coin" class="status-banner">PREDICT ALL THREE COINS</div>
+<!-- Original L501: Closes the div element opened by the surrounding markup. -->        </div>
+<!-- Original L502: Blank line separates nearby markup sections. -->
+<!-- Original L503: ‹div› is a layout container with class='three-coin-stage'. -->        <div class="three-coin-stage">
+<!-- Original L504: ‹div› is a layout container with id='coin-a-element', class='coin'. -->          <div id="coin-a-element" class="coin">
+<!-- Original L505: ‹div› is a layout container with class='coin-face coin-heads', br, span, HEADS, span, div and displays '🪙HEADS'. -->            <div class="coin-face coin-heads">🪙<br><span>HEADS</span></div>
+<!-- Original L506: ‹div› is a layout container with class='coin-face coin-tails', br, span, TAILS, span, div and displays '👑TAILS'. -->            <div class="coin-face coin-tails">👑<br><span>TAILS</span></div>
+<!-- Original L507: Closes the div element opened by the surrounding markup. -->          </div>
+<!-- Original L508: ‹div› is a layout container with id='coin-b-element', class='coin'. -->          <div id="coin-b-element" class="coin">
+<!-- Original L509: ‹div› is a layout container with class='coin-face coin-heads', br, span, HEADS, span, div and displays '🪙HEADS'. -->            <div class="coin-face coin-heads">🪙<br><span>HEADS</span></div>
+<!-- Original L510: ‹div› is a layout container with class='coin-face coin-tails', br, span, TAILS, span, div and displays '👑TAILS'. -->            <div class="coin-face coin-tails">👑<br><span>TAILS</span></div>
+<!-- Original L511: Closes the div element opened by the surrounding markup. -->          </div>
+<!-- Original L512: ‹div› is a layout container with id='coin-c-element', class='coin'. -->          <div id="coin-c-element" class="coin">
+<!-- Original L513: ‹div› is a layout container with class='coin-face coin-heads', br, span, HEADS, span, div and displays '🪙HEADS'. -->            <div class="coin-face coin-heads">🪙<br><span>HEADS</span></div>
+<!-- Original L514: ‹div› is a layout container with class='coin-face coin-tails', br, span, TAILS, span, div and displays '👑TAILS'. -->            <div class="coin-face coin-tails">👑<br><span>TAILS</span></div>
+<!-- Original L515: Closes the div element opened by the surrounding markup. -->          </div>
+<!-- Original L516: Closes the div element opened by the surrounding markup. -->        </div>
+<!-- Original L517: Blank line separates nearby markup sections. -->
+<!-- Original L518: ‹p› is a paragraph with class='game-rules-note', Predict, each, coin, then, flip, all, three, 0, 1, correct:, no, return, 2, correct:, 1, 5, total, return, 3, correct:, 3, total, return, Returns, include, your, stake, the, payout, doubles, from, 2, to, 3, correct, p and displays 'Predict each coin, then flip all three. 0–1 correct: no return. 2 correct: 1.5× total return. 3 correct: 3× total return. Returns include your stake; the payout doubles from 2 to 3 correct.'. -->        <p class="game-rules-note">Predict each coin, then flip all three. 0–1 correct: no return. 2 correct: 1.5× total return. 3 correct: 3× total return. Returns include your stake; the payout doubles from 2 to 3 correct.</p>
+<!-- Original L519: ‹div› is a layout container with class='three-coin-choices'. -->        <div class="three-coin-choices">
+<!-- Original L520: ‹fieldset› is a choice group with legend, Coin, 1, legend, button, type='button', class='choice-btn', data-coin-index='0', data-coin-choice='HEADS', aria-pressed='false', Heads, button, button, type='button', class='choice-btn', data-coin-index='0', data-coin-choice='TAILS', aria-pressed='false', Tails, button, fieldset and displays 'Coin 1HeadsTails'. -->          <fieldset><legend>Coin 1</legend><button type="button" class="choice-btn" data-coin-index="0" data-coin-choice="HEADS" aria-pressed="false">Heads</button><button type="button" class="choice-btn" data-coin-index="0" data-coin-choice="TAILS" aria-pressed="false">Tails</button></fieldset>
+<!-- Original L521: ‹fieldset› is a choice group with legend, Coin, 2, legend, button, type='button', class='choice-btn', data-coin-index='1', data-coin-choice='HEADS', aria-pressed='false', Heads, button, button, type='button', class='choice-btn', data-coin-index='1', data-coin-choice='TAILS', aria-pressed='false', Tails, button, fieldset and displays 'Coin 2HeadsTails'. -->          <fieldset><legend>Coin 2</legend><button type="button" class="choice-btn" data-coin-index="1" data-coin-choice="HEADS" aria-pressed="false">Heads</button><button type="button" class="choice-btn" data-coin-index="1" data-coin-choice="TAILS" aria-pressed="false">Tails</button></fieldset>
+<!-- Original L522: ‹fieldset› is a choice group with legend, Coin, 3, legend, button, type='button', class='choice-btn', data-coin-index='2', data-coin-choice='HEADS', aria-pressed='false', Heads, button, button, type='button', class='choice-btn', data-coin-index='2', data-coin-choice='TAILS', aria-pressed='false', Tails, button, fieldset and displays 'Coin 3HeadsTails'. -->          <fieldset><legend>Coin 3</legend><button type="button" class="choice-btn" data-coin-index="2" data-coin-choice="HEADS" aria-pressed="false">Heads</button><button type="button" class="choice-btn" data-coin-index="2" data-coin-choice="TAILS" aria-pressed="false">Tails</button></fieldset>
+<!-- Original L523: Closes the div element opened by the surrounding markup. -->        </div>
+<!-- Original L524: ‹div› is a layout container with class='dashboard'. -->        <div class="dashboard">
+<!-- Original L525: ‹div› is a layout container with class='card'. -->          <div class="card">
+<!-- Original L526: ‹span› is a inline status/text element with class='label', Current, Bet, span and displays 'Current Bet'. -->            <span class="label">Current Bet</span>
+<!-- Original L527: ‹div› is a layout container with class='bet-controls'. -->            <div class="bet-controls">
+<!-- Original L528: ‹button› is a interactive button with id='btn-three-coin-minus', class='btn-small', -, button and displays '-'. -->              <button id="btn-three-coin-minus" class="btn-small">-</button>
+<!-- Original L529: ‹span› is a inline status/text element with id='bet-three-coin-display', class='value', 10, span and displays '$10'. -->              <span id="bet-three-coin-display" class="value">$10</span>
+<!-- Original L530: ‹button› is a interactive button with id='btn-three-coin-plus', class='btn-small', button and displays '+'. -->              <button id="btn-three-coin-plus" class="btn-small">+</button>
+<!-- Original L531: ‹button› is a interactive button with id='btn-three-coin-clear', class='btn-small', Clear, Bet, button and displays 'Clear Bet'. -->              <button id="btn-three-coin-clear" class="btn-small">Clear Bet</button>
+<!-- Original L532: Closes the div element opened by the surrounding markup. -->            </div>
+<!-- Original L533: Closes the div element opened by the surrounding markup. -->          </div>
+<!-- Original L534: Closes the div element opened by the surrounding markup. -->        </div>
+<!-- Original L535: Blank line separates nearby markup sections. -->
+<!-- Original L536: ‹div› is a layout container with class='actions'. -->        <div class="actions">
+<!-- Original L537: ‹button› is a interactive button with id='btn-three-coin-max', class='max-btn', MAX, button and displays 'MAX'. -->          <button id="btn-three-coin-max" class="max-btn">MAX</button>
+<!-- Original L538: ‹button› is a interactive button with id='btn-three-coin-flip', class='spin-btn', FLIP, COINS, button and displays 'FLIP COINS'. -->          <button id="btn-three-coin-flip" class="spin-btn">FLIP COINS</button>
+<!-- Original L539: Closes the div element opened by the surrounding markup. -->        </div>
+<!-- Original L540: Closes the div element opened by the surrounding markup. -->      </div>
+<!-- Original L541: Closes the section element opened by the surrounding markup. -->    </section>
+<!-- Original L542: Blank line separates nearby markup sections. -->
+<!-- Original L543: Blank line separates nearby markup sections. -->
+<!-- Original L544: Comment: 5-REEL SLOTS VIEW. -->    <!-- 5-REEL SLOTS VIEW -->
+<!-- Original L545: ‹section› is a page/view section with id='view-5reel-slots', class='view-screen hidden-view'. -->    <section id="view-5reel-slots" class="view-screen hidden-view">
+<!-- Original L546: ‹button› is a interactive button with class='back-lobby-btn', BACK, TO, LOBBY, button and displays '⬅ BACK TO LOBBY'. -->      <button class="back-lobby-btn">⬅ BACK TO LOBBY</button>
+<!-- Original L547: Blank line separates nearby markup sections. -->      
+<!-- Original L548: ‹div› is a layout container with class='slot-machine slot-5reel'. -->      <div class="slot-machine slot-5reel">
+<!-- Original L549: ‹div› is a layout container with class='header'. -->        <div class="header">
+<!-- Original L550: ‹h1› is a top-level heading with Gem, Quest, 5x3, h1 and displays 'Gem Quest 5x3'. -->          <h1>Gem Quest 5x3</h1>
+<!-- Original L551: ‹p› is a paragraph with class='slot-theme-stakes', HIGH, STAKES, 5, MINIMUM, p and displays 'HIGH STAKES · $5 MINIMUM'. -->          <p class="slot-theme-stakes">HIGH STAKES · $5 MINIMUM</p>
+<!-- Original L552: ‹div› is a layout container with id='status-5reel', class='status-banner', data-slot-status, PRESS, SPIN, TO, PLAY, div and displays 'PRESS SPIN TO PLAY'. -->          <div id="status-5reel" class="status-banner" data-slot-status>PRESS SPIN TO PLAY</div>
+<!-- Original L553: Closes the div element opened by the surrounding markup. -->        </div>
+<!-- Original L554: Blank line separates nearby markup sections. -->
+<!-- Original L555: ‹div› is a layout container with id='bonus-hud-5reel', class='bonus-hud hidden-view', data-slot-bonus-hud. -->        <div id="bonus-hud-5reel" class="bonus-hud hidden-view" data-slot-bonus-hud>
+<!-- Original L556: ‹div› is a layout container with class='bonus-stat', FREE, SPINS:, span, id='fs-remaining-count', data-slot-fs-count, 0, span, div and displays 'FREE SPINS: 0'. -->          <div class="bonus-stat">FREE SPINS: <span id="fs-remaining-count" data-slot-fs-count>0</span></div>
+<!-- Original L557: ‹div› is a layout container with class='bonus-stat', BONUS, WIN:, span, id='fs-total-win', data-slot-fs-win, 0, 00, span, div and displays 'BONUS WIN: $0.00'. -->          <div class="bonus-stat">BONUS WIN: <span id="fs-total-win" data-slot-fs-win>$0.00</span></div>
+<!-- Original L558: Closes the div element opened by the surrounding markup. -->        </div>
+<!-- Original L559: Blank line separates nearby markup sections. -->
+<!-- Original L560: ‹div› is a layout container with class='reels-viewport-5reel'. -->        <div class="reels-viewport-5reel">
+<!-- Original L561: ‹div› is a layout container with class='reel-5reel', id='reel5-0', div, class='strip', div, div. -->          <div class="reel-5reel" id="reel5-0"><div class="strip"></div></div>
+<!-- Original L562: ‹div› is a layout container with class='reel-5reel', id='reel5-1', div, class='strip', div, div. -->          <div class="reel-5reel" id="reel5-1"><div class="strip"></div></div>
+<!-- Original L563: ‹div› is a layout container with class='reel-5reel', id='reel5-2', div, class='strip', div, div. -->          <div class="reel-5reel" id="reel5-2"><div class="strip"></div></div>
+<!-- Original L564: ‹div› is a layout container with class='reel-5reel', id='reel5-3', div, class='strip', div, div. -->          <div class="reel-5reel" id="reel5-3"><div class="strip"></div></div>
+<!-- Original L565: ‹div› is a layout container with class='reel-5reel', id='reel5-4', div, class='strip', div, div. -->          <div class="reel-5reel" id="reel5-4"><div class="strip"></div></div>
+<!-- Original L566: Closes the div element opened by the surrounding markup. -->        </div>
+<!-- Original L567: Blank line separates nearby markup sections. -->
+<!-- Original L568: ‹div› is a layout container with class='dashboard'. -->        <div class="dashboard">
+<!-- Original L569: ‹div› is a layout container with class='card'. -->          <div class="card">
+<!-- Original L570: ‹span› is a inline status/text element with class='label', Total, stake, 10, paylines, span and displays 'Total stake · 10 paylines'. -->            <span class="label">Total stake · 10 paylines</span>
+<!-- Original L571: ‹div› is a layout container with class='bet-controls'. -->            <div class="bet-controls">
+<!-- Original L572: ‹button› is a interactive button with id='btn5-minus', class='btn-small', data-slot-minus, type='button', aria-label='Decrease bet', -, button and displays '-'. -->              <button id="btn5-minus" class="btn-small" data-slot-minus type="button" aria-label="Decrease bet">-</button>
+<!-- Original L573: ‹span› is a inline status/text element with id='bet5-display', class='value', data-slot-bet, 10, 00, span and displays '$10.00'. -->              <span id="bet5-display" class="value" data-slot-bet>$10.00</span>
+<!-- Original L574: ‹button› is a interactive button with id='btn5-plus', class='btn-small', data-slot-plus, type='button', aria-label='Increase bet', button and displays '+'. -->              <button id="btn5-plus" class="btn-small" data-slot-plus type="button" aria-label="Increase bet">+</button>
+<!-- Original L575: Closes the div element opened by the surrounding markup. -->            </div>
+<!-- Original L576: Closes the div element opened by the surrounding markup. -->          </div>
+<!-- Original L577: Closes the div element opened by the surrounding markup. -->        </div>
+<!-- Original L578: Blank line separates nearby markup sections. -->
+<!-- Original L579: ‹div› is a layout container with class='actions'. -->        <div class="actions">
+<!-- Original L580: ‹button› is a interactive button with id='btn5-max', class='max-btn', data-slot-max, type='button', MAX, button and displays 'MAX'. -->          <button id="btn5-max" class="max-btn" data-slot-max type="button">MAX</button>
+<!-- Original L581: ‹button› is a interactive button with id='btn5-spin', class='spin-btn', data-slot-spin, type='button', SPIN, button and displays 'SPIN'. -->          <button id="btn5-spin" class="spin-btn" data-slot-spin type="button">SPIN</button>
+<!-- Original L582: Closes the div element opened by the surrounding markup. -->        </div>
+<!-- Original L583: Closes the div element opened by the surrounding markup. -->      </div>
+<!-- Original L584: Closes the section element opened by the surrounding markup. -->    </section>
+<!-- Original L585: Blank line separates nearby markup sections. -->
+<!-- Original L586: Comment: CLASSIC SLOTS VIEW. -->    <!-- CLASSIC SLOTS VIEW -->
+<!-- Original L587: ‹section› is a page/view section with id='view-classic-slots', class='view-screen hidden-view'. -->    <section id="view-classic-slots" class="view-screen hidden-view">
+<!-- Original L588: ‹button› is a interactive button with class='back-lobby-btn', BACK, TO, LOBBY, button and displays '⬅ BACK TO LOBBY'. -->      <button class="back-lobby-btn">⬅ BACK TO LOBBY</button>
+<!-- Original L589: Blank line separates nearby markup sections. -->      
+<!-- Original L590: ‹div› is a layout container with class='slot-machine'. -->      <div class="slot-machine">
+<!-- Original L591: ‹div› is a layout container with class='header'. -->        <div class="header">
+<!-- Original L592: ‹h1› is a top-level heading with Classic, 3-Reel, h1 and displays 'Classic 3-Reel'. -->          <h1>Classic 3-Reel</h1>
+<!-- Original L593: ‹p› is a paragraph with class='slot-theme-stakes', HIGH, STAKES, 5, MINIMUM, p and displays 'HIGH STAKES · $5 MINIMUM'. -->          <p class="slot-theme-stakes">HIGH STAKES · $5 MINIMUM</p>
+<!-- Original L594: ‹div› is a layout container with id='status', class='status-banner', data-slot-status, PRESS, SPIN, TO, PLAY, div and displays 'PRESS SPIN TO PLAY'. -->          <div id="status" class="status-banner" data-slot-status>PRESS SPIN TO PLAY</div>
+<!-- Original L595: Closes the div element opened by the surrounding markup. -->        </div>
+<!-- Original L596: Blank line separates nearby markup sections. -->
+<!-- Original L597: ‹div› is a layout container with class='reels-viewport'. -->        <div class="reels-viewport">
+<!-- Original L598: ‹div› is a layout container with class='payline-overlay', div. -->          <div class="payline-overlay"></div>
+<!-- Original L599: ‹div› is a layout container with class='reel', id='reel-0', div, class='strip', div, div. -->          <div class="reel" id="reel-0"><div class="strip"></div></div>
+<!-- Original L600: ‹div› is a layout container with class='reel', id='reel-1', div, class='strip', div, div. -->          <div class="reel" id="reel-1"><div class="strip"></div></div>
+<!-- Original L601: ‹div› is a layout container with class='reel', id='reel-2', div, class='strip', div, div. -->          <div class="reel" id="reel-2"><div class="strip"></div></div>
+<!-- Original L602: Closes the div element opened by the surrounding markup. -->        </div>
+<!-- Original L603: Blank line separates nearby markup sections. -->
+<!-- Original L604: ‹div› is a layout container with class='dashboard'. -->        <div class="dashboard">
+<!-- Original L605: ‹div› is a layout container with class='card'. -->          <div class="card">
+<!-- Original L606: ‹span› is a inline status/text element with class='label', Current, Bet, span and displays 'Current Bet'. -->            <span class="label">Current Bet</span>
+<!-- Original L607: ‹div› is a layout container with class='bet-controls'. -->            <div class="bet-controls">
+<!-- Original L608: ‹button› is a interactive button with id='btn-minus', class='btn-small', data-slot-minus, type='button', aria-label='Decrease bet', -, button and displays '-'. -->              <button id="btn-minus" class="btn-small" data-slot-minus type="button" aria-label="Decrease bet">-</button>
+<!-- Original L609: ‹span› is a inline status/text element with id='bet-display', class='value', data-slot-bet, 10, 00, span and displays '$10.00'. -->              <span id="bet-display" class="value" data-slot-bet>$10.00</span>
+<!-- Original L610: ‹button› is a interactive button with id='btn-plus', class='btn-small', data-slot-plus, type='button', aria-label='Increase bet', button and displays '+'. -->              <button id="btn-plus" class="btn-small" data-slot-plus type="button" aria-label="Increase bet">+</button>
+<!-- Original L611: Closes the div element opened by the surrounding markup. -->            </div>
+<!-- Original L612: Closes the div element opened by the surrounding markup. -->          </div>
+<!-- Original L613: Closes the div element opened by the surrounding markup. -->        </div>
+<!-- Original L614: Blank line separates nearby markup sections. -->
+<!-- Original L615: ‹div› is a layout container with class='actions'. -->        <div class="actions">
+<!-- Original L616: ‹button› is a interactive button with id='btn-max', class='max-btn', data-slot-max, type='button', MAX, button and displays 'MAX'. -->          <button id="btn-max" class="max-btn" data-slot-max type="button">MAX</button>
+<!-- Original L617: ‹button› is a interactive button with id='btn-spin', class='spin-btn', data-slot-spin, type='button', SPIN, button and displays 'SPIN'. -->          <button id="btn-spin" class="spin-btn" data-slot-spin type="button">SPIN</button>
+<!-- Original L618: Closes the div element opened by the surrounding markup. -->        </div>
+<!-- Original L619: Closes the div element opened by the surrounding markup. -->      </div>
+<!-- Original L620: Closes the section element opened by the surrounding markup. -->    </section>
+<!-- Original L621: Blank line separates nearby markup sections. -->
+<!-- Original L622: Closes the main element opened by the surrounding markup. -->  </main>
+<!-- Original L623: Blank line separates nearby markup sections. -->
+<!-- Original L624: ‹template› is a inert reusable DOM template with id='slot-template-classic'. -->  <template id="slot-template-classic">
+<!-- Original L625: ‹section› is a page/view section. -->    <section>
+<!-- Original L626: ‹button› is a interactive button with class='back-lobby-btn', type='button', BACK, TO, LOBBY, button and displays '⬅ BACK TO LOBBY'. -->      <button class="back-lobby-btn" type="button">⬅ BACK TO LOBBY</button>
+<!-- Original L627: ‹div› is a layout container with class='slot-machine theme-slot-machine'. -->      <div class="slot-machine theme-slot-machine">
+<!-- Original L628: ‹div› is a layout container with class='header'. -->        <div class="header">
+<!-- Original L629: ‹h1› is a top-level heading with data-slot-title, h1. -->          <h1 data-slot-title></h1>
+<!-- Original L630: ‹p› is a paragraph with class='slot-theme-stakes', data-slot-stakes, p. -->          <p class="slot-theme-stakes" data-slot-stakes></p>
+<!-- Original L631: ‹div› is a layout container with class='status-banner', data-slot-status, role='status', aria-live='polite', div. -->          <div class="status-banner" data-slot-status role="status" aria-live="polite"></div>
+<!-- Original L632: Closes the div element opened by the surrounding markup. -->        </div>
+<!-- Original L633: ‹div› is a layout container with class='reels-viewport'. -->        <div class="reels-viewport">
+<!-- Original L634: ‹div› is a layout container with class='payline-overlay', div. -->          <div class="payline-overlay"></div>
+<!-- Original L635: ‹div› is a layout container with class='reel', div, class='strip', div, div. -->          <div class="reel"><div class="strip"></div></div>
+<!-- Original L636: ‹div› is a layout container with class='reel', div, class='strip', div, div. -->          <div class="reel"><div class="strip"></div></div>
+<!-- Original L637: ‹div› is a layout container with class='reel', div, class='strip', div, div. -->          <div class="reel"><div class="strip"></div></div>
+<!-- Original L638: Closes the div element opened by the surrounding markup. -->        </div>
+<!-- Original L639: ‹div› is a layout container with class='dashboard'. -->        <div class="dashboard">
+<!-- Original L640: ‹div› is a layout container with class='card'. -->          <div class="card">
+<!-- Original L641: ‹span› is a inline status/text element with class='label', Total, stake, 5, paylines, span and displays 'Total stake · 5 paylines'. -->            <span class="label">Total stake · 5 paylines</span>
+<!-- Original L642: ‹div› is a layout container with class='bet-controls'. -->            <div class="bet-controls">
+<!-- Original L643: ‹button› is a interactive button with class='btn-small', data-slot-minus, type='button', aria-label='Decrease bet', button and displays '−'. -->              <button class="btn-small" data-slot-minus type="button" aria-label="Decrease bet">−</button>
+<!-- Original L644: ‹span› is a inline status/text element with class='value', data-slot-bet, span. -->              <span class="value" data-slot-bet></span>
+<!-- Original L645: ‹button› is a interactive button with class='btn-small', data-slot-plus, type='button', aria-label='Increase bet', button and displays '+'. -->              <button class="btn-small" data-slot-plus type="button" aria-label="Increase bet">+</button>
+<!-- Original L646: Closes the div element opened by the surrounding markup. -->            </div>
+<!-- Original L647: Closes the div element opened by the surrounding markup. -->          </div>
+<!-- Original L648: Closes the div element opened by the surrounding markup. -->        </div>
+<!-- Original L649: ‹div› is a layout container with class='actions'. -->        <div class="actions">
+<!-- Original L650: ‹button› is a interactive button with class='max-btn', data-slot-max, type='button', MAX, button and displays 'MAX'. -->          <button class="max-btn" data-slot-max type="button">MAX</button>
+<!-- Original L651: ‹button› is a interactive button with class='spin-btn', data-slot-spin, type='button', SPIN, button and displays 'SPIN'. -->          <button class="spin-btn" data-slot-spin type="button">SPIN</button>
+<!-- Original L652: Closes the div element opened by the surrounding markup. -->        </div>
+<!-- Original L653: Closes the div element opened by the surrounding markup. -->      </div>
+<!-- Original L654: Closes the section element opened by the surrounding markup. -->    </section>
+<!-- Original L655: Closes the template element opened by the surrounding markup. -->  </template>
+<!-- Original L656: Blank line separates nearby markup sections. -->
+<!-- Original L657: ‹template› is a inert reusable DOM template with id='slot-template-gem-quest'. -->  <template id="slot-template-gem-quest">
+<!-- Original L658: ‹section› is a page/view section. -->    <section>
+<!-- Original L659: ‹button› is a interactive button with class='back-lobby-btn', type='button', BACK, TO, LOBBY, button and displays '⬅ BACK TO LOBBY'. -->      <button class="back-lobby-btn" type="button">⬅ BACK TO LOBBY</button>
+<!-- Original L660: ‹div› is a layout container with class='slot-machine slot-5reel theme-slot-machine'. -->      <div class="slot-machine slot-5reel theme-slot-machine">
+<!-- Original L661: ‹div› is a layout container with class='header'. -->        <div class="header">
+<!-- Original L662: ‹h1› is a top-level heading with data-slot-title, h1. -->          <h1 data-slot-title></h1>
+<!-- Original L663: ‹p› is a paragraph with class='slot-theme-stakes', data-slot-stakes, p. -->          <p class="slot-theme-stakes" data-slot-stakes></p>
+<!-- Original L664: ‹div› is a layout container with class='status-banner', data-slot-status, role='status', aria-live='polite', div. -->          <div class="status-banner" data-slot-status role="status" aria-live="polite"></div>
+<!-- Original L665: Closes the div element opened by the surrounding markup. -->        </div>
+<!-- Original L666: ‹div› is a layout container with class='bonus-hud hidden-view', data-slot-bonus-hud. -->        <div class="bonus-hud hidden-view" data-slot-bonus-hud>
+<!-- Original L667: ‹div› is a layout container with class='bonus-stat', FREE, SPINS:, span, data-slot-fs-count, 0, span, div and displays 'FREE SPINS: 0'. -->          <div class="bonus-stat">FREE SPINS: <span data-slot-fs-count>0</span></div>
+<!-- Original L668: ‹div› is a layout container with class='bonus-stat', BONUS, WIN:, span, data-slot-fs-win, 0, 00, span, div and displays 'BONUS WIN: $0.00'. -->          <div class="bonus-stat">BONUS WIN: <span data-slot-fs-win>$0.00</span></div>
+<!-- Original L669: Closes the div element opened by the surrounding markup. -->        </div>
+<!-- Original L670: ‹div› is a layout container with class='reels-viewport-5reel'. -->        <div class="reels-viewport-5reel">
+<!-- Original L671: ‹div› is a layout container with class='reel-5reel', div, class='strip', div, div. -->          <div class="reel-5reel"><div class="strip"></div></div>
+<!-- Original L672: ‹div› is a layout container with class='reel-5reel', div, class='strip', div, div. -->          <div class="reel-5reel"><div class="strip"></div></div>
+<!-- Original L673: ‹div› is a layout container with class='reel-5reel', div, class='strip', div, div. -->          <div class="reel-5reel"><div class="strip"></div></div>
+<!-- Original L674: ‹div› is a layout container with class='reel-5reel', div, class='strip', div, div. -->          <div class="reel-5reel"><div class="strip"></div></div>
+<!-- Original L675: ‹div› is a layout container with class='reel-5reel', div, class='strip', div, div. -->          <div class="reel-5reel"><div class="strip"></div></div>
+<!-- Original L676: Closes the div element opened by the surrounding markup. -->        </div>
+<!-- Original L677: ‹div› is a layout container with class='dashboard'. -->        <div class="dashboard">
+<!-- Original L678: ‹div› is a layout container with class='card'. -->          <div class="card">
+<!-- Original L679: ‹span› is a inline status/text element with class='label', Total, stake, 10, paylines, span and displays 'Total stake · 10 paylines'. -->            <span class="label">Total stake · 10 paylines</span>
+<!-- Original L680: ‹div› is a layout container with class='bet-controls'. -->            <div class="bet-controls">
+<!-- Original L681: ‹button› is a interactive button with class='btn-small', data-slot-minus, type='button', aria-label='Decrease bet', button and displays '−'. -->              <button class="btn-small" data-slot-minus type="button" aria-label="Decrease bet">−</button>
+<!-- Original L682: ‹span› is a inline status/text element with class='value', data-slot-bet, span. -->              <span class="value" data-slot-bet></span>
+<!-- Original L683: ‹button› is a interactive button with class='btn-small', data-slot-plus, type='button', aria-label='Increase bet', button and displays '+'. -->              <button class="btn-small" data-slot-plus type="button" aria-label="Increase bet">+</button>
+<!-- Original L684: Closes the div element opened by the surrounding markup. -->            </div>
+<!-- Original L685: Closes the div element opened by the surrounding markup. -->          </div>
+<!-- Original L686: Closes the div element opened by the surrounding markup. -->        </div>
+<!-- Original L687: ‹div› is a layout container with class='actions'. -->        <div class="actions">
+<!-- Original L688: ‹button› is a interactive button with class='max-btn', data-slot-max, type='button', MAX, button and displays 'MAX'. -->          <button class="max-btn" data-slot-max type="button">MAX</button>
+<!-- Original L689: ‹button› is a interactive button with class='spin-btn', data-slot-spin, type='button', SPIN, button and displays 'SPIN'. -->          <button class="spin-btn" data-slot-spin type="button">SPIN</button>
+<!-- Original L690: Closes the div element opened by the surrounding markup. -->        </div>
+<!-- Original L691: Closes the div element opened by the surrounding markup. -->      </div>
+<!-- Original L692: Closes the section element opened by the surrounding markup. -->    </section>
+<!-- Original L693: Closes the template element opened by the surrounding markup. -->  </template>
+<!-- Original L694: Blank line separates nearby markup sections. -->
+<!-- Original L695: ‹div› is a layout container with class='splash-modal hidden-view', id='splash-modal', role='dialog', aria-modal='true', aria-labelledby='splash-title'. -->  <div class="splash-modal hidden-view" id="splash-modal" role="dialog" aria-modal="true" aria-labelledby="splash-title">
+<!-- Original L696: ‹img› is a image with src='assets/splash.png', alt='', class='splash-logo', id='splash-logo'. -->    <img src="assets/splash.png" alt="" class="splash-logo" id="splash-logo" />
+<!-- Original L697: ‹div› is a layout container with class='splash-copy'. -->    <div class="splash-copy">
+<!-- Original L698: ‹p› is a paragraph with class='splash-kicker', Welcome, To, p and displays 'Welcome To'. -->      <p class="splash-kicker">Welcome To</p>
+<!-- Original L699: ‹h1› is a top-level heading with id='splash-title', Sluts, amp, Slots, Casino, h1 and displays 'Sluts &amp; Slots Casino'. -->      <h1 id="splash-title">Sluts &amp; Slots Casino</h1>
+<!-- Original L700: ‹p› is a paragraph with class='splash-tagline', Slots, table, games, racing, p and displays 'Slots · table games · racing'. -->      <p class="splash-tagline">Slots · table games · racing</p>
+<!-- Original L701: ‹p› is a paragraph with class='splash-disclaimer', Just-for-fun, play, p and displays 'Just-for-fun play'. -->      <p class="splash-disclaimer">Just-for-fun play</p>
+<!-- Original L702: Closes the div element opened by the surrounding markup. -->    </div>
+<!-- Original L703: ‹button› is a interactive button with class='splash-skip', id='btn-skip-splash', type='button', Skip, intro, button and displays 'Skip intro'. -->    <button class="splash-skip" id="btn-skip-splash" type="button">Skip intro</button>
+<!-- Original L704: Closes the div element opened by the surrounding markup. -->  </div>
+<!-- Original L705: Blank line separates nearby markup sections. -->
+<!-- Original L706: Closes the body element opened by the surrounding markup. --></body>
+<!-- Original L707: Closes the html element opened by the surrounding markup. --></html>

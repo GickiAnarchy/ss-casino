@@ -1,0 +1,24 @@
+{
+    // This file is VS Code launch configuration (JSON with comments), not application runtime configuration.
+    // Use IntelliSense to learn about possible attributes; hover to view descriptions of existing attributes.
+    // Reference: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            // Attach to a Chrome instance already started with remote debugging enabled on port 9222.
+            "name": "Attach to Chrome",
+            "port": 9222,
+            "request": "attach",
+            "type": "chrome",
+            "webRoot": "${workspaceFolder}"
+        },
+        {
+            // Start Chrome at the local site; run a local HTTP server on port 8080 first.
+            "type": "chrome",
+            "request": "launch",
+            "name": "Launch Chrome against localhost",
+            "url": "http://localhost:8080",
+            "webRoot": "${workspaceFolder}"
+        }
+    ]
+}

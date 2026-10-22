@@ -1,0 +1,11 @@
+flowchart TD
+  A[index.html] --> B[Browser DOM]
+  C[CSS files] --> B
+  D[Classic JS files] --> E[app.js bootstrap]
+  E --> F[Game UI managers]
+  F --> G[Rules and engines]
+  G --> H[Updated DOM]
+  G --> I[Accomplishments]
+  F --> J[local-save.js / profiles.js]
+  J --> K[(Browser storage / JSON backup / linked files)]
+  K --> J

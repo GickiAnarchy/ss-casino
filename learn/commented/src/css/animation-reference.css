@@ -1,0 +1,24 @@
+/* Original L1: Selects .splash-container; the declarations inside control its matching elements. */.splash-container {
+/* Original L2: Sets position: relative (sets positioning scheme). */  position: relative;
+/* Original L3: Sets background: #0d0d11 (paints the background). */  background: #0d0d11;
+/* Original L4: Closes the current CSS rule or responsive/animation block. */}
+/* Original L5: Blank line separates stylesheet rules. */
+/* Original L6: Selects .splash-image; the declarations inside control its matching elements. */.splash-image {
+/* Original L7: Sets width: 100% (sets used width). */  width: 100%;
+/* Original L8: Sets height: 100vh (sets used height). */  height: 100vh;
+/* Original L9: Sets object-fit: cover (fits replaced content within its box). */  object-fit: cover;
+/* Original L10: Comment: Traces alpha transparency of the asset. */  /* Traces alpha transparency of the asset */
+/* Original L11: Sets filter: drop-shadow(0 0 0px rgba(99, 102, 241, 0)) (applies visual filter). */  filter: drop-shadow(0 0 0px rgba(99, 102, 241, 0)); 
+/* Original L12: Sets animation: ambientGlow 3s ease-in-out infinite alternate (runs a named CSS animation). */  animation: ambientGlow 3s ease-in-out infinite alternate;
+/* Original L13: Closes the current CSS rule or responsive/animation block. */}
+/* Original L14: Blank line separates stylesheet rules. */
+/* Original L15: Defines animation timeline ambientGlow for changing properties over time. */@keyframes ambientGlow {
+/* Original L16: Selects 0%; the declarations inside control its matching elements. */  0% {
+/* Original L17: Sets filter: drop-shadow(0 0 15px rgba(99, 102, 241, 0.3)) (applies visual filter). */    filter: drop-shadow(0 0 15px rgba(99, 102, 241, 0.3));
+/* Original L18: Sets transform: translateY(0) (applies geometric transform). */    transform: translateY(0);
+/* Original L19: Closes the current CSS rule or responsive/animation block. */  }
+/* Original L20: Selects 100%; the declarations inside control its matching elements. */  100% {
+/* Original L21: Sets filter: drop-shadow(0 0 40px rgba(168, 85, 247, 0.6)) (applies visual filter). */    filter: drop-shadow(0 0 40px rgba(168, 85, 247, 0.6));
+/* Original L22: Sets transform: translateY(-5px) (applies geometric transform). */    transform: translateY(-5px); /* Smooth GPU-promoted layer lift */
+/* Original L23: Closes the current CSS rule or responsive/animation block. */  }
+/* Original L24: Closes the current CSS rule or responsive/animation block. */}
