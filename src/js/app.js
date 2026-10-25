@@ -1,3 +1,6 @@
+
+
+
 /* Browser bootstrap waits for the HTML, unlocks or creates the local profile, and only then wires game systems to that save. */
 document.addEventListener('DOMContentLoaded', async () => {
   const LocalProfiles = new window.LocalProfileManager();

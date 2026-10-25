@@ -118,6 +118,36 @@ body {
   border-radius: 10px;
 }
 
+.app-link {
+  text-align: center;
+  font-size: 18px;
+  animation: link-anim 4s infinite alternate;
+  transition: color 0.4s;
+}
+
+@keyframes link-anim{
+  0% {
+    transform: scale(1);
+    color: #FF3D3D;
+  }
+  20% {
+    color: #FFF83D;
+  }
+  40% {
+    transform: scale(0.8);
+    color: #3DFF7D;
+  }
+  60% {
+    color: #3D7BFF;
+  }
+  80% {
+    color: #AF3DFF;
+  }
+  100% {
+    transform: scale(1.4);
+  }
+}
+
 .level-badge {
   background: linear-gradient(135deg, #e056fd, #686de0);
   color: #fff;
