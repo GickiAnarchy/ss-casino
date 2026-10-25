@@ -64,6 +64,62 @@ body {
   z-index: 999;
 }
 
+.app-link-div {
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+  white-space: nowrap;
+  background-color: #1a1a1a;
+  padding: 15px 0;
+}
+
+.app-link {
+  display: inline-block;
+  font-size: 18px;
+  /* Run the color animation AND the slide animation cleanly side-by-side */
+  animation: 
+    link-anim 7s infinite alternate, 
+    slideAcross 11s infinite linear;
+  transition: color 0.4s;
+}
+
+/* Moves smoothly across the screen while scaling at intervals */
+@keyframes slideAcross {
+  0% {
+    transform: translateX(-100%) scale(1);
+  }
+  25% {
+    transform: translateX(-25%) scale(0.8);
+  }
+  50% {
+    transform: translateX(25%) scale(1.3);
+  }
+  75% {
+    transform: translateX(75%) scale(0.9);
+  }
+  100% {
+    transform: translateX(100vw) scale(1.2);
+  }
+}
+
+@keyframes link-anim {
+  0%, 100% {
+    color: #FF3D3D;
+  }
+  20% {
+    color: #FFF83D;
+  }
+  40% {
+    color: #3DFF7D;
+  }
+  60% {
+    color: #3D7BFF;
+  }
+  80% {
+    color: #AF3DFF;
+  }
+}
+
 /* The flex header wraps instead of pushing the balance and settings controls off narrow screens. */
 .global-bar {
   background: var(--header-bg);
