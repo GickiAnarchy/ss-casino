@@ -79,13 +79,17 @@ body {
 .app-link {
   display: inline-block;
   text-align: center;
-  font-size: 18px;
+  font-size: 24px;
   /* Run the color animation AND the slide animation cleanly side-by-side */
   animation: 
     link-anim 5s infinite alternate,
-    zoomies 16s infinite ease-in-out forwards 2s;
-    /*slideAcross 12s infinite linear;*/
+    slideAcross 18s infinite linear;
+  animation-play-state: running;
   transition: color 0.4s;
+}
+
+.app-link:hover {
+  animation-play-state: paused;
 }
 
 @keyframes zoomies {
@@ -106,13 +110,10 @@ body {
 /* Moves smoothly across the screen while scaling at intervals */
 @keyframes slideAcross {
   0% {
-    transform: translateX(-100%) scale(0.4);
-  }
-  50% {
-    transform: translateX(25%) scale(1);
+    transform: translateX(-125vh) scale(1);
   }
   100% {
-    transform: translateX(100vw) scale(0.4);
+    transform: translateX(125vh) scale(1.15);
   }
 }
 
