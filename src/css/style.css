@@ -1483,7 +1483,7 @@ summary::marker {
   object-fit: cover;
   /* Traces alpha transparency of the asset */
   filter: drop-shadow(0 0 0px rgba(99, 102, 241, 0));
-  animation: ambientGlow 7.5s ease-in-out alternate;
+  animation: ambientGlow 3.5s ease-in-out alternate;
 }
 
 .splash-logo {
