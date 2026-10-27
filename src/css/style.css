@@ -110,10 +110,13 @@ body {
 /* Moves smoothly across the screen while scaling at intervals */
 @keyframes slideAcross {
   0% {
-    transform: translateX(-125vh) scale(1);
+    transform: translateX(-125vh) scale(0.7);
+  }
+  38%, 78% {
+    transform: translateX(0vh) scale(1);
   }
   100% {
-    transform: translateX(125vh) scale(1.15);
+    transform: translateX(125vh) scale(0.7);
   }
 }
 
